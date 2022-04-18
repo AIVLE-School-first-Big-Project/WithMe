@@ -3,4 +3,7 @@ from django.http import HttpResponse
 
 
 def login_ok(request):
-    return HttpResponse('<u>login successful!</u>')
+    return HttpResponse('\
+                        login successful!</br>\
+                        <a href="/accounts/logout/">[ Logout ] </a>\
+                        ')
