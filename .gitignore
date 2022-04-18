@@ -1,0 +1,15 @@
+### Django ###
+*.log
+*.pot
+*.pyc
+__pycache__/
+
+
+
+# vscode
+.vscode
+
+
+
+# Jupyter Notebook
+.ipynb_checkpoints
