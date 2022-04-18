@@ -1,0 +1,4 @@
+Django==4.0
+
+ipython==8.2.0
+mysqlclient==2.1.0
