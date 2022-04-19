@@ -3,7 +3,7 @@
 *.pot
 *.pyc
 __pycache__/
-
+settings.py
 
 
 # vscode
