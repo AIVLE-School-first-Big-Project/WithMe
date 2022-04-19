@@ -3,13 +3,12 @@
 *.pot
 *.pyc
 __pycache__/
-settings.py
-
 
 # vscode
 .vscode
 
-
+# SECRET KEY, DB sercurity
+.env
 
 # Jupyter Notebook
 .ipynb_checkpoints
