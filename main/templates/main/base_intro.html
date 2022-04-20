@@ -1,0 +1,42 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>With me</title>
+    <script src="{% static "jquery-3.6.0.min.js" %}"></script>
+    <link href="{% static "style_intro.css" %}" rel="stylesheet">
+
+
+</head>
+<body>
+
+    <div class="topnav">
+        <a href="#">Link</a>
+        <a href="#">Link</a>
+        <a href="#">Link</a>
+    </div>
+
+    <div class="content">
+        <h2>로그인이 되지 않았을 때 보여주는 첫 화면입니다.</h2>
+        <span id="type-effect"></span></br>
+
+        <a href="/accounts/login/">[ Login ] </a>
+    </div>
+
+    <div class="footer">
+        <p>Footer</p>
+    </div>
+
+    <script src="https://unpkg.com/typeit@8.4.0/dist/index.umd.js"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        new TypeIt("#type-effect", {
+          strings: ["애옹 공화국 개발팀입니다. 애옹 공화국 개발팀입니다. 애옹 공화국 개발팀입니다."],
+        }).go();
+      });
+    </script>
+</body>
+
+</html>
