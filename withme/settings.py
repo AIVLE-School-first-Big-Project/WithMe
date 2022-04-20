@@ -63,6 +63,7 @@ INSTALLED_APPS = [
     ### APPS ###
     'accounts',
     'tag',
+    'main',
 ]
 
 MIDDLEWARE = [
@@ -124,7 +125,8 @@ DATABASES = {
 ##################
 
 LOGIN_URL = "/accounts/login/"
-LOGIN_REDIRECT_URL = "/accounts/login_ok/"
+LOGIN_REDIRECT_URL = "/"
+LOGOUT_REDIRECT_URL = "/"
 
 AUTH_USER_MODEL = 'accounts.User'
 
@@ -163,6 +165,11 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
 
 STATIC_URL = 'static/'
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'withme', 'static'),
+]
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
