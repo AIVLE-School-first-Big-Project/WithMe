@@ -45,6 +45,11 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    # The autocomplete library needs by adding to INSTALLED_APPS, before django.contrib.admin
+    # , bottlehun
+    'dal',
+    'dal_select2',
+
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -52,7 +57,12 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+    ### Third Party ###
+    'jquery',
+
+    ### APPS ###
     'accounts',
+    'tag',
 ]
 
 MIDDLEWARE = [
@@ -94,14 +104,6 @@ DATABASES = {
     #     'ENGINE': 'django.db.backends.sqlite3',
     #     'NAME': BASE_DIR / 'db.sqlite3',
     # }
-    # 'default': {
-    #     'ENGINE': 'django.db.backends.mysql',
-    #     'NAME': 'test',
-    #     'USER': 'root',
-    #     'PASSWORD': '1111',
-    #     'HOST': '39.118.206.39',
-    #     'PORT': '4544',
-    # }
     'default' :
     {
         'ENGINE': env('DB_ENGINE'),
@@ -110,6 +112,10 @@ DATABASES = {
         'PASSWORD': env('DB_PASSWORD'),
         'HOST': env('DB_HOST'),
         'PORT': env('DB_PORT'),
+        'OPTIONS': {
+                'charset': 'utf8mb4',
+                'use_unicode': True,
+            }
     }
 }
 
