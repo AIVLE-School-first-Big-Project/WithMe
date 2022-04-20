@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
-from django.contrib.auth.models import User
+from .models import User, UserType
 
 def login_ok(request):
     return HttpResponse('\
@@ -22,9 +22,16 @@ def signup(request):
         if raw_password != password:
             return render(request, 'accounts/signup_error_password.html')
         email = request.POST['email']
+        
+        # Check UserType
+        try:
+            user_type = UserType.objects.get(Type_name = request.POST['user_type'])
+        except UserType.DoesNotExist:
+            user_type = None
 
         user = User.objects.create_user(username, email, raw_password)
+        user.User_type = user_type
         user.save()
-        return redirect('accounts/login_form.html')
+        return redirect('accounts:Login')
     else:
         return render(request, 'accounts/signup_form.html')
