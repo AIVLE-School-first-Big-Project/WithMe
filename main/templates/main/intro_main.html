@@ -1,0 +1,78 @@
+{% load static %}
+{% block content %}
+<section data-scroll id="scale_d" class="border bg-white p-5 my-5 mb-5 text-center shadow-lg">
+    <img class="d-block mx-auto mb-4" src="{% static "assets/img/angrycat.jpg" %}" alt="" width="72" height="57">
+    <span id="type-effect" class="display-3"></span>
+    <span id="type-effect2" class="display-5 "></span>
+    <div class="col-lg-6 mt-3 mx-auto">
+        <p class="lead mb-4">Quickly design and customize responsive mobile-first sites with Bootstrap, the world’s most popular front-end open source toolkit, featuring Sass variables and mixins, responsive grid system, extensive prebuilt components, and powerful JavaScript plugins.</p>
+        <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
+            <a href="/accounts/login/">
+            <button type="button" class="btn btn-primary btn-lg px-4 gap-3">
+                로그인 하기
+            </button>
+            </a>
+        </div>
+    </div>
+</section>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        new TypeIt("#type-effect").
+        type("<span class='display-5'>혼공 시대.</span></br>").
+        pause(100).
+        type("<span class='display-4 fw-bold'><em>새로운 변화가</em></span>").
+        pause(100).
+        type("</br><span class='display-5'>찾아옵니다.</span>").
+        go()
+    });
+    ScrollOut();
+</script>
+<section data-scroll class="mb-5 px-4 text-center border-bottom">
+    <h1 class="display-4 fw-bold">Centered screenshot</h1>
+    <div class="col-lg-6 mx-auto">
+        <p class="lead mb-4">Quickly design and customize responsive mobile-first sites with Bootstrap, the world’s most popular front-end open source toolkit, featuring Sass variables and mixins, responsive grid system, extensive prebuilt components, and powerful JavaScript plugins.</p>
+        <div class="d-grid gap-2 d-sm-flex justify-content-sm-center mb-5">
+            <button type="button" class="btn btn-primary btn-lg px-4 me-sm-3">Primary button</button>
+            <button type="button" class="btn btn-outline-secondary btn-lg px-4">Secondary</button>
+        </div>
+    </div>
+    <div class="overflow-hidden" style="max-height: 30vh;">
+        <div class="container px-5">
+        </div>
+    </div>
+</section>
+
+<section data-scroll class="mb-5 container col-xxl-8 px-4 border-bottom">
+    <div class="row flex-lg-row-reverse align-items-center g-5 py-5">
+        <div class="col-10 col-sm-8 col-lg-6">
+            <img src="{% static "assets/img/bootstrap-themes.png" %}" class="d-block mx-lg-auto img-fluid" alt="Bootstrap Themes" width="700" height="500" loading="lazy">
+        </div>
+        <div class="col-lg-6">
+            <h1 class="display-5 fw-bold lh-1 mb-3">Responsive left-aligned hero with image</h1>
+            <p class="lead">Quickly design and customize responsive mobile-first sites with Bootstrap, the world’s most popular front-end open source toolkit, featuring Sass variables and mixins, responsive grid system, extensive prebuilt components, and powerful JavaScript plugins.</p>
+            <div class="d-grid gap-2 d-md-flex justify-content-md-start">
+                <button type="button" class="btn btn-primary btn-lg px-4 me-md-2">Primary</button>
+                <button type="button" class="btn btn-outline-secondary btn-lg px-4">Default</button>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section data-scroll class="mb-5 container col-xxl-8 border-bottom">
+    <div class="row flex-lg-row-reverse align-items-center g-5 py-5">
+        <div class="col-lg-6">
+            <h1 class="display-5 fw-bold lh-1 mb-3">Responsive left-aligned hero with image</h1>
+            <p class="lead">Quickly design and customize responsive mobile-first sites with Bootstrap, the world’s most popular front-end open source toolkit, featuring Sass variables and mixins, responsive grid system, extensive prebuilt components, and powerful JavaScript plugins.</p>
+            <div class="d-grid gap-2 d-md-flex justify-content-md-start">
+                <button type="button" class="btn btn-primary btn-lg px-4 me-md-2">Primary</button>
+                <button type="button" class="btn btn-outline-secondary btn-lg px-4">Default</button>
+            </div>
+        </div>
+        <div class="col-10 col-sm-8 col-lg-6">
+            <img src="{% static "assets/img/bootstrap-themes.png" %}" class="d-block mx-lg-auto img-fluid" alt="Bootstrap Themes" width="700" height="500" loading="lazy">
+        </div>
+    </div>
+</section>
+
+
+{% endblock %}

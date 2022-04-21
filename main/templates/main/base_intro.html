@@ -1,41 +1,39 @@
 {% load static %}
-
 <!DOCTYPE html>
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
     <title>With me</title>
+    <link rel="stylesheet" href="{% static "style_intro.css" %}">
+
+    <link rel="stylesheet" href="{% static "bootstrap-5.1.3-dist/css/bootstrap.min.css" %}"/>
     <script src="{% static "jquery-3.6.0.min.js" %}"></script>
-    <link href="{% static "style_intro.css" %}" rel="stylesheet">
+    <script src="{% static "bootstrap-5.1.3-dist/js/bootstrap.min.js" %}"></script>
+    <script src="https://unpkg.com/scroll-out/dist/scroll-out.min.js"></script>
 
-
+    <meta name="theme-color" content="#7952b3">
 </head>
-<body>
-
-    <div class="topnav">
-        <a href="#">Link</a>
-        <a href="#">Link</a>
-        <a href="#">Link</a>
-    </div>
-
-    <div class="content">
-        <h2>로그인이 되지 않았을 때 보여주는 첫 화면입니다.</h2>
-        <span id="type-effect"></span></br>
-
-        <a href="/accounts/login/">[ Login ] </a>
-    </div>
-
-    <div class="footer">
-        <p>Footer</p>
-    </div>
-
+<body class="bg-light">
+    <header>
+        <!-- pass -->
+    </header>
+    <main>
+        {% include "main/intro_main.html" %}
+    </main>
+    <footer data-scroll class="bg-dark text-secondary my-5 px-4 py-5 text-center">
+        <div class="py-5">
+            <h1 class="display-5 fw-bold text-white">Dark mode hero</h1>
+            <div class="col-lg-6 mx-auto">
+                <p class="fs-5 mb-4">Quickly design and customize responsive mobile-first sites with Bootstrap, the world’s most popular front-end open source toolkit, featuring Sass variables and mixins, responsive grid system, extensive prebuilt components, and powerful JavaScript plugins.</p>
+                <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
+                  <button type="button" class="btn btn-outline-info btn-lg px-4 me-sm-3 fw-bold">Contact us</button>
+                </div>
+            </div>
+        </div>
+    </footer>
     <script src="https://unpkg.com/typeit@8.4.0/dist/index.umd.js"></script>
     <script>
-      document.addEventListener("DOMContentLoaded", function () {
-        new TypeIt("#type-effect", {
-          strings: ["애옹 공화국 개발팀입니다. 애옹 공화국 개발팀입니다. 애옹 공화국 개발팀입니다."],
-        }).go();
-      });
+        ScrollOut();
     </script>
 </body>
 
