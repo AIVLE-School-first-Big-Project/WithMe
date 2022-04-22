@@ -105,26 +105,18 @@ DATABASES = {
     #     'ENGINE': 'django.db.backends.sqlite3',
     #     'NAME': BASE_DIR / 'db.sqlite3',
     # }
-    # 'default' :
-    # {
-    #     'ENGINE': env('DB_ENGINE'),
-    #     'NAME': env('DB_NAME'),
-    #     'USER': env('DB_USER'),
-    #     'PASSWORD': env('DB_PASSWORD'),
-    #     'HOST': env('DB_HOST'),
-    #     'PORT': env('DB_PORT'),
-    #     'OPTIONS': {
-    #             'charset': 'utf8mb4',
-    #             'use_unicode': True,
-    #         }
-    # }
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'withmeDB',
-        'USER': 'admin',
-        'PASSWORD': 'aivle202101!',
-        'HOST': 'withmerds.cswcqfz4v7uz.ap-northeast-2.rds.amazonaws.com',
-        'PORT': '3306',
+    'default' :
+    {
+        'ENGINE': env('DB_ENGINE'),
+        'NAME': env('DB_NAME'),
+        'USER': env('DB_USER'),
+        'PASSWORD': env('DB_PASSWORD'),
+        'HOST': env('DB_HOST'),
+        'PORT': env('DB_PORT'),
+        'OPTIONS': {
+                'charset': 'utf8mb4',
+                'use_unicode': True,
+            }
     }
 }
 
