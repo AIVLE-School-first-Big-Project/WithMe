@@ -7,5 +7,3 @@ django-environ==0.8.1
 
 django-autocomplete-light==3.9.4
 django-jquery==3.1.0
-
-opencv-python==4.5.5.64
