@@ -29,7 +29,7 @@ def detectme(request):
         number = random.randrange(1, 10000)
 
         # 저장 경로 및 파일명 설정
-        filename = request.user.username + 'image' + str(number) + '.png'
+        filename = request.user.username + '_image_' + str(number) + '.png'
         save_path = os.path.join(MEDIA_ROOT, filename)
 
         image = open(save_path, "wb") # path+filename, "wb")
