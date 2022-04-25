@@ -20,7 +20,6 @@ let pushMessageShow = anime({
 
 function push_message(text){
     document.querySelector('#push_text').textContent = text
-    console.log(text)
     pushMessageShow.play()
 };
 
