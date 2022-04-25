@@ -8,6 +8,11 @@ from django.http import HttpResponse
 from .models import User, UserType
 from django.urls import reverse
 # from .forms import CustomUserChangeForm
+
+from django.contrib.auth.views import LoginView
+
+login = LoginView.as_view(template_name="accounts/login_form.html")
+
 def login_ok(request):
     return HttpResponse('\
                         login successful!</br>\

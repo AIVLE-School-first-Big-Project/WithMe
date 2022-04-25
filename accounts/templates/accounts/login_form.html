@@ -1,8 +1,23 @@
-<form action=""method="post">
-    {% csrf_token %}
-    <table>
-        {{ form }}
-    </table>
-    <input type="submit" value="Login" />
+{% load static %}
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>With me</title>
 
-</form>
+    <link rel="stylesheet" href="{% static "bootstrap-5.1.3-dist/css/bootstrap.min.css" %}"/>
+    <script src="{% static "bootstrap-5.1.3-dist/js/bootstrap.min.js" %}"></script>
+</head>
+<body>
+
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-sm-6 offset-sm-3 mp-5">
+            {% include "accounts/_form.html" with form_title="With me" submit_label="로그인" %}
+        </div>
+    </div>
+</div>
+
+</body>
+
+</html>
