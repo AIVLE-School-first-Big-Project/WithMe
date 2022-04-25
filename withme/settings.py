@@ -59,12 +59,20 @@ INSTALLED_APPS = [
 
     ### Third Party ###
     'jquery',
+    'channels',
 
     ### APPS ###
     'accounts',
     'tag',
     'main',
 ]
+
+ASGI_APPLICATION = 'withme.asgi.application'
+CHANNEL_LAYERS = {
+    'default': {
+        "BACKEND": "channels.layers.InMemoryChannelLayer",
+    },
+}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
