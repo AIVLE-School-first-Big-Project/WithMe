@@ -1,0 +1,23 @@
+{% extends "main/base_main.html" %}
+{% block content %}
+{% load static %}
+
+<link rel="stylesheet" href="{% static 'stopwatch.css' %}">
+<script src="{% static 'stopwatch.js' %}"></script>
+<link href='https://fonts.googleapis.com/css?family=Ubuntu' rel='stylesheet' type='text/css'>
+
+<link rel="stylesheet" type="text/css" href="https://code.jquery.com/ui/1.10.4/themes/redmond/jquery-ui.css">
+ <div id="time">
+    <span id="hours">00</span> :
+    <span id="minutes">00</span> :
+    <span id="seconds">00</span> ::
+    <span id="milliseconds">000</span>
+</div><br>
+<div id="controls">
+    <button id="start_pause_resume">Start</button>
+    <button id="reset">Reset</button>
+    <button onClick="history.back();">back</button >
+</div>
+
+
+{% endblock %}

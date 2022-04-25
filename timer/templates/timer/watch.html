@@ -1,5 +1,8 @@
+{% extends "main/base_main.html" %}
+{% block content %}
 {% load static %}
 <link rel="stylesheet" href="{% static 'watch.css' %}">
+<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
 
 <script src="{% static 'watch.js' %}"></script>
 
@@ -19,11 +22,12 @@
             <input type = "button" class="al" value="공부 종료" onclick = "end_time()">
             <p id = "val3"></p>
             </form>
+        
+            <button type = "button" onclick="location.href= '/timer/timer'" class="nav-link active">Timer</button>
+            <button type = "button" onclick="location.href= '/timer/stopwatch'" class="nav-link active">Stopwatch</button>
+            
         </ul>
-        <ul>
-            <button type = "button" class="al">Timer</button>
-            <button type = "button" class="al">Stopwatch</button>
-        </ul>
+
     </div>
 </div>
 
@@ -31,21 +35,21 @@
 <script>
 
 function start_time(){
-    start_time = new Date()
-    var start_time = start_time.getHours()+":"+start_time.getMinutes()+":"+start_time.getSeconds()
-    document.getElementById("val1").innerHTML="공부 시작 시간은 "+start_time+"입니다."
+    var start_time = new Date()
+    var start_time_houre = start_time.getHours()+":"+start_time.getMinutes()+":"+start_time.getSeconds()
+    document.getElementById("val1").innerHTML="공부 시작 시간은 "+start_time_houre+"입니다."
     var start_time_day =start_time.getFullYear()+"/"+start_time.getMonth()+"/"+start_time.getDate()
 }
 
 function end_time(){
-    end_time = new Date()
-    var end_time = end_time.getHours()+":"+end_time.getMinutes()+":"+end_time.getSeconds()
-    document.getElementById("val3").innerHTML="공부 종료 시간은"+end_time+"입니다."
+    var end_time = new Date()
+    var end_time_houre = end_time.getHours()+":"+end_time.getMinutes()+":"+end_time.getSeconds()
+    document.getElementById("val3").innerHTML="공부 종료 시간은"+end_time_houre+"입니다."
     var end_time_day =end_time.getFullYear()+"/"+end_time.getMonth()+"/"+end_time.getDate()
 }
 function stop_time(){
-    stop_time = new Date()
-    var stop_time = stop_time.getHours()+":"+stop_time.getMinutes()+":"+stop_time.getSeconds()
+    var stop_time = new Date()
+    var stop_time_houre = stop_time.getHours()+":"+stop_time.getMinutes()+":"+stop_time.getSeconds()
     var stop_time_day =stop_time.getFullYear()+"/"+stop_time.getMonth()+"/"+stop_time.getDate()
   }
 
@@ -67,3 +71,6 @@ ajax.then(function(response) {
     console.log(result);
 });
 </script>
+
+
+{% endblock %}

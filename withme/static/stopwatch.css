@@ -1,0 +1,15 @@
+body {
+    font-family: "Chivo Regular", "Franklin Gothic Medium", "Franklin Gothic", "ITC Franklin Gothic", Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    width: 95.5078125%;
+    margin: 0 auto;
+    width: 90%;
+    text-align: center;
+}
+#controls{
+	font-size: 18px;
+}
+#time {
+    
+    font-size: 250%;
+}
