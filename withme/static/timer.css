@@ -1,0 +1,104 @@
+.clock {
+    font-size: 4em;
+  }
+  @import "compass/css3";
+  @mixin boxsizing-borderbox {
+    box-sizing: border-box;
+  }
+  
+  html {
+    background-color: #594c4a;
+  }
+  
+  * {
+    @include boxsizing-borderbox;
+  }
+  
+  body {
+    font-family: "Chivo Regular", "Franklin Gothic Medium", "Franklin Gothic", "ITC Franklin Gothic", Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    width: 95.5078125%;
+    margin: 0 auto;
+    width: 90%;
+  }
+  
+  .main {
+    padding: 4px 0;
+    width: 408px;
+    height: 348px;
+    background-color: #f5f5f5;
+    margin: 100px auto;
+    @include border-radius(4px);
+    -webkit-box-shadow: 0px 10px 10px rgba(47, 40, 39, 0.9), 0px 35px 20px rgba(47, 40, 39, 0.4), 0px 50px 15px rgba(69, 57, 62, 0.6); // + clean up with a mixin
+  }
+  
+  .nav {
+    float: left;
+    width: 215px;
+    ul {
+      padding: 0;
+      margin: 0;
+      list-style: none;
+    }
+    li {
+      padding: 30px 0 0 95px;
+      height: 84px;
+      border-bottom: 1px solid rgba(193, 193, 193, 0.5);
+      font-size: 25px;
+      color: rgba(188, 185, 184, 0.7);
+      &:hover {
+        color: #E0744D;
+      }
+    }
+    .al {
+      background: url('http://www.charlesamoss.com/design/images/clock_wid/alams.svg') 15% center no-repeat;
+    }
+    .sw {
+      background: url('http://www.charlesamoss.com/design/images/clock_wid/stopwatch.svg') 15% center no-repeat;
+    }
+    .tm {
+      background: url('http://www.charlesamoss.com/design/images/clock_wid/timer.svg') 15% center no-repeat;
+    }
+    .st {
+      background: url('http://www.charlesamoss.com/design/images/clock_wid/site.svg') 15% center no-repeat;
+      border-bottom: 0px;
+    }
+  }
+  
+  #clock {
+    padding: 0;
+    position: relative;
+    list-style: none;
+    margin: 50px 10px 0 0;
+    height: 234px;
+    width: 234px;
+    display: block;
+    float: right;
+    background: url('http://www.charlesamoss.com/design/images/clock_wid/clockFace.svg') 5% center no-repeat;
+    /*  -webkit-box-shadow: 0px 0px 20px rgba(47, 40, 39, 0.4);  */
+  }
+  
+  #sec,
+  #min,
+  #hour {
+    position: absolute;
+    width: 24px;
+    height: 234px;
+    top: 0px;
+    left: 102px;
+  }
+  
+  #sec {
+    background: url('http://www.charlesamoss.com/design/images/clock_wid/sec.svg');
+    z-index: 3;
+  }
+  
+  #min {
+    background: url('http://www.charlesamoss.com/design/images/clock_wid/min.svg');
+    z-index: 2;
+  }
+  
+  #hour {
+    background: url('http://www.charlesamoss.com/design/images/clock_wid/hour.svg');
+    z-index: 1;
+  }

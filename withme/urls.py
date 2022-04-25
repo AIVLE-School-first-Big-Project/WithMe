@@ -20,7 +20,7 @@ urlpatterns = [
     path('', include('main.urls')),
     path('accounts/', include('accounts.urls')),
     path('tag/', include('tag.urls')),
-
+    path('timer/', include('timer.urls')),
 
     path('admin/', admin.site.urls),
 

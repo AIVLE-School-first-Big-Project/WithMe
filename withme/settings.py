@@ -64,6 +64,7 @@ INSTALLED_APPS = [
     'accounts',
     'tag',
     'main',
+    'timer',
 ]
 
 MIDDLEWARE = [
