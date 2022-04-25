@@ -4,6 +4,6 @@ from . import views
 app_name = 'timer'
 
 urlpatterns = [
-    path("timer/", views.timer, name='timer'),
+    path("timer/", views.watch, name='timer'),
     
 ]
