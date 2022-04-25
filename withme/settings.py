@@ -60,6 +60,7 @@ INSTALLED_APPS = [
     ### Third Party ###
     'jquery',
     'channels',
+    'bootstrap5',
 
     ### APPS ###
     'accounts',
