@@ -12,7 +12,7 @@ from withme.settings import MEDIA_ROOT
 def index(request):
     if request.user.is_authenticated:
         return main(request)
-    return render(request, "main/base_intro.html")
+    return render(request, "main/intro_main.html")
 
 @login_required
 def main(request):

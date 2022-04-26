@@ -18,19 +18,9 @@
         <!-- pass -->
     </header>
     <main>
-        {% include "main/intro_main.html" %}
+        {% block content %}
+        {% endblock %}
     </main>
-    <footer data-scroll class="bg-dark text-secondary my-5 px-4 py-5 text-center">
-        <div class="py-5">
-            <h1 class="display-5 fw-bold text-white">Dark mode hero</h1>
-            <div class="col-lg-6 mx-auto">
-                <p class="fs-5 mb-4">Quickly design and customize responsive mobile-first sites with Bootstrap, the world’s most popular front-end open source toolkit, featuring Sass variables and mixins, responsive grid system, extensive prebuilt components, and powerful JavaScript plugins.</p>
-                <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
-                  <button type="button" class="btn btn-outline-info btn-lg px-4 me-sm-3 fw-bold">Contact us</button>
-                </div>
-            </div>
-        </div>
-    </footer>
     <script src="https://unpkg.com/typeit@8.4.0/dist/index.umd.js"></script>
     <script>
         ScrollOut();
