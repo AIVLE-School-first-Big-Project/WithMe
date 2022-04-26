@@ -1,33 +1,15 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends "main/base_main.html" %}
 
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-
-    <style>    
-        #video {
-            transform: rotateY(180deg);
-            -webkit-transform: rotateY(180deg);
-            /* Safari and Chrome */
-            -moz-transform: rotateY(180deg);
-            /* Firefox */
-        }
-    </style>
-
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-</head>
-
-<body>
-
+{% block content %}
     <div id="container">
-        <video autoplay playsinline id="videoElement"></video>
+        <video playsinline id="videoElement"></video>
         <canvas id="canvas"  width="400" height="300"></canvas>
         <br>
+        <h2></h2>
         <h2 id="rslt">DETECT ME</h2>
     </div>
 
-      
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script>
         var canvas = document.getElementById('canvas');
         var context = canvas.getContext('2d');
@@ -51,7 +33,7 @@
 
         function ajaxTest(){
             context.drawImage(video, 0, 0, video.width, video.height);
-            var data = canvas.toDataURL();//'image/jpeg', 0.5);
+            var data = canvas.toDataURL('image/png', 1.0);
             context.clearRect(0, 0, video.width, video.height);
 
             $.ajax({
@@ -59,7 +41,7 @@
                 url : "/detectme",
                 data : {data:data},
                 success : function(result) {
-                    $('#rslt').text(result['userState']);
+                    $('#rslt').text('User Status: ' + result['userState']);
                     console.log(result);
                 },
                 error : function() {
@@ -74,7 +56,4 @@
 
     </script>
 
-
-</body>
-
-</html>
+{% endblock %}
