@@ -5,37 +5,30 @@
     <meta charset="UTF-8">
     <title>Title</title>
 
-    <style>
+    <style>    
         #video {
             transform: rotateY(180deg);
             -webkit-transform: rotateY(180deg);
             /* Safari and Chrome */
             -moz-transform: rotateY(180deg);
             /* Firefox */
-
-        }
-        
-        .section {
-            margin: 15px;
         }
     </style>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    
-    <script src=""https://code.jquery.com/jquery-2.2.1.min.js></script>
 </head>
 
 <body>
 
     <div id="container">
-        <video id="videoElement"></video>
+        <video autoplay playsinline id="videoElement"></video>
+        <canvas id="canvas"  width="400" height="300"></canvas>
         <br>
         <h2 id="rslt">DETECT ME</h2>
-        <canvas id="canvas" width="400" height="300"></canvas>
     </div>
 
       
-    <script type="text/javascript" charset="utf-8">
+    <script>
         var canvas = document.getElementById('canvas');
         var context = canvas.getContext('2d');
         const video = document.querySelector("#videoElement");
@@ -50,19 +43,16 @@
                     video.srcObject = stream;
                     video.play();
                 })
-                .catch(function (err0r) {
-
+                .catch(function (errMsg) {
+                    console.log(errMsg)
                 });
         }
-
         const FPS = 2;
 
         function ajaxTest(){
-            width = video.width;
-            height = video.height;
-            context.drawImage(video, 0, 0, width, height);
-            var data = canvas.toDataURL()//('image/jpeg', 0.5);
-            context.clearRect(0, 0, width, height);
+            context.drawImage(video, 0, 0, video.width, video.height);
+            var data = canvas.toDataURL();//'image/jpeg', 0.5);
+            context.clearRect(0, 0, video.width, video.height);
 
             $.ajax({
                 type : "POST",
