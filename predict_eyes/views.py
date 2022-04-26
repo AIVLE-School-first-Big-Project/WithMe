@@ -12,7 +12,7 @@ import logging
 
 # for image capture
 from django.views.decorators.csrf import csrf_exempt
-from tensorflow.keras.models import load_model
+from keras.models import load_model
 import os, random
 from withme.settings import MEDIA_ROOT
 
