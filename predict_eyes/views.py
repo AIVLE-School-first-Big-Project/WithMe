@@ -17,7 +17,7 @@ import os, random
 from withme.settings import MEDIA_ROOT
 
 logger = logging.getLogger(__name__)
-#model = load_model(os.path.join(MEDIA_ROOT, 'mobileNet_v3.h5'))
+model = load_model(os.path.join(MEDIA_ROOT, 'mobileNet_v3_for_small_eyes.h5'))
 
 
 @csrf_exempt
@@ -31,15 +31,16 @@ def detectme2(request):
         filename = request.user.username + '_image_' + str(number) + '.png'
         save_path = os.path.join(MEDIA_ROOT, filename)
 
-        getEyes_mediapipe_mesh(base64.b64decode(data))
+        left_eye, right_eye = getEyes_mediapipe_mesh(base64.b64decode(data))
         # 모델 완성 시, 해당 result 반환
-        number = random.randrange(1, 10000)
-        user_state = '눈 뜨세요' if number % 2 else '화이팅 !!'
+
+        # number = random.randrange(1, 10000)
+        user_state = 0 if left_eye + right_eye <= 0.5 else 1
         answer = {
-            'userState': user_state,
+            'userState': str(user_state),
             'filepath' : save_path,
-            # 'left eye' : str(left_eye[0][0]),
-            # 'right eye' : str(right_eye[0][0]),
+            'left eye' : str(left_eye[0][0]),
+            'right eye' : str(right_eye[0][0]),
             }
 
         return JsonResponse(answer)
@@ -91,9 +92,9 @@ def getEyes_mediapipe_mesh(image):
                 right_eye_img = image[right_y: right_y2, right_x: right_x2]
                 #print('right eye shape:', right_eye_img.shape)
 
-                number = random.randrange(1, 10000)
-                cv2.imwrite(f'left_{number}.jpeg', left_eye_img)
-                cv2.imwrite(f'right_{number}.jpeg', right_eye_img)
+                # number = random.randrange(1, 10000)
+                # cv2.imwrite(f'left_{number}.jpeg', left_eye_img)
+                # cv2.imwrite(f'right_{number}.jpeg', right_eye_img)
                 # plt.subplot(1,3,2)
                 # plt.imshow(left_eye_img)
                 # plt.show()
@@ -101,16 +102,16 @@ def getEyes_mediapipe_mesh(image):
                 # plt.subplot(1,3,3)
                 # plt.imshow(right_eye_img)
                 # plt.show()
-                # left_img = img_preprocessing(left_eye_img)
-                # right_img = img_preprocessing(right_eye_img)
+                left_img = img_preprocessing(left_eye_img)
+                right_img = img_preprocessing(right_eye_img)
                 # print(left_img.shape)
                 # print(right_img.shape)
-                # left_pred = model.predict(left_img)
-                # right_pred = model.predict(right_img)
+                left_pred = model.predict(left_img)
+                right_pred = model.predict(right_img)
                 # print('left', left_pred)
                 # print('right', right_pred)
-                # print(left_pred, right_pred)
-                # return left_pred, right_pred
+                print(left_pred, right_pred)
+                return left_pred, right_pred
 
 
 def img_preprocessing(img):
