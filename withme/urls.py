@@ -21,7 +21,7 @@ urlpatterns = [
     path('accounts/', include('accounts.urls')),
     path('tag/', include('tag.urls')),
     path('timer/', include('timer.urls')),
-
+    path('predict_eyes/', include('predict_eyes.urls')),
     path('admin/', admin.site.urls),
 
 ]

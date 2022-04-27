@@ -1,23 +1,40 @@
-{% load static %}
-<!DOCTYPE html>
-<html lang="ko">
-<head>
-    <meta charset="UTF-8">
-    <title>With me</title>
+{% extends "main/base_intro.html"  %}
+{% load bootstrap5 %}
 
-    <link rel="stylesheet" href="{% static "bootstrap-5.1.3-dist/css/bootstrap.min.css" %}"/>
-    <script src="{% static "bootstrap-5.1.3-dist/js/bootstrap.min.js" %}"></script>
-</head>
-<body>
-
+{% block content %}
 <div class="container mt-5">
     <div class="row">
         <div class="col-sm-6 offset-sm-3 mp-5">
-            {% include "accounts/_form.html" with form_title="With me" submit_label="로그인" %}
+            <div class="card">
+                <div class="card-header">
+                    <div class="d-flex justify-content-between">
+                        <button type="button" class="btn btn-light"> Withme </button>
+                        <a href="{% url "accounts:signup" %}" class="btn btn-outline-dark align-self-end">
+                            회원가입
+                        </a>
+                    </div>
+                </div>
+
+                <div class="card-body">
+                    {% if form %}
+                        <form action="" method="POST" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            {% bootstrap_form form %}
+                            {% buttons %}
+                                <button type="submit" class="btn btn-primary align-self-end">
+                                    로그인
+                                </button>
+                            {% endbuttons %}
+                        </form>
+                    {% else %}
+                        <div class="alert alert-danger">
+                            form 객체를 지정해주세요.
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+
         </div>
     </div>
 </div>
-
-</body>
-
-</html>
+{% endblock %}

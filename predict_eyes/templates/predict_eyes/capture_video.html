@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+    <style>
+        #video {
+            transform: rotateY(180deg);
+            -webkit-transform: rotateY(180deg);
+            /* Safari and Chrome */
+            -moz-transform: rotateY(180deg);
+            /* Firefox */
+
+        }
+        
+        .section {
+            margin: 15px;
+        }
+    </style>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    
+    <script src=""https://code.jquery.com/jquery-2.2.1.min.js></script>
+</head>
+
+<body>
+
+    <div id="container">
+        <video id="videoElement"></video>
+        <br>
+        <h2 id="rslt">DETECT ME</h2>
+        <canvas id="canvas" width="400" height="300"></canvas>
+    </div>
+
+      
+    <script type="text/javascript" charset="utf-8">
+        var canvas = document.getElementById('canvas');
+        var context = canvas.getContext('2d');
+        const video = document.querySelector("#videoElement");
+
+        video.width = 400;
+        video.height = 300;
+
+        if (navigator.mediaDevices.getUserMedia) {
+            navigator.mediaDevices
+                .getUserMedia({ video: true })
+                .then(function (stream) {
+                    video.srcObject = stream;
+                    video.play();
+                })
+                .catch(function (error) {
+
+                });
+        }
+
+        const FPS = 2;
+        var count = 0;
+        function ajaxTest(){
+            width = video.width;
+            height = video.height;
+            context.drawImage(video, 0, 0, width, height);
+            var data = canvas.toDataURL('image/jpeg')//('image/jpeg', 0.5);
+            context.clearRect(0, 0, width, height);
+
+            $.ajax({
+                type : "POST",
+                url : "/predict_eyes/detectme2",
+                data : {data:data},
+                success : function(result) {
+                    if(result['userState'] == '0'){
+                        count++;
+                        if(count>=15){
+                            //threshhold 얼마로 할지 정해야함
+                            // 일정이상 count 되면 어떤 동작할지
+                        }
+                    }else{
+                        count = 0;
+                    }
+                    $('#rslt').text(count);
+                    console.log(result);
+                },
+                error : function() {
+                    console.log('통신 실패');
+                },
+
+            });
+        }
+        playAlert = setInterval(function() {
+            ajaxTest();
+        }, 500);//1000 / FPS);
+        
+        
+        
+
+    </script>
+
+
+</body>
+
+</html>

@@ -1,0 +1,20 @@
+{% extends "main/base_intro.html" %}
+{% load bootstrap5 %}
+
+
+{% block content %}
+<div class="d-flex mt-5 flex-column">
+    <div class="d-flex justify-content-center">
+        <div class="d-flex flex-column">
+            <h4>Come to Join Us!</h4>
+            <span>이미 회원가입을 했다면 <a href="{% url 'accounts:Login' %}">로그인 하세요 :)</a></span>
+
+            <form method="post" class="post-form" action="{% url 'accounts:signup' %}">
+                {% csrf_token %}
+                {% bootstrap_form form %}
+                <button type="submit" class="btn btn-info mt-3" style="width:100%;">Sign Up</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

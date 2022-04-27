@@ -1,17 +1,22 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth import update_session_auth_hash
+from django.contrib.auth import login as auth_login
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserChangeForm
 from django.contrib import messages
 from django.http import HttpResponse
 from .models import User, UserType
+from .forms import SignupForm
 from django.urls import reverse
 # from .forms import CustomUserChangeForm
 
 from django.contrib.auth.views import LoginView
 
+from .forms import SignupForm
+
 login = LoginView.as_view(template_name="accounts/login_form.html")
+
 
 def login_ok(request):
     return HttpResponse('\
@@ -21,31 +26,15 @@ def login_ok(request):
 
 def signup(request):
     if request.method == 'POST':
-        # Check duplicate account
-        if User.objects.filter(email=request.POST['email']).exists():
-            return render(request, 'accounts/signup_error_duplicate.html')
-
-        username = request.POST['username']
-        raw_password = request.POST['password1']
-        password = request.POST['password2']
-
-        # Check Password Typo
-        if raw_password != password:
-            return render(request, 'accounts/signup_error_password.html')
-        email = request.POST['email']
-        
-        # Check UserType
-        try:
-            user_type = UserType.objects.get(Type_name = request.POST['user_type'])
-        except UserType.DoesNotExist:
-            user_type = None
-
-        user = User.objects.create_user(username, email, raw_password)
-        user.User_type = user_type
-        user.save()
-        return redirect('accounts:Login')
+        form = SignupForm(request.POST)
+        if form.is_valid():
+            signed_user = form.save()
+            auth_login(request, signed_user)
+            return redirect("index")
     else:
-        return render(request, 'accounts/signup_form.html')
+        form = SignupForm()
+    return render(request, 'accounts/signup.html', {'form': form})
+
 
 @login_required
 def change_password(request):
