@@ -1,41 +1,46 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends "main/base_main.html" %}
+{% block content %}
+{% load static %}
 
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
 
-    <style>    
-        #video {
-            transform: rotateY(180deg);
-            -webkit-transform: rotateY(180deg);
-            /* Safari and Chrome */
-            -moz-transform: rotateY(180deg);
-            /* Firefox */
-        }
-    </style>
+<link rel="stylesheet" href="{% static 'alertModal.css' %}">
 
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-</head>
+    <div id = "modal", class="modal-overlay">
 
-<body>
-
-    <div id="container">
-        <video autoplay playsinline id="videoElement"></video>
-        <canvas id="canvas"  width="400" height="300"></canvas>
-        <br>
-        <h2 id="rslt">DETECT ME</h2>
+        <div class="modal-window">
+            <div class="close-area">X</div>
+            <div class="title">
+                <h2>Wake up</h2>
+            </div>
+            <div class="content">
+                <p>일어나세요</p>                
+            </div>
+        </div>
     </div>
 
-      
-    <script>
-        var canvas = document.getElementById('canvas');
-        var context = canvas.getContext('2d');
-        const video = document.querySelector("#videoElement");
 
-        video.width = 400;
-        video.height = 300;
+<div>
+    <div id="container">
+        <video playsinline id="videoElement"></video>
+        <br>
+        <h2 id="result">DETECT ME</h2>
+        <h2 id="count"></h2>
+    </div>
+    
+    
+    
+</div>
 
+
+<canvas id="canvas" width="400" height="300"></canvas>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+    var canvas = document.getElementById('canvas');
+    var context = canvas.getContext('2d');
+    const video = document.querySelector("#videoElement");
+
+    function setVideo() {
         if (navigator.mediaDevices.getUserMedia) {
             navigator.mediaDevices
                 .getUserMedia({ video: true })
@@ -44,37 +49,92 @@
                     video.play();
                 })
                 .catch(function (errMsg) {
-                    console.log(errMsg)
+                    console.log(errMsg);
                 });
         }
-        const FPS = 2;
+        video.width = 400;
+        video.height = 300;
+    }
 
-        function ajaxTest(){
-            context.drawImage(video, 0, 0, video.width, video.height);
-            var data = canvas.toDataURL();//'image/jpeg', 0.5);
-            context.clearRect(0, 0, video.width, video.height);
+    function getFrameData() {
+        context.drawImage(video, 0, 0, video.width, video.height);
+        var data = canvas.toDataURL('image/png', 1.0);
+        context.clearRect(0, 0, video.width, video.height);
 
-            $.ajax({
-                type : "POST",
-                url : "/detectme",
-                data : {data:data},
-                success : function(result) {
-                    $('#rslt').text(result['userState']);
-                    console.log(result);
-                },
-                error : function() {
-                    console.log('통신 실패');
-                },
+        return data;
+    }
 
-            });
+    function isUserAwake(result){
+        return result['userAwakeState'] == '0';
+    }
+
+    const FPS = 2;
+    const THRESHOLD = 5;
+    var count = 0;
+
+    function displayModal(){
+        document.body.style.overflow = 'hidden'; 
+        modal.style.display = 'flex';
+
+        // prevent overflow
+        count = THRESHOLD;
+    }
+
+    function closeModal(){
+        document.body.style.overflow = 'auto';
+        modal.style.display = 'none';
+        count = 0;
+    }
+
+    window.addEventListener("keyup", e => {
+        if(modal.style.display === "flex" && e.key === "Escape") {
+            closeModal();
         }
-        playAlert = setInterval(function() {
-            ajaxTest();
-        }, 10000);//1000 / FPS);
+    })
 
-    </script>
+    // const closeBtn = modal.querySelector(".close-area")
+    // closeBtn.addEventListener("click", e => {
+    //         closeModal();
+    // })
 
+    modal.addEventListener("click", e => {
+    const evTarget = e.target
+    if(evTarget.classList.contains("modal-overlay")) {
+        closeModal();
+    }
+    if(evTarget.classList.contains("close-area")) {
+        closeModal();
+    }
+})
+    function monitorUser() {
+        $.ajax({
+            type: "POST",
+            url: "../predict_eyes/detectme2",
+            data: { data: getFrameData() },
+            success: function (result) {
+                if (isUserAwake(result)) {
+                    count++;
+                    if (count >= THRESHOLD) {
+                        displayModal();
+                    }
+                } else {
+                    closeModal();
+                }
 
-</body>
+                $('#count').text(count);
+                console.log(result);
+            },
+            error: function () {
+                console.log('통신 실패');
+            },
+        });
+    }
 
-</html>
+    setVideo()
+    setInterval(function () {
+        monitorUser();
+    }, 1000 / FPS);
+
+</script>
+
+{% endblock %}

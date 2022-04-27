@@ -13,44 +13,43 @@ import logging
 # for image capture
 from django.views.decorators.csrf import csrf_exempt
 from keras.models import load_model
-import os, random
+import os
 from withme.settings import MEDIA_ROOT
 
 logger = logging.getLogger(__name__)
 model = load_model(os.path.join(MEDIA_ROOT, 'mobileNet_v3_for_small_eyes.h5'))
 
+def extractData(request):
+    search = 'base64,'
+    data = request.POST.__getitem__('data')
+    index = data.find(search) + len(search)
+    return data[index:]
 
 @csrf_exempt
 def detectme2(request):
-    if request.POST:
-        data = request.POST.__getitem__('data')
-        data = data[22:] # data:image/png;base64 부분 제거
+	if request.POST:
+		data = extractData(request)
 
+		left_eye, right_eye = getEyes_mediapipe_mesh(base64.b64decode(data))
 
-        left_eye, right_eye = getEyes_mediapipe_mesh(base64.b64decode(data))
+		user_state = 0 if left_eye + right_eye <= 0.5 else 1
+		user_exist_state = 0 if left_eye == -1 else 1
 
-
-        # 모델 완성 시, 해당 result 반환
-
-        # number = random.randrange(1, 10000)
-        user_state = 0 if left_eye + right_eye <= 0.5 else 1
-
-        answer = {
-            'userState': str(user_state),
+		answer = {
+            'userAwakeState': str(user_state),
+            'userExistState': str(user_exist_state),
             'left eye' : str(left_eye),
             'right eye' : str(right_eye),
             }
-
-
-        return JsonResponse(answer)
-    return render(request, 'predict_eyes/capture_video.html')
+		return JsonResponse(answer)
+	return render(request, 'predict_eyes/capture_video.html')
 
 
 def getEyes_mediapipe_mesh(image):
     # mp_drawing = mp.solutions.drawing_utils
     encoded_img = np.fromstring(image, dtype = np.uint8)
     image = cv2.imdecode(encoded_img, cv2.IMREAD_COLOR)
-    print(image.shape)
+    # print(image.shape)
 
     mp_face_mesh = mp.solutions.face_mesh
 
@@ -110,7 +109,7 @@ def getEyes_mediapipe_mesh(image):
                 right_pred = model.predict(right_img)[:, 0]
                 # print('left', left_pred)
                 # print('right', right_pred)
-                print(left_pred, right_pred)
+                # print(left_pred, right_pred)
                 return left_pred, right_pred
         else:
             return -1, -1
