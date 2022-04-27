@@ -1,22 +1,44 @@
 {% extends "main/base_main.html" %}
-
 {% block content %}
-<div id="container">
-    <video playsinline id="videoElement"></video>
-    <br>
-    <h2 id="result">DETECT ME</h2>
-    <h2 id="count"></h2>
-    <canvas id="canvas" width="400" height="300"></canvas>
+{% load static %}
+
+
+<link rel="stylesheet" href="{% static 'alertModal.css' %}">
+
+    <div id = "modal", class="modal-overlay">
+
+        <div class="modal-window">
+            <div class="close-area">X</div>
+            <div class="title">
+                <h2>Wake up</h2>
+            </div>
+            <div class="content">
+                <p>일어나세요</p>                
+            </div>
+        </div>
+    </div>
+
+
+<div>
+    <div id="container">
+        <video playsinline id="videoElement"></video>
+        <br>
+        <h2 id="result">DETECT ME</h2>
+        <h2 id="count"></h2>
+    </div>
+    
+    
+    
 </div>
+
+
+<canvas id="canvas" width="400" height="300"></canvas>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script>
     var canvas = document.getElementById('canvas');
     var context = canvas.getContext('2d');
     const video = document.querySelector("#videoElement");
-
-    video.width = 400;
-    video.height = 300;
 
     function setVideo() {
         if (navigator.mediaDevices.getUserMedia) {
@@ -27,9 +49,11 @@
                     video.play();
                 })
                 .catch(function (errMsg) {
-                    console.log(errMsg)
+                    console.log(errMsg);
                 });
         }
+        video.width = 400;
+        video.height = 300;
     }
 
     function getFrameData() {
@@ -37,16 +61,51 @@
         var data = canvas.toDataURL('image/png', 1.0);
         context.clearRect(0, 0, video.width, video.height);
 
-        return data
+        return data;
     }
 
     function isUserAwake(result){
-        return result['userAwakeState'] == '0'
+        return result['userAwakeState'] == '0';
     }
 
     const FPS = 2;
-    const THRESHOLD = 15;
+    const THRESHOLD = 5;
     var count = 0;
+
+    function displayModal(){
+        document.body.style.overflow = 'hidden'; 
+        modal.style.display = 'flex';
+
+        // prevent overflow
+        count = THRESHOLD;
+    }
+
+    function closeModal(){
+        document.body.style.overflow = 'auto';
+        modal.style.display = 'none';
+        count = 0;
+    }
+
+    window.addEventListener("keyup", e => {
+        if(modal.style.display === "flex" && e.key === "Escape") {
+            closeModal();
+        }
+    })
+
+    // const closeBtn = modal.querySelector(".close-area")
+    // closeBtn.addEventListener("click", e => {
+    //         closeModal();
+    // })
+
+    modal.addEventListener("click", e => {
+    const evTarget = e.target
+    if(evTarget.classList.contains("modal-overlay")) {
+        closeModal();
+    }
+    if(evTarget.classList.contains("close-area")) {
+        closeModal();
+    }
+})
     function monitorUser() {
         $.ajax({
             type: "POST",
@@ -56,13 +115,10 @@
                 if (isUserAwake(result)) {
                     count++;
                     if (count >= THRESHOLD) {
-                        alertUser()
-
-                        // prevent overflow
-                        count = THRESHOLD
+                        displayModal();
                     }
                 } else {
-                    count = 0;
+                    closeModal();
                 }
 
                 $('#count').text(count);
