@@ -25,23 +25,22 @@ def detectme2(request):
     if request.POST:
         data = request.POST.__getitem__('data')
         data = data[22:] # data:image/png;base64 부분 제거
-        number = random.randrange(1, 10000)
 
-        # 저장 경로 및 파일명 설정
-        filename = request.user.username + '_image_' + str(number) + '.png'
-        save_path = os.path.join(MEDIA_ROOT, filename)
 
         left_eye, right_eye = getEyes_mediapipe_mesh(base64.b64decode(data))
+
+
         # 모델 완성 시, 해당 result 반환
 
         # number = random.randrange(1, 10000)
         user_state = 0 if left_eye + right_eye <= 0.5 else 1
+
         answer = {
             'userState': str(user_state),
-            'filepath' : save_path,
-            'left eye' : str(left_eye[0][0]),
-            'right eye' : str(right_eye[0][0]),
+            'left eye' : str(left_eye),
+            'right eye' : str(right_eye),
             }
+
 
         return JsonResponse(answer)
     return render(request, 'predict_eyes/capture_video.html')
@@ -52,6 +51,7 @@ def getEyes_mediapipe_mesh(image):
     encoded_img = np.fromstring(image, dtype = np.uint8)
     image = cv2.imdecode(encoded_img, cv2.IMREAD_COLOR)
     print(image.shape)
+
     mp_face_mesh = mp.solutions.face_mesh
 
     # 이미지 입장에서 왼쪽 눈(사람이 이미지를 봤을 땐 오른쪽에 있는 눈)
@@ -106,12 +106,15 @@ def getEyes_mediapipe_mesh(image):
                 right_img = img_preprocessing(right_eye_img)
                 # print(left_img.shape)
                 # print(right_img.shape)
-                left_pred = model.predict(left_img)
-                right_pred = model.predict(right_img)
+                left_pred = model.predict(left_img)[:, 0]
+                right_pred = model.predict(right_img)[:, 0]
                 # print('left', left_pred)
                 # print('right', right_pred)
                 print(left_pred, right_pred)
                 return left_pred, right_pred
+        else:
+            return -1, -1
+
 
 
 def img_preprocessing(img):
@@ -126,10 +129,10 @@ def get_boundary_box(x_list, y_list, max_x, max_y):
 
     x_start = min(x_list) * max_x  # image.shape[1]
     y_start = min(y_list) * max_y  # image.shape[0]
-    
+
     x_end = max(x_list) * max_x
     y_end = max(y_list) * max_y
-    
+
     # print(f'start coord: ({x_start, y_start}), end coord: ({x_end, y_end})')
 
     # boundary box에 여분을 두기 위해 거리 구하기
