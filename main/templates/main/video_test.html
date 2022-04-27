@@ -1,23 +1,24 @@
 {% extends "main/base_main.html" %}
 
 {% block content %}
-    <div id="container">
-        <video playsinline id="videoElement"></video>
-        <canvas id="canvas"  width="400" height="300"></canvas>
-        <br>
-        <h2></h2>
-        <h2 id="rslt">DETECT ME</h2>
-    </div>
+<div id="container">
+    <video playsinline id="videoElement"></video>
+    <br>
+    <h2 id="result">DETECT ME</h2>
+    <h2 id="count"></h2>
+    <canvas id="canvas" width="400" height="300"></canvas>
+</div>
 
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script>
-        var canvas = document.getElementById('canvas');
-        var context = canvas.getContext('2d');
-        const video = document.querySelector("#videoElement");
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+    var canvas = document.getElementById('canvas');
+    var context = canvas.getContext('2d');
+    const video = document.querySelector("#videoElement");
 
-        video.width = 400;
-        video.height = 300;
+    video.width = 400;
+    video.height = 300;
 
+    function setVideo() {
         if (navigator.mediaDevices.getUserMedia) {
             navigator.mediaDevices
                 .getUserMedia({ video: true })
@@ -29,31 +30,55 @@
                     console.log(errMsg)
                 });
         }
-        const FPS = 2;
+    }
 
-        function ajaxTest(){
-            context.drawImage(video, 0, 0, video.width, video.height);
-            var data = canvas.toDataURL('image/png', 1.0);
-            context.clearRect(0, 0, video.width, video.height);
+    function getFrameData() {
+        context.drawImage(video, 0, 0, video.width, video.height);
+        var data = canvas.toDataURL('image/png', 1.0);
+        context.clearRect(0, 0, video.width, video.height);
 
-            $.ajax({
-                type : "POST",
-                url : "/detectme",
-                data : {data:data},
-                success : function(result) {
-                    $('#rslt').text('User Status: ' + result['userState']);
-                    console.log(result);
-                },
-                error : function() {
-                    console.log('통신 실패');
-                },
+        return data
+    }
 
-            });
-        }
-        playAlert = setInterval(function() {
-            ajaxTest();
-        }, 10000);//1000 / FPS);
+    function isUserAwake(result){
+        return result['userAwakeState'] == '0'
+    }
 
-    </script>
+    const FPS = 2;
+    const THRESHOLD = 15;
+    var count = 0;
+    function monitorUser() {
+        $.ajax({
+            type: "POST",
+            url: "../predict_eyes/detectme2",
+            data: { data: getFrameData() },
+            success: function (result) {
+                if (isUserAwake(result)) {
+                    count++;
+                    if (count >= THRESHOLD) {
+                        alertUser()
+
+                        // prevent overflow
+                        count = THRESHOLD
+                    }
+                } else {
+                    count = 0;
+                }
+
+                $('#count').text(count);
+                console.log(result);
+            },
+            error: function () {
+                console.log('통신 실패');
+            },
+        });
+    }
+
+    setVideo()
+    setInterval(function () {
+        monitorUser();
+    }, 1000 / FPS);
+
+</script>
 
 {% endblock %}
