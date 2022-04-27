@@ -72,12 +72,6 @@ def update(request):
             # user_type.save()
             
             # messages.info(request, 'type이 변경되었습니다.')
-            return redirect('accounts:change_type')
-        elif new_type == '':
-            messages.info(request, '다시 입력하세요.')
-            return redirect(reverse('accounts:change_type'))
-        else:
-            messages.info(request, '다시 입력하세요.')
-            return redirect(reverse('accounts:change_type'))
+
         
     return render(request, 'accounts/change_type.html')
