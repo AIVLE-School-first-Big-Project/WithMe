@@ -1,0 +1,30 @@
+{% extends "main/base_main.html" %}
+{% block content %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'timer.css' %}">
+<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/vue/1.0.18/vue.min.js"></script>
+
+
+<div id="app" v-cloak>
+	<h1>Timer</h1>
+	<timer-setup v-if="!time" @set-time="setTime"></timer-setup>
+	 <div v-else>
+		 <timer :time="prettyTime"></timer>
+		 <div>
+			  <button v-if="!isRunning" @click="start">Start</button>
+			  <button v-if="isRunning" @click="stop">Stop</button>
+			  <button @click="reset">Reset</button>
+		 </div>
+	</div>
+
+    <button onClick="history.back();">back</button >
+       
+</div>
+
+
+<script src="{% static 'timer.js' %}"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+
+{% endblock %}

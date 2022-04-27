@@ -12,3 +12,11 @@ def watch(request):
         return HttpResponse(result)
     return render(request, 'timer/watch.html')
 # Create your views here.
+
+def timer(request):
+
+    return render(request, 'timer/timer.html')
+
+def stopwatch(request):
+
+    return render(request, 'timer/stopwatch.html')
