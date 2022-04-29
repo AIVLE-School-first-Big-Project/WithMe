@@ -23,5 +23,5 @@ urlpatterns = [
     path('timer/', include('timer.urls')),
     path('predict_eyes/', include('predict_eyes.urls')),
     path('admin/', admin.site.urls),
-
+    path('calendarApp', include('calendarApp.urls'))
 ]
