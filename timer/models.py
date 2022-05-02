@@ -13,3 +13,8 @@ class User_log(models.Model):
     pause = models.DateTimeField(auto_now_add=True)
     end_time = models.DateTimeField(auto_now_add=True)
     abnomal_time = models.DateTimeField(auto_now_add=False)
+
+class TimeLog(models.Model):
+    user_log  = models.ForeignKey(UserType, on_delete=models.SET_NULL, null=True)
+    occur_time = models.DateTimeField(auto_now_add=True)
+    tag_name = models.IntegerField()
