@@ -3,8 +3,9 @@
 {% load static %}
 <link rel="stylesheet" href="{% static 'watch.css' %}">
 <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.js" crossorigin="anonymous"></script>
 <script src="{% static 'watch.js' %}"></script>
+
 
 <div class="main">
 
@@ -15,12 +16,13 @@
     <div class="nav">
         <ul>
             {% csrf_token %}
+            <select type = "submit" name="Tag" class="selector" data-placeholder="과목선택" data-autocomplete-light-language="ko" data-autocomplete-light-url="http://127.0.0.1:8000/tag/test/" data-autocomplete-light-function="select2"></select>
             <form name="frm10">
-            <input type = "button" class="al" value="공부 시작" onclick = "start_time()">
+            <input type = "button" class="al" value="공부 시작" method = 'post' onclick = "start_time()">
             <p id = "val1"></p>
-            <input type = "button" class="al" value="일시정지" onclick = "stop_time()">
+            <input type = "button" class="al" value="일시정지" method = 'post' onclick = "stop_time()">
             <p id = "val2"></p>
-            <input type = "button" class="al" value="공부 종료" onclick = "end_time()">
+            <input type = "button" class="al" value="공부 종료" method = 'post' onclick = "end_time()">
             <p id = "val3"></p>
             </form>
         
@@ -40,19 +42,19 @@ function start_time(){
     var start_time = new Date()
     var start_time_houre = start_time.getHours()+":"+start_time.getMinutes()+":"+start_time.getSeconds()
     document.getElementById("val1").innerHTML="공부 시작 시간은 "+start_time_houre+"입니다."
-    
+    console.log(start_time)
 }
 
 function end_time(){
     var end_time = new Date()
     var end_time_houre = end_time.getHours()+":"+end_time.getMinutes()+":"+end_time.getSeconds()
     document.getElementById("val3").innerHTML="공부 종료 시간은"+end_time_houre+"입니다."
-    
+    console.log(end_time)
 }
 function stop_time(){
     var stop_time = new Date()
     var stop_time_houre = stop_time.getHours()+":"+stop_time.getMinutes()+":"+stop_time.getSeconds()
-    
+    console.log(stop_time)
   }
 
 
@@ -77,7 +79,7 @@ formData.append('csrfmiddlewaretoken', csrftoken);
 formData.append('a', start_time);
 formData.append('b', end_time);
 formData.append('c', stop_time);
-const ajax = fetch('/timer/timer/', {
+const ajax = fetch('/timer/watch/', {
     method: 'post',
     body: formData
 });
@@ -88,5 +90,14 @@ ajax.then(function(response) {
 });
 </script>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.js" crossorigin="anonymous"></script>
+
+<link href="/static/admin/css/vendor/select2/select2.css" type="text/css" media="screen" rel="stylesheet">
+<link href="/static/admin/css/autocomplete.css" type="text/css" media="screen" rel="stylesheet">
+<link href="/static/autocomplete_light/select2.css" type="text/css" media="screen" rel="stylesheet">
+<script src="/static/admin/js/vendor/select2/select2.full.js"></script>
+<script src="/static/autocomplete_light/autocomplete_light.js"></script>
+<script src="/static/autocomplete_light/select2.js"></script>
+<script src="/static/autocomplete_light/i18n/ko.js"></script>
 
 {% endblock %}

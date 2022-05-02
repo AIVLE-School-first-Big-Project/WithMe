@@ -1,5 +1,6 @@
+from audioop import reverse
 from django.shortcuts import render
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from .models import *
 from django.shortcuts import redirect
@@ -10,19 +11,20 @@ def watch(request):
     
     if request.method == 'POST':
         user_id = request.session.get('user_id')
-        start_time = request.POST.get('a')
-        end_time = request.POST.get('b')
-        stop_time = request.POST.get('c')
+        tag_name = request.POST.get(tag_name)
+        start_time = request.POST.get(start_time)
+        end_time = request.POST.get(end_time)
+        stop_time = request.POST.get(stop_time)
 
 
-        User_log = User_log(user = User.objects.get(user_id = user_id),
-        start_time = start_time,
-        pause = stop_time,
-        end_time = end_time)
+        New_User_log = User_log()
+        New_User_log.start_time = start_time
+        New_User_log.pause = stop_time
+        New_User_log.end_time = end_time
 
         User_log.save()
-        result = '%s %s %s' % (start_time, end_time, stop_time)
-        return HttpResponse(result)
+        
+        return HttpResponseRedirect(reverse('timer/watch.html'))
 
     return render(request, 'timer/watch.html')
 # Create your views here.

@@ -4,6 +4,7 @@
 <link rel="stylesheet" href="{% static 'timer.css' %}">
 <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/1.0.18/vue.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
 
 
 <div id="app" v-cloak>
@@ -12,6 +13,7 @@
 	 <div v-else>
 		 <timer :time="prettyTime"></timer>
 		 <div>
+			 
 			  <button v-if="!isRunning" @click="start">Start</button>
 			  <button v-if="isRunning" @click="stop">Stop</button>
 			  <button @click="reset">Reset</button>
@@ -22,9 +24,5 @@
        
 </div>
 
-
 <script src="{% static 'timer.js' %}"></script>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
-
 {% endblock %}

@@ -1,6 +1,6 @@
 from django.urls import path
 from . import views
-
+from tag.views import Autocomplete, BasicDALView
 app_name = 'timer'
 
 urlpatterns = [
