@@ -66,8 +66,12 @@
             }
         });
         ajax.then(function (result) {
-            console.log(result)      
-        });        
+            if (result.is_exist == 'true'){
+                return true;
+            }else{
+                return false;
+            }
+        });
     }
 
     function create_timelog(event_type){
@@ -95,13 +99,15 @@
 
     function start_time(){
         //create user log
-        create_user_log();
+        is_exist = create_user_log();
 
-        // send data to server
-        create_timelog(0);
+        if(is_exist == false){
+            // send data to server
+            create_timelog(0);
+            // render time below the button
+            render_time(document.getElementById("val1"), "시작");
+        }
 
-        // render time below the button
-        render_time(document.getElementById("val1"), "시작");
     }
 
     function end_time(){

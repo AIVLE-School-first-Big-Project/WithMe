@@ -8,6 +8,7 @@ from accounts.models import *
 from django.http import HttpResponseRedirect, JsonResponse
 import json
 from django.utils import timezone
+from django.db.models import Q
 
 @login_required
 def watch(request):
@@ -21,13 +22,36 @@ def timer(request):
 def stopwatch(request):
     return render(request, 'timer/stopwatch.html')
 
-def get_user_log(user):
-    user_log = None # UserLog()
+def get_user_log(current_user):
+    try:
+        user_log = UserLog.objects.filter(
+            user = current_user,
+            end_time = None
+        ).order_by('start_time')[0]
+
+        #debug
+        print('\n'*5)
+        print('='*20)
+        print(user_log)
+        print(user_log.id)
+        print(user_log.user.username)
+        print('='*20)
+        print('\n'*5)
+
+    except UserLog.DoesNotExist:
+        user_log = None
+
     return user_log
 
 def get_tag(tag_name):
-    tag = None # UserLog()
+    try:
+        tag = Tag.objects.get(Tag_name = tag_name)
+    except Tag.DoesNotExist:
+        tag = None
     return tag
+
+def is_userlog_exist(current_user):
+    return get_user_log(current_user) != None
 
 @login_required
 def create_userlog(request):
@@ -35,12 +59,17 @@ def create_userlog(request):
         obj = request.body.decode("utf-8")
         data = json.loads(obj)
         
+        if is_userlog_exist(request.user):
+            data['result'] = 'false'
+            return JsonResponse(data)
+
         # create user log through ORM
         user_log = UserLog()
         user_log.user = request.user
         user_log.tag = get_tag(data['tag'])
         user_log.save()
 
+        data['result'] = 'true'
         return JsonResponse(data)
 
 @login_required
