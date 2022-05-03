@@ -11,6 +11,6 @@ class UserLog(models.Model):
     abnomal_time = models.DateTimeField(auto_now_add=False, null=True)
 
 class TimeLog(models.Model):
-    user_log    = models.ForeignKey(User_log, on_delete=models.SET_NULL, null=True)
-    occur_time  = models.DateTimeField(auto_now_add=False)
-    tag_name    = models.IntegerField()
+    user_log    = models.ForeignKey(UserLog, on_delete=models.SET_NULL, null=True)
+    time        = models.DateTimeField(auto_now_add=False)
+    event_type  = models.IntegerField()

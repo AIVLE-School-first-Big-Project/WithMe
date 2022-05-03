@@ -4,51 +4,56 @@ from .models import *
 from django.shortcuts import redirect
 from timer.forms import *
 from tag.models import *
+from accounts.models import *
 from django.http import HttpResponseRedirect, JsonResponse
 import json
 from django.utils import timezone
 
 @login_required
 def watch(request):
-    form = timeForm(request.POST)
-    if request.method == 'POST':
-        if form.is_valid(): # 데이터 저장/ 어딘가로 이동/메세지 출력 등등
-            timer_data = form.save(commit = False)
-            timer_data.tag_name = request.POST.get('Tag')
-            timer_data.start_time = request.POST.get('a') 
-            timer_data.end_time = request.POST.get('b')
-            timer_data.pause = request.POST.get('c')
-            timer_data.save()
-            return redirect('timer:watch')
-        else:
-            form = timeForm()
-    return render(request, 'timer/watch.html', {'form':form})
+    return render(request, 'timer/watch.html')
     
 @login_required
 def timer(request):
-
     return render(request, 'timer/timer.html')
-
 
 @login_required
 def stopwatch(request):
-
     return render(request, 'timer/stopwatch.html')
 
+def get_user_log(user):
+    user_log = None # UserLog()
+    return user_log
+
+def get_tag(tag_name):
+    tag = None # UserLog()
+    return tag
+
 @login_required
-def set_start_time(request):
-    obj = request.body.decode("utf-8")
-    data = json.loads(obj)
+def create_userlog(request):
+    if request.method == 'POST':
+        obj = request.body.decode("utf-8")
+        data = json.loads(obj)
+        
+        # create user log through ORM
+        user_log = UserLog()
+        user_log.user = request.user
+        user_log.tag = get_tag(data['tag'])
+        user_log.save()
 
-    start_time = data['time']
-    tag = data['tag']
-    print('\n'*5, f'{type(start_time)}|| start_time : {start_time}', '\n'*5)
-    print('\n'*5, f'{type(tag)}|| tag : {tag}', '\n'*5)
+        return JsonResponse(data)
 
-    # user_log = UserLog()
-    # user_log.user = request.user
-    # user_log.tag = Tag.objects.get(id=tag_id)
-    # user_log.start_time = timezone.now()
-    # user_log.save()
+@login_required
+def create_timelog(request):
+    if request.method == 'POST':
+        obj = request.body.decode("utf-8")
+        data = json.loads(obj)
 
-    return JsonResponse(data)
+        # create user log through ORM
+        time_log = TimeLog()
+        time_log.user_log = get_user_log(request.user)
+        time_log.time = timezone.now()
+        time_log.event_type = int(data['event_type'])
+        time_log.save()
+
+        return JsonResponse(data)
