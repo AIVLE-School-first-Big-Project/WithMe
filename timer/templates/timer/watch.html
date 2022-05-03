@@ -38,62 +38,58 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <script>
-function start_time(){
-    start_time = new Date()
-    start_time_houre = start_time.getHours()+":"+start_time.getMinutes()+":"+start_time.getSeconds()
-    document.getElementById("val1").innerHTML="공부 시작 시간은 "+start_time_houre+"입니다."
-    console.log(start_time)
-    return start_time
-}
-
-function end_time(){
-    end_time = new Date()
-    end_time_houre = end_time.getHours()+":"+end_time.getMinutes()+":"+end_time.getSeconds()
-    document.getElementById("val3").innerHTML="공부 종료 시간은"+end_time_houre+"입니다."
-    console.log(end_time)
-    return end_time
-}
-function stop_time(){
-    stop_time = new Date()
-    stop_time_houre = stop_time.getHours()+":"+stop_time.getMinutes()+":"+stop_time.getSeconds()
-    console.log(stop_time)
-    return stop_time
-  }
-
-function getCookie(name) {
-    var cookieValue = null;
-    if (document.cookie && document.cookie !== '') {
-        var cookies = document.cookie.split(';');
-        for (var i = 0; i < cookies.length; i++) {
-            var cookie = cookies[i].trim();
-            if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                break;
+    function getCookie(name) {
+        var cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            var cookies = document.cookie.split(';');
+            for (var i = 0; i < cookies.length; i++) {
+                var cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                    }
                 }
             }
+            return cookieValue;
         }
-        return cookieValue;
+
+    function start_time(){
+        start_time = new Date();
+        start_time_houre = start_time.getHours()+":"+start_time.getMinutes()+":"+start_time.getSeconds();
+        document.getElementById("val1").innerHTML="공부 시작 시간은 "+start_time_houre+"입니다.";
+        console.log('start_time:', start_time);
+
+        // send data to server
+        const csrftoken = getCookie('csrftoken');
+        const data = { 'time': start_time_houre };
+        const ajax = axios({
+            url: '/timer/set_start_time/',
+            method: 'post',
+            data: JSON.stringify(data),
+            headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': csrftoken
+        }
+        });
+        ajax.then(function (result) {
+            console.log(result)      
+        });
     }
 
-
-const csrftoken = getCookie('csrftoken');
-const data2 = { 'a': start_time, 'b': end_time, 'c': stop_time };
-
-const data = axios({
-    url: '/timer/watch/',
-    method: 'post',
-    data: JSON.stringify(data2),
-    headers: { 
-        'Content-Type': 'application/json',
-        'X-CSRFToken': csrftoken 
+    function end_time(){
+        end_time = new Date()
+        end_time_houre = end_time.getHours()+":"+end_time.getMinutes()+":"+end_time.getSeconds()
+        document.getElementById("val3").innerHTML="공부 종료 시간은"+end_time_houre+"입니다."
+        console.log(end_time)
+        return end_time
     }
-});
-data.then(function (result) {
-    console.log(result.data);
-});
-
-
-
+    
+    function stop_time(){
+        stop_time = new Date()
+        stop_time_houre = stop_time.getHours()+":"+stop_time.getMinutes()+":"+stop_time.getSeconds()
+        console.log(stop_time)
+        return stop_time
+    }
 
 </script>
 
