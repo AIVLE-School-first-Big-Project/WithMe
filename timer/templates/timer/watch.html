@@ -21,10 +21,12 @@
                 <p id = "val0"></p>
                 <input type=button id = 'start_time_value' value="공부 시작" onclick = "start_time()">
                 <p id = "val1"></p>
-                <input type=button id = 'stop_time_value' value="일시정지" onclick = "stop_time()">
-                <p id = "val2"></p>
                 <input type=button id = 'end_time_value' value="공부 종료" onclick = "end_time()">
+                <p id = "val2"></p>
+                <input type=button id = 'stop_time_value' value="일시정지" onclick = "stop_time()">
                 <p id = "val3"></p>
+                <input type=button id = 'stop_time_value' value="재시작" onclick = "stop_time()">
+                <p id = "val4"></p>
             </form>
         
             <button type = "button" onclick="location.href= '/timer/timer'" class="nav-link active">Timer</button>
@@ -51,44 +53,81 @@
                 }
             }
             return cookieValue;
-        }
+    }
 
-    function start_time(){
-        start_time = new Date();
-        start_time_houre = start_time.getHours()+":"+start_time.getMinutes()+":"+start_time.getSeconds();
-        document.getElementById("val1").innerHTML="공부 시작 시간은 "+start_time_houre+"입니다.";
-        console.log('start_time:', start_time);
-
-        // send data to server
+    function create_user_log(){
         const csrftoken = getCookie('csrftoken');
-        const data = { 'time': start_time_houre };
+        const data = { 'tag': 'test' };
         const ajax = axios({
-            url: '/timer/set_start_time/',
+            url: '/timer/create_userlog/',
             method: 'post',
             data: JSON.stringify(data),
             headers: {
-            'Content-Type': 'application/json',
-            'X-CSRFToken': csrftoken
-        }
+                'Content-Type': 'application/json',
+                'X-CSRFToken': csrftoken
+            }
+        });
+        ajax.then(function (result) {
+            console.log(result)      
+        });        
+    }
+
+    function create_timelog(event_type){
+        const csrftoken = getCookie('csrftoken');
+        const data = { 'event_type': event_type };
+        const ajax = axios({
+            url: '/timer/create_timelog/',
+            method: 'post',
+            data: JSON.stringify(data),
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': csrftoken
+            }
         });
         ajax.then(function (result) {
             console.log(result)      
         });
     }
 
-    function end_time(){
-        end_time = new Date()
-        end_time_houre = end_time.getHours()+":"+end_time.getMinutes()+":"+end_time.getSeconds()
-        document.getElementById("val3").innerHTML="공부 종료 시간은"+end_time_houre+"입니다."
-        console.log(end_time)
-        return end_time
+    function render_time(object, str_type){
+        time = new Date();
+        cur_time = time.getHours() + ":" + time.getMinutes()+":" + time.getSeconds();
+        object.innerHTML= "공부 " + str_type + " 시간은 " + cur_time + "입니다.";
     }
-    
+
+    function start_time(){
+        //create user log
+        create_user_log();
+
+        // send data to server
+        create_timelog(0);
+
+        // render time below the button
+        render_time(document.getElementById("val1"), "시작");
+    }
+
+    function end_time(){
+        // send data to server
+        create_timelog(1);
+
+        // render time below the button
+        render_time(document.getElementById("val3"), "시작");
+    }
+
     function stop_time(){
-        stop_time = new Date()
-        stop_time_houre = stop_time.getHours()+":"+stop_time.getMinutes()+":"+stop_time.getSeconds()
-        console.log(stop_time)
-        return stop_time
+        // send data to server
+        create_timelog(2);
+
+        // render time below the button
+        render_time(document.getElementById("val2"), "시작");
+    }
+
+    function resume_time(){
+        // send data to server
+        create_timelog(3);
+        
+        // render time below the button
+        render_time(document.getElementById("val4"), "시작");
     }
 
 </script>
