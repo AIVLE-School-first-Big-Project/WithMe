@@ -11,7 +11,7 @@ from django.utils import timezone
 
 @login_required
 def watch(request):
-    return render(request, 'timer/watch.html', {'form':form})
+    return render(request, 'timer/watch.html')
     
 @login_required
 def timer(request):

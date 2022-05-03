@@ -15,7 +15,6 @@
 
     <div class="nav">
         <ul>
-            <form name="frm10" action = "/timer/watch/" method = 'post'>
                 {% csrf_token %}
                 <select type = "submit" name="Tag" class="selector" data-placeholder="과목선택" data-autocomplete-light-language="ko" data-autocomplete-light-url="http://127.0.0.1:8000/tag/test/" data-autocomplete-light-function="select2"></select>
                 <p id = "val0"></p>
@@ -27,7 +26,6 @@
                 <p id = "val3"></p>
                 <input type=button id = 'stop_time_value' value="재시작" onclick = "stop_time()">
                 <p id = "val4"></p>
-            </form>
         
             <button type = "button" onclick="location.href= '/timer/timer'" class="nav-link active">Timer</button>
             <button type = "button" onclick="location.href= '/timer/stopwatch'" class="nav-link active">Stopwatch</button>
