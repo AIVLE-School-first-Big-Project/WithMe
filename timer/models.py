@@ -3,18 +3,14 @@ from accounts.models import *
 from tag.models import *
 # Create your models here.
 
-
-
-class User_log(models.Model):
-    user_log_id = models.AutoField(primary_key=True)
-    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
-    tag_name = models.CharField(max_length=50)
-    start_time = models.DateTimeField(auto_now_add=False)
-    pause = models.DateTimeField(auto_now_add=False)
-    end_time = models.DateTimeField(auto_now_add=False)
-    abnomal_time = models.DateTimeField(auto_now_add=False)
+class UserLog(models.Model):
+    user         = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+    tag          = models.ForeignKey(Tag, on_delete=models.SET_NULL, null=True)
+    start_time   = models.DateTimeField(auto_now_add=False, null=True)
+    end_time     = models.DateTimeField(auto_now_add=False, null=True)
+    abnomal_time = models.DateTimeField(auto_now_add=False, null=True)
 
 class TimeLog(models.Model):
-    user_log  = models.ForeignKey(UserType, on_delete=models.SET_NULL, null=True)
-    occur_time = models.DateTimeField(auto_now_add=False)
-    tag_name = models.IntegerField()
+    user_log    = models.ForeignKey(User_log, on_delete=models.SET_NULL, null=True)
+    occur_time  = models.DateTimeField(auto_now_add=False)
+    tag_name    = models.IntegerField()
