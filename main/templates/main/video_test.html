@@ -24,7 +24,8 @@
         <video playsinline id="videoElement"></video>
         <br>
         <h2 id="result">DETECT ME</h2>
-        <h2 id="count"></h2>
+        <h2 id="count_eye"></h2>
+        <h2 id='count_neck'></h2>
     </div>
     
     
@@ -68,9 +69,14 @@
         return result['userAwakeState'] == '0';
     }
 
+    function isUserNeckOkay(result){
+        return result['userNeckState'] == '0';
+    }
+
     const FPS = 2;
     const THRESHOLD = 5;
     var count = 0;
+    var count2 = 0;
 
     function displayModal(){
         document.body.style.overflow = 'hidden'; 
@@ -106,7 +112,8 @@
         closeModal();
     }
 })
-    function monitorUser() {
+
+    function monitorEye(){
         $.ajax({
             type: "POST",
             url: "../predict_eyes/detectme2",
@@ -121,7 +128,7 @@
                     closeModal();
                 }
 
-                $('#count').text(count);
+                $('#count_eye').text(count);
                 console.log(result);
             },
             error: function () {
@@ -130,10 +137,37 @@
         });
     }
 
-    setVideo()
+    function monitorNeck(){
+        $.ajax({
+            type: "POST",
+            url: "../predict_eyes/detectneck",
+            data: { data: getFrameData() },
+            success: function (result) {
+                if (isUserNeckOkay(result)) {
+                    count2++;
+                    if (count2 >= THRESHOLD) {
+                        displayModal();
+                    }
+                } else {
+                    closeModal();
+                }
+
+                $('#count_neck').text(count2);
+                console.log(result);
+            },
+            error: function () {
+                console.log('통신 실패');
+            },
+        });
+    }
+
+    setVideo();
+    {% comment %} setInterval(function () {
+        monitorEye();
+    }, 1000 / FPS); {% endcomment %}
     setInterval(function () {
-        monitorUser();
-    }, 1000 / FPS);
+        monitorNeck();
+    }, 2000 / FPS);
 
 </script>
 
