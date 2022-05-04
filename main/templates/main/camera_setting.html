@@ -1,0 +1,163 @@
+{% extends "main/base_main.html" %}
+{% block content %}
+{% load static %}
+
+<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.js" crossorigin="anonymous"></script>
+
+<link rel="stylesheet" href="{% static 'alertModal.css' %}">
+
+<div id = "modal", class="modal-overlay">
+    <div class="modal-window">
+        <div class="close-area">X</div>
+        <div class="title">
+            <h2>Camera Setting</h2>
+        </div>
+        <div class="content">
+            <p>다시 조정하세요</p>                
+        </div>
+    </div>
+</div>
+
+<div class="main">
+    {% comment %} <div class="nav"> {% endcomment %}
+        <ul>
+            {% csrf_token %}
+            <select type = "submit" name="Tag" class="selector" data-placeholder="과목선택" data-autocomplete-light-language="ko" data-autocomplete-light-url="http://127.0.0.1:8000/tag/test/" data-autocomplete-light-function="select2"></select>                
+        
+            <button id = "submit-button">공부 시작</button>
+        </ul>
+    {% comment %} </div> {% endcomment %}
+</div>
+
+<div>
+    <div id="container">
+        <video playsinline id="videoElement"></video>
+        <br>
+        <h2 id="result"></h2>
+    </div>
+    <canvas id="canvas" width="400" height="300"></canvas>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script>
+    function getCookie(name) {
+        var cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            var cookies = document.cookie.split(';');
+            for (var i = 0; i < cookies.length; i++) {
+                var cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                    }
+                }
+            }
+            return cookieValue;
+    }
+
+    var canvas = document.getElementById('canvas');
+    var context = canvas.getContext('2d');
+    const video = document.querySelector("#videoElement");
+
+    function setVideo() {
+        if (navigator.mediaDevices.getUserMedia) {
+            navigator.mediaDevices
+                .getUserMedia({ video: true })
+                .then(function (stream) {
+                    video.srcObject = stream;
+                    video.play();
+                })
+                .catch(function (errMsg) {
+                    console.log(errMsg);
+                });
+        }
+        video.width = 400;
+        video.height = 300;
+    }
+
+    function getFrameData() {
+        context.drawImage(video, 0, 0, video.width, video.height);
+        var data = canvas.toDataURL('image/png', 1.0);
+        context.clearRect(0, 0, video.width, video.height);
+
+        return data;
+    }
+
+    function isUserAwake(result){
+        return result['userAwakeState'] != '0';
+    }
+    
+    const FPS = 2;
+    const THRESHOLD = 5;
+    var count = 0;
+
+    function displayModal(){
+        document.body.style.overflow = 'hidden'; 
+        modal.style.display = 'flex';
+    }
+
+    function closeModal(){
+        document.body.style.overflow = 'auto';
+        modal.style.display = 'none';
+        count = 0;
+    }
+
+    window.addEventListener("keyup", e => {
+        if(modal.style.display === "flex" && e.key === "Escape") {
+            closeModal();
+        }
+    })
+
+    modal.addEventListener("click", e => {
+        const evTarget = e.target
+        if(evTarget.classList.contains("modal-overlay")) {
+            closeModal();
+        }
+        if(evTarget.classList.contains("close-area")) {
+            closeModal();
+        }
+    })
+    function monitorUser() {
+        $.ajax({
+            type: "POST",
+            url: "../predict_eyes/detectme2",
+            data: { data: getFrameData() },
+            success: function (result) {
+                console.log(result);
+                if (isUserAwake(result) == false) {
+                    count++;
+                    if (count >= THRESHOLD) {
+                        count = THRESHOLD;
+                        $('#result').text('어깨와 눈이 보이도록 카메라를 조정하세요.');
+                    }
+                } else {
+                    count = 0;
+                    $('#result').text('바른 자세입니다.');
+                }
+            },
+            error: function () {
+                console.log('통신 실패');
+            },
+        });
+    }
+
+    setVideo()
+    setInterval(function () {
+        monitorUser();
+    }, 1000 / FPS);
+    
+</script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.js" crossorigin="anonymous"></script>
+
+<link href="/static/admin/css/vendor/select2/select2.css" type="text/css" media="screen" rel="stylesheet">
+<link href="/static/admin/css/autocomplete.css" type="text/css" media="screen" rel="stylesheet">
+<link href="/static/autocomplete_light/select2.css" type="text/css" media="screen" rel="stylesheet">
+<script src="/static/admin/js/vendor/select2/select2.full.js"></script>
+<script src="/static/autocomplete_light/autocomplete_light.js"></script>
+<script src="/static/autocomplete_light/select2.js"></script>
+<script src="/static/autocomplete_light/i18n/ko.js"></script>
+
+{% endblock %}

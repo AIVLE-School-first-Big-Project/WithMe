@@ -55,3 +55,6 @@ def detectme(request):
 
 def pushmes(request):
     return render(request, 'main/pushmes_send.html')
+
+def camera_setting(request):
+    return render(request, 'main/camera_setting.html')
