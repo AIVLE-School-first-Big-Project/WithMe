@@ -17,7 +17,8 @@ import os
 from withme.settings import MEDIA_ROOT
 
 logger = logging.getLogger(__name__)
-model = load_model(os.path.join(MEDIA_ROOT, 'mobileNet_v3_for_small_eyes.h5'))
+model_eye = load_model(os.path.join(MEDIA_ROOT, 'mobileNet_v3_for_small_eyes.h5'))
+model_neck = load_model(os.path.join(MEDIA_ROOT, 'mobileNet_v3_turtleNeck.h5'))
 
 def extractData(request):
     search = 'base64,'
@@ -44,6 +45,36 @@ def detectme2(request):
 		return JsonResponse(answer)
 	return render(request, 'predict_eyes/capture_video.html')
 
+
+@csrf_exempt
+def detectneck(request):
+	if request.POST:
+		data = extractData(request)
+
+		y_pred = getTurtle_mediapipe_mesh(base64.b64decode(data))
+
+    # 0: abnormal 1: normal
+		neck_state = 0 if y_pred < 0.5 else 1
+
+		answer = {
+            'userNeckState': str(neck_state),
+            'userNeckpred': str(y_pred),
+            }
+		return JsonResponse(answer)
+	return render(request, 'predict_eyes/capture_video.html')
+
+
+def getTurtle_mediapipe_mesh(image):
+  encoded_img = np.fromstring(image, dtype = np.uint8)
+  image = cv2.imdecode(encoded_img, cv2.IMREAD_COLOR)
+
+  image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+  image = image/255
+  image = cv2.resize(image, (224, 224))
+  image = np.expand_dims(image, axis=0)
+
+  y_pred = np.squeeze(model_neck.predict(image))
+  return y_pred
 
 def getEyes_mediapipe_mesh(image):
     # mp_drawing = mp.solutions.drawing_utils
@@ -105,8 +136,8 @@ def getEyes_mediapipe_mesh(image):
                 right_img = img_preprocessing(right_eye_img)
                 # print(left_img.shape)
                 # print(right_img.shape)
-                left_pred = model.predict(left_img)[:, 0]
-                right_pred = model.predict(right_img)[:, 0]
+                left_pred = model_eye.predict(left_img)[:, 0]
+                right_pred = model_eye.predict(right_img)[:, 0]
                 # print('left', left_pred)
                 # print('right', right_pred)
                 # print(left_pred, right_pred)
