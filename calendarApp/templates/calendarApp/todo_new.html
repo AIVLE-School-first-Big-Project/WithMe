@@ -1,0 +1,19 @@
+{% load bootstrap5 %}
+
+
+<div id="form_section" class="card">
+    <div class="card-header">
+        <h5 class="modal-title" id="Modal_todo_Label">일정 추가</h5>
+    </div>
+    <div class="card-body">
+        <form id="modal_todo_form" action="/calendarApp/todo/new" method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ form.media }}
+            {% bootstrap_form form %}
+            <div class="modal-footer">
+                <button id="modalBtn_todo_close" type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
+                <input id="todo_submit" type="submit" value="추가" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>

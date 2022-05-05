@@ -6,7 +6,7 @@ from tag.models import *
 class UserLog(models.Model):
     user         = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     tag          = models.ForeignKey(Tag, on_delete=models.SET_NULL, null=True)
-    start_time   = models.DateTimeField(auto_now_add=False, null=True)
+    start_time   = models.DateTimeField(auto_now_add=True, null=True)
     end_time     = models.DateTimeField(auto_now_add=False, null=True)
     abnomal_time = models.DateTimeField(auto_now_add=False, null=True)
 

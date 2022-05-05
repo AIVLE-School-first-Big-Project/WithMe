@@ -1,12 +1,19 @@
 import base64
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponse, JsonResponse
 
 # for image capture
 from django.views.decorators.csrf import csrf_exempt
+from timer.models import UserLog
+from calendarApp.form import TodoForm, TodoEditForm
+from calendarApp.models import Todolist
+from tag.models import Tag
+from django.db.models import Q
+
 import os, random
 from withme.settings import MEDIA_ROOT
+
 
 
 def index(request):
@@ -16,16 +23,11 @@ def index(request):
 
 @login_required
 def main(request):
-    return render(request, "main/base_main.html")
+    return render(request, "main/home.html")
 
 @login_required
 def settings(request):
     return render(request, "main/settings.html")
-
-
-@login_required
-def camera_test(request):
-    return render(request, "main/base_test.html")
 
 @csrf_exempt
 def detectme(request):
@@ -57,4 +59,19 @@ def pushmes(request):
     return render(request, 'main/pushmes_send.html')
 
 def camera_setting(request):
-    return render(request, 'main/camera_setting.html')
+    item = UserLog.objects.filter(Q(user_id=request.user) & Q(end_time__isnull=True))
+    if len(item) == 0:
+        return render(request, 'main/camera_setting.html')
+    else:
+        item = item[0]
+        todo_form = TodoForm()
+        todo_list = Todolist.objects.all().filter(Q(author=request.user))
+        tag = Tag.objects.get(pk=item.tag_id)
+
+        return render(request, 'timer/service_main.html', {
+            "todo_form": todo_form,
+            "todo_edit_form": TodoEditForm,
+            "todo_list": todo_list,
+            "tag": tag,
+            "user_log": item,
+        })

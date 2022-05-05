@@ -1,0 +1,78 @@
+{% load static %}
+{% load bootstrap5 %}
+
+<div id="form_section" class="card">
+    <script src="{% static "jquery-form-4.3.0.min.js" %}"></script>
+    <div class="card-header">
+        <div class="d-flex justify-content-between">
+            <h5 class="modal-title" id="Modal_todo_Label">일정 수정</h5>
+            <button id="edit_delete{{todo_id}}" type="button" class="btn btn-danger">삭제</button>
+        </div>
+    </div>
+    <div class="card-body">
+        <form id="modal_todo_form_{{todo_id}}" action="/calendarApp/todo/edit/{{todo_id}}" method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ form.media }}
+            {% bootstrap_form form %}
+            <div class="modal-footer">
+                <button id="edit_close" type="button" class="btn btn-secondary">닫기</button>
+
+                <input id="edit_submit{{todo_id}}" type="submit" value="수정" class="btn btn-primary" />
+                <!--<button id="edit_submit{{todo_id}}" type="button" class="btn btn-primary">추가</button>-->
+            </div>
+        </form>
+        <form id='delete_form{{todo_id}}' method="POST" action="/calendarApp/todo/delete" enctype="multipart/form-data" style="display:None;">
+            {% csrf_token %}
+            <input type="text" name="todo_id" value="{{todo_id}}"/>
+        </form>
+        <script>
+            $(function() {
+                $("#edit_delete{{todo_id}}").click(function () {
+                    $("#delete_form{{todo_id}}").submit()
+                });
+                $("#delete_form{{todo_id}}").submit(function(e) {
+                    e.preventDefault();
+                    var options = {
+                        success: function(responseText, statusText, xhr, $form) {
+                            if (responseText['cnt'] == 0){
+                                $("#todo_list_view").append('\
+                                <div id ="todo_empty">\
+                                    <div class="p-2 bg-white">\
+                                        <div class="d-flex flex-column">\
+                                            <div>\
+                                                오늘의 일정이 없습니다. ㅠ_ㅠ\
+                                            </div>\
+                                            <div>\
+                                                <small class="text-muted">새로운 일정을 등록해주세요.</small>\
+                                            </div>\
+                                        </div>\
+                                    </div>\
+                                    <div class="bg-light" style="background: linear-gradient(to top, #f8f9fa, 80%, #edeff0); height:5px"></div>\
+                                </div>\
+                                ');
+                            }
+                            $("#todo_{{todo_id}}").remove();
+                            $('#todo_modalBox').modal('hide');
+                        }
+                    };
+                    $(this).ajaxSubmit(options);
+                });
+                $("#edit_close").click(function () {
+                    $('#todo_modalBox').modal('hide');
+                });
+                $("#modal_todo_form_{{todo_id}}").submit(function(e) {
+                    e.preventDefault();
+                    var options = {
+                        success: function(responseText, statusText, xhr, $form) {
+                            $("#todo_{{todo_id}}").html('');
+                            $("#todo_{{todo_id}}").append(responseText);
+                            $('#todo_modalBox').modal('hide');
+                        }
+                    };
+                    $(this).ajaxSubmit(options);
+                });
+
+            });
+        </script>
+    </div>
+</div>
