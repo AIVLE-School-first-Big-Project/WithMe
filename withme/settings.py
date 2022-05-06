@@ -69,6 +69,7 @@ INSTALLED_APPS = [
     'timer',
     'predict_eyes',
     'calendarApp',
+    'bulletin',
 ]
 
 ASGI_APPLICATION = 'withme.asgi.application'
