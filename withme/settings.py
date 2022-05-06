@@ -56,11 +56,13 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.humanize',
 
     ### Third Party ###
     'jquery',
     'channels',
     'bootstrap5',
+    'bootstrap_datepicker_plus',
 
     ### APPS ###
     'accounts',
@@ -131,6 +133,15 @@ DATABASES = {
                 'use_unicode': True,
             }
     }
+    # 'default': {
+    #     'ENGINE': 'django.db.backends.mysql',
+    #     'NAME': 'test',
+    #     'USER': 'root',
+    #     'PASSWORD': '1111',
+    #     'HOST': '127.0.0.1',
+    #     'PORT': '3306',
+    # }
+
 }
 
     
@@ -170,11 +181,7 @@ AUTH_PASSWORD_VALIDATORS = [
 LANGUAGE_CODE = 'ko-kr'
 
 TIME_ZONE = 'Asia/Seoul'
-
-USE_I18N = True
-
-USE_TZ = True
-
+USE_TZ = False
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.0/howto/static-files/

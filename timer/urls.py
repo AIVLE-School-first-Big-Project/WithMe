@@ -9,4 +9,6 @@ urlpatterns = [
     path("stopwatch/", views.stopwatch, name='stopwatch'),
     path("create_timelog/", views.create_timelog, name='create_timelog'),
     path("create_userlog/", views.create_userlog, name='create_userlog'),
+
+    path('service', views.service, name='main'),
 ]

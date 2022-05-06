@@ -1,0 +1,234 @@
+{% extends "main/base_main.html" %}
+{% load static %}
+
+{% block content %}
+
+<script>
+    $('#side_nav1').attr("class", 'nav-link link-dark');
+    $('#side_nav2').attr("class", 'nav-link active');
+    $('#side_nav3').attr("class", 'nav-link link-dark');
+    $('#side_nav4').attr("class", 'nav-link link-dark');
+</script>
+
+<div class="container" style="position: relative;">
+    <div class="row">
+        <div class="col-12" style="height: 72px">
+        </div>
+    </div>
+    <div class="row " >
+        <div class="col-1"></div>
+        <div class="col-7 bg-light" style="border-radius: 10px 0 0 10px / 10px 0 0 10px;">
+            <div class="d-flex flex-column" >
+                <div style="height:30px"></div>
+                <div class="px-3 mb-2 border-bottom border-dark">
+                    <p style="font-size: 20px; bold ">공부 주제 선택하기</p>
+                </div>
+                <div class="m-2 p-2 border-top border-bottom">
+                    <div class="d-flex justify-content-center">
+                        <select id="tag_selector" onChange="tag_change_func(this);" style="width:100%" type = "submit" name="Tag" class="selector" data-placeholder="과목선택" data-autocomplete-light-language="ko" data-autocomplete-light-url="http://127.0.0.1:8000/tag/test/" data-autocomplete-light-function="select2"></select>
+                    </div>
+                </div>
+                <div class="mt-3 px-3 mb-2 border-bottom border-dark">
+                    <p style="font-size: 20px; bold ">카메라 설정하기</p>
+
+                </div>
+
+
+                <div class="row m-2">
+                    <p class="mx-2"> 카메라의 구도를 오른쪽 사진과 유사하게 설정해 주세요! </p>
+
+                    <div class="col-6">
+                        <div id="videoSection" class="card border-0">
+                            <video class="card-img-top" id="videoElement" style="border-radius: 10px 10px 0px 0px / 10px 10px 0px 0px;"></video>
+                            <div class="card-footer bg-dark">
+                                <div class="d-flex justify-content-center" style="width:100%">
+                                    <small id="result" style="color: white; font-size: 0.7em;"></small>
+                                </div>
+                            </div>
+                            <canvas id="canvas" width="400" height="300" style="display:None;"></canvas>
+                        </div>
+                    </div>
+                    <div class="col-6 border" style="border-radius: 10px" style="height:100%;">
+                        <img id="sample_picture" src="{% static "assets/img/sample_camera.png" %}" class="img-fluid" />
+                    </div>
+                </div>
+            </div>
+            <div style="height:30px"></div>
+        </div>
+        <div class="col-3" style="border-radius: 0 10px 10px 0 / 0 10px 10px 0 ; background:#e8ecf3;">
+            <div class="d-flex align-items-start flex-column" style="height: 100%; width: 100%;">
+                <div class="p-2 mt-3" style="border-radius: 10px 10px 0px 0px / 10px 10px 0px 0px;">
+                        > 시작하기 앞서
+                </div>
+
+                <div class="p-1" style="width: 100%;">
+                    <div class="p-2 bg-white">
+                        <div class="d-flex flex-column">
+                            <div class="d-flex justify-content-between">
+                                <div>
+                                    공부 주제 선택
+                                </div>
+                                <div>
+                                    <img id="setting_tag_picture" src="{% static "assets/img/delete-button.png" %}" alt="" width="20" height="20" />
+                                </div>
+                            </div>
+                            <div>
+                                <small id="setting_tag_text" class="text-muted">공부 주제를 선택해 주세요.</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-light" style="background: linear-gradient(to top, #e8ecf3, 80%, #edeff0); height:5px"></div>
+                    <div class="p-2 mt-1 bg-white">
+                        <div class="d-flex flex-column">
+                            <div class="d-flex justify-content-between">
+                                <div>
+                                    카메라 구도 설정
+                                </div>
+                                <div>
+                                    <img id="setting_camera_picture" src="{% static "assets/img/delete-button.png" %}" alt="" width="20" height="20" />
+                                </div>
+                            </div>
+                            <div>
+                                <small id="setting_camera_text" class="text-muted">카메라 구도를 재조정 해주세요.</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-light" style="background: linear-gradient(to top, #e8ecf3, 80%, #edeff0); height:5px"></div>
+                </div>
+
+                <div class="mt-auto py-2 " style="height:130px; width: 100%;">
+                    <div class="d-grid gap-2" style="height:120px;">
+                        <button id="submit-button" type="button" class="btn btn-block btn-secondary my-2 btn-lg">시작하기</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-1"></div>
+    </div>
+    <form id='redirection_form' style="display:None;">
+        {% csrf_token %}
+    </form>
+</div>
+<script>
+    function tag_change_func(sel) {
+        if ($("#tag_selector")[0].value == ''){
+            $('#setting_tag_picture').attr("src", '{% static "assets/img/delete-button.png" %}');
+            $('#setting_tag_text').text('공부 주제를 선택해 주세요.');
+        }
+        else{
+            tag_idx = $("#tag_selector")[0].value;
+            let tag_name = sel.options[sel.selectedIndex].text;
+            $('#setting_tag_picture').attr("src", '{% static "assets/img/check.png" %}');
+            $('#setting_tag_text').text('"' + tag_name + '" 과목을 선택하셨습니다!');
+        }
+    }
+    $(function() {
+        $("#sidetoggle").click();
+        var canvas = document.getElementById('canvas');
+        var context = canvas.getContext('2d');
+        const video = document.querySelector("#videoElement");
+
+        function setVideo() {
+            if (navigator.mediaDevices.getUserMedia) {
+                navigator.mediaDevices
+                    .getUserMedia({ video: true })
+                    .then(function (stream) {
+                        video.srcObject = stream;
+                        video.play();
+                    })
+                    .catch(function (errMsg) {
+                        console.log(errMsg);
+                    });
+            }
+        }
+
+        function getFrameData() {
+            context.drawImage(video, 0, 0, 400, 300);
+            var data = canvas.toDataURL('image/png', 1.0);
+            context.clearRect(0, 0, video.width, video.height);
+
+            return data;
+        }
+
+        function isUserAwake(result){
+            return result['userAwakeState'] != '0';
+        }
+
+        const FPS = 2;
+        const THRESHOLD = 3;
+        var count = THRESHOLD;
+        var tag_idx = -1;
+
+        function monitorUser() {
+            $.ajax({
+                type: "POST",
+                url: "../predict_eyes/detectme2",
+                data: { data: getFrameData() },
+                success: function (result) {
+                    //console.log(result);
+                    if (isUserAwake(result) == false) {
+                        count++;
+                        if (count >= THRESHOLD) {
+                            count = THRESHOLD;
+                            $('#setting_camera_picture').attr("src", '{% static "assets/img/delete-button.png" %}');
+                            $('#sample_picture').attr("src", '{% static "assets/img/sample_camera_bad.png" %}');
+                            $('#result').text('어깨와 눈이 보이도록 카메라를 조정하세요.');
+                            $('#setting_camera_text').text('카메라 구도를 재조정 해주세요.');
+                            $('#submit-button').attr("class", 'btn btn-block btn-secondary my-2 btn-lg');
+                        }
+                    } else {
+                        count = 0;
+                        $('#setting_camera_picture').attr("src", '{% static "assets/img/check.png" %}');
+                        $('#sample_picture').attr("src", '{% static "assets/img/sample_camera.png" %}');
+                        $('#setting_camera_text').text('카메라 구도가 완벽합니다!');
+                        $('#result').text('바른 자세입니다.');
+                        if ($("#tag_selector")[0].value != ''){
+                            $('#submit-button').attr("class", 'btn btn-block btn-primary my-2 btn-lg');
+                        }
+                    }
+                },
+                error: function () {
+                    //console.log('통신 실패');
+                },
+            });
+        }
+
+        setVideo()
+        setInterval(function () {
+            monitorUser();
+        }, 1000 / FPS);
+
+        $('#submit-button').click(function() {
+            if (count >= THRESHOLD){
+                return;
+            }
+
+            if ($("#tag_selector")[0].value == ''){
+                console.log('Tag None')
+                return;
+            }
+
+            let f = $("#redirection_form")[0];
+            f.setAttribute('method', 'post');
+            f.setAttribute('action', '/timer/service');
+
+            let obj = document.createElement('input');
+            obj.setAttribute('type', 'text')
+            obj.setAttribute('name', 'tag_id')
+            obj.setAttribute('value', $("#tag_selector")[0].value)
+            f.appendChild(obj);
+
+            f.submit();
+        });
+    });
+</script>
+
+<link href="/static/admin/css/vendor/select2/select2.css" type="text/css" media="screen" rel="stylesheet">
+<link href="/static/admin/css/autocomplete.css" type="text/css" media="screen" rel="stylesheet">
+<link href="/static/autocomplete_light/select2.css" type="text/css" media="screen" rel="stylesheet">
+<script src="/static/admin/js/vendor/select2/select2.full.js"></script>
+<script src="/static/autocomplete_light/autocomplete_light.js"></script>
+<script src="/static/autocomplete_light/select2.js"></script>
+<script src="/static/autocomplete_light/i18n/ko.js"></script>
+
+{% endblock %}

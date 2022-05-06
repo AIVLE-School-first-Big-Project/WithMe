@@ -1,0 +1,264 @@
+{% extends "main/base_main.html" %}
+{% load static %}
+{% load bootstrap5 %}
+
+{% block content %}
+<script>
+    $('#side_nav1').attr("class", 'nav-link link-dark');
+    $('#side_nav2').attr("class", 'nav-link active');
+    $('#side_nav3').attr("class", 'nav-link link-dark');
+    $('#side_nav4').attr("class", 'nav-link link-dark');
+</script>
+<svg class="wave-top" style="position: absolute; z-index: -1; top: 0%; left: 0; width: 100%;"  viewBox="0 0 1200 250">
+    <path fill-rule="evenodd" clip-rule="evenodd" d="M0 108.306L50 114.323C100 120.34 200 132.374 300 168.476C400 204.578 500 264.749 600 246.698C700 228.647 800 132.374 900 108.306C1000 84.2382 1100 132.374 1150 156.442L1200 180.51V-8.5451e-06H1150C1100 -8.5451e-06 1000 -8.5451e-06 900 -8.5451e-06C800 -8.5451e-06 700 -8.5451e-06 600 -8.5451e-06C500 -8.5451e-06 400 -8.5451e-06 300 -8.5451e-06C200 -8.5451e-06 100 -8.5451e-06 50 -8.5451e-06H0V108.306Z" fill="#f8f9fa"/>
+</svg>
+
+</div>
+<div style="position: absolute; z-index: -3; top: 0; left: 0; width: 100%; height:98vh; background-color: white;"  viewBox="0 0 1200 250">
+</div>
+<div class="container" style="position: relative; z-index: 10;">
+    <div class="row">
+        <div class="col-12" style="height: 72px">
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-1"></div>
+        <div class="col-3">
+            <div class="d-flex flex-column border border-primary" style="border-radius: 10px; height: 80vh;">
+                <div class="d-flex flex-column bg-primary" style="border-radius: 10px 10px 0px 0px / 10px 10px 0px 0px;">
+                    <div class="d-flex mx-auto p-2">
+                        <div class="d-flex justify-content-center text-white">Todo List</div>
+                    </div>
+                </div>
+
+                <div id="todo_list_view" class="col p-3 bg-light">
+                    {% for todo in todo_list %}
+                        {% include "timer/todo_item.html" %}
+                    {% empty %}
+                        <div id ="todo_empty">
+                            <div class="p-2 bg-white">
+                                <div class="d-flex flex-column">
+                                    <div>
+                                        오늘의 일정이 없습니다. ㅠ_ㅠ
+                                    </div>
+                                    <div>
+                                        <small class="text-muted">새로운 일정을 등록해주세요.</small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="bg-light" style="background: linear-gradient(to top, #f8f9fa, 80%, #edeff0); height:5px"></div>
+                        </div>
+                    {% endfor %}
+                </div>
+                <div class="p-2 bg-white" style="border-radius: 10px">
+                    <div class="d-flex justify-content-center">
+                        <button id="modalBtn_todo" type="button" class="btn btn-primary my-2 btn-lg" style="border-radius: 50%;">+</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-7">
+            <div class="d-flex flex-column">
+                <div class="px-3 mb-2 border-bottom border-dark">
+                    <p style="font-size: 20px; font: 1em NanumGothic, sans-serif bold ">
+                        {{ tag }}
+                    </p>
+                </div>
+                <div class="m-2 p-2 border-top border-bottom">
+                    <div class="d-flex justify-content-around">
+                        <div class="d-flex flex-column bd-highlight">
+                            <div class="d-flex justify-content-center p-2 bd-highlight">경과 시간</div>
+                            <div class="align-items-center p-2 bd-highlight"><h2><div class="clock"></div></h2></div>
+                        </div>
+                        <div class="d-flex flex-column bd-highlight">
+                            <div class="d-flex justify-content-center p-2 bd-highlight">공부 시간</div>
+                            <div class="align-items-center p-2 bd-highlight"><h1>00:00:00</h1></div>
+                        </div>
+                        <div class="d-flex flex-column bd-highlight">
+                            <div class="d-flex justify-content-center p-2 bd-highlight">흘러간 시간</div>
+                            <div class="align-items-center p-2 bd-highlight"><h2>00:00:00</div></h2></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="d-flex bd-highlight">
+                    <div class="m-2 p-3 w-100 bd-highlight border">
+                        <div class="d-flex justify-content-center p-2 bd-highlight">
+                             <div class="align-items-center p-2 bd-highlight">
+                                종료버튼?
+                             </div>
+                        </div>
+                    </div>
+                    <div class="p-2 flex-shrink-1 bd-highlight">
+                        <div id="videoSection" class="card border-0">
+                            <video class="card-img-top" id="videoElement" style="width:300px; border-radius: 10px 10px 0px 0px / 10px 10px 0px 0px;"></video>
+                            <div class="card-footer">
+                                <div class="d-flex justify-content-center" style="width:100%">
+                                    <small id="result" style="font-size: 0.5em;">System message</small>
+                                </div>
+                            </div>
+                            <canvas id="canvas" width="400" height="300" style="display:None;"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div class="col mt-3 px-3 pb-2 border" >
+                    >> Rangking System
+                </div>
+            </div>
+        </div>
+        <div class="col-1"></div>
+    </div>
+</div>
+
+<div id="modalBox_todo" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="Modal_todo_Label">새로운 일정</h5>
+            </div>
+            <div class="modal-body">
+                <form id="modal_todo_form" action="/calendarApp/todo/new" method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    {{ todo_form.media }}
+                    {% bootstrap_form todo_form %}
+                    <div class="modal-footer">
+                        <button id="modalBtn_todo_close" type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
+                        <input id="modalBtn_todo_submit" type="submit" value="추가" class="btn btn-primary" />
+                    </div>
+                </form>
+                <script>
+                    $(function() {
+                        $("#modal_todo_form").submit(function(e) {
+                            e.preventDefault();
+                            var options = {
+                                success: function(responseText, statusText, xhr, $form) {
+                                    if ($("#todo_empty").length){
+                                        $("#todo_empty").remove()
+                                    }
+                                    $("#todo_list_view").append(responseText);
+
+                                    $('#modalBox_todo').modal('hide');
+                                    $('#modal_todo_form')[0].reset();
+                                }
+                            };
+                            $(this).ajaxSubmit(options);
+                        });
+
+                    });
+                </script>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="todo_modalBox" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div id="modal_form_section">
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="{% static 'anime_service_bg.js' %}"></script>
+<script>
+    $(function() {
+        $("#sidetoggle").click();
+        var canvas = document.getElementById('canvas');
+        var context = canvas.getContext('2d');
+        const video = document.querySelector("#videoElement");
+
+        function setVideo() {
+            if (navigator.mediaDevices.getUserMedia) {
+                navigator.mediaDevices
+                    .getUserMedia({ video: true })
+                    .then(function (stream) {
+                        video.srcObject = stream;
+                        video.play();
+                    })
+                    .catch(function (errMsg) {
+                        console.log(errMsg);
+                    });
+            }
+        }
+
+        function getFrameData() {
+            context.drawImage(video, 0, 0, 400, 300);
+            var data = canvas.toDataURL('image/png', 1.0);
+            context.clearRect(0, 0, video.width, video.height);
+
+            return data;
+        }
+
+        function isUserAwake(result){
+            return result['userAwakeState'] != '0';
+        }
+
+        const FPS = 2;
+        const THRESHOLD = 3;
+        var count = THRESHOLD;
+        var tag_idx = -1;
+
+        function monitorUser() {
+            $.ajax({
+                type: "POST",
+                url: "../predict_eyes/detectme2",
+                data: { data: getFrameData() },
+                success: function (result) {
+                    //console.log(result);
+                    if (isUserAwake(result) == false) {
+                        count++;
+                        if (count >= THRESHOLD) {
+                            count = THRESHOLD;
+                            $('#result').text('어깨와 눈이 보이도록 카메라를 조정하세요.');
+                        }
+                    } else {
+                        count = 0;
+                        $('#result').text('바른 자세입니다.');
+                    }
+                },
+                error: function () {
+                    //console.log('통신 실패');
+                },
+            });
+        }
+
+        function clock() {// We create a new Date object and assign it to a variable called "time".
+            let start_time = new Date('{{user_log.start_time|date:"c"}}');
+            let time = new Date();
+            let differ = parseInt((time.getTime() - start_time.getTime()) / 1000);
+
+            let hours = parseInt(differ/3600),
+            minutes = parseInt((differ%3600)/60),
+            seconds = differ%60;
+
+            document.querySelectorAll('.clock')[0].innerHTML = harold(hours) + ":" + harold(minutes) + ":" + harold(seconds);
+
+            function harold(standIn) {
+            if (standIn < 10) {
+                standIn = '0' + standIn
+            }
+                return standIn;
+            }
+        }
+
+        setVideo()
+        setInterval(function () {
+            monitorUser();
+        }, 1000 / FPS);
+
+        setInterval(clock, 1000);
+
+
+
+        // modal
+        $("#modalBtn_todo").click(function () {
+            $('#modalBox_todo').modal('show');
+        });
+        $("#modalBtn_todo_close").click(function () {
+            $('#modalBox_todo').modal('hide');
+        });
+    });
+</script>
+
+{% endblock %}

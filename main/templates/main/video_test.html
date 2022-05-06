@@ -2,7 +2,10 @@
 {% block content %}
 {% load static %}
 
-
+<script src="https://cdn.jsdelivr.net/npm/chart.js@3.3.2"></script>
+<script src="https://cdn.jsdelivr.net/npm/luxon@1.27.0"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-luxon@1.0.0"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-streaming@2.0.0"></script>
 <link rel="stylesheet" href="{% static 'alertModal.css' %}">
 
     <div id = "modal", class="modal-overlay">
@@ -24,17 +27,27 @@
         <video playsinline id="videoElement"></video>
         <br>
         <h2 id="result">DETECT ME</h2>
-        <h2 id="count"></h2>
+        <h2 id="count_eye"></h2>
+        <h2 id='count_neck'></h2>
     </div>
     
     
     
 </div>
+<div>
+    <canvas id='myChart'></canvas>
+    <script>
+        
+    </script>
+</div>
+
 
 
 <canvas id="canvas" width="400" height="300"></canvas>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+
 <script>
     var canvas = document.getElementById('canvas');
     var context = canvas.getContext('2d');
@@ -68,22 +81,36 @@
         return result['userAwakeState'] == '0';
     }
 
+    function isUserNeckOkay(result){
+        return result['userNeckState'] == '0';
+    }
+
     const FPS = 2;
     const THRESHOLD = 5;
     var count = 0;
+    var count2 = 0;
 
-    function displayModal(){
+    function displayModal(param_type){
         document.body.style.overflow = 'hidden'; 
         modal.style.display = 'flex';
 
         // prevent overflow
-        count = THRESHOLD;
+        if(param_type == 'eye'){
+            count = THRESHOLD;
+        }else{
+            count2 = THRESHOLD;
+        }
+        
     }
 
-    function closeModal(){
+    function closeModal(param_type){
         document.body.style.overflow = 'auto';
         modal.style.display = 'none';
-        count = 0;
+        if(param_type == 'eye'){
+            count = 0
+        }else{
+            count2 = 0
+        }
     }
 
     window.addEventListener("keyup", e => {
@@ -106,7 +133,8 @@
         closeModal();
     }
 })
-    function monitorUser() {
+
+    function monitorEye(){
         $.ajax({
             type: "POST",
             url: "../predict_eyes/detectme2",
@@ -115,13 +143,13 @@
                 if (isUserAwake(result)) {
                     count++;
                     if (count >= THRESHOLD) {
-                        displayModal();
+                        displayModal('eye');
                     }
                 } else {
-                    closeModal();
+                    closeModal('eye');
                 }
 
-                $('#count').text(count);
+                $('#count_eye').text(count);
                 console.log(result);
             },
             error: function () {
@@ -130,11 +158,86 @@
         });
     }
 
-    setVideo()
-    setInterval(function () {
-        monitorUser();
-    }, 1000 / FPS);
+    function monitorNeck(){
+        $.ajax({
+            type: "POST",
+            url: "../predict_eyes/detectneck",
+            data: { data: getFrameData() },
+            success: function (result) {
+                if (isUserNeckOkay(result)) {
+                    count2++;
+                    if (count2 >= THRESHOLD) {
+                        displayModal('neck');
+                    }
+                } else {
+                    closeModal('neck');
+                }
 
+                $('#count_neck').text(count2);
+                console.log(result);
+            },
+            error: function () {
+                console.log('통신 실패');
+            },
+        });
+    }
+
+    setVideo();
+    setInterval(function () {
+        monitorEye();
+    }, 1000 / FPS);
+    setInterval(function () {
+        monitorNeck();
+    }, 2000 / FPS);
+
+    const config = {
+        type:'line',
+        data:{
+            datasets:[
+                {
+                    label : 'isEyeClosed',
+                    backgroundColor:'rgba(255, 99, 132, 0.5)',
+                    borderColor: 'rgb(255, 99, 132)',
+                    fill: true,
+                    data:[]
+                },
+                {
+                    label : 'isNeckOkay',
+                    backgroundColor:'rgba(54, 162, 235, 0.5)',
+                    borderColor: 'rgb(54, 162, 235)',
+                    cubicInterpolationMode: 'monotone',
+                    fill: true,
+                    data:[]
+                }
+            ]
+        },
+        options:{
+            scales:{
+                x:{
+                    type:'realtime',
+                    realtime:{
+                        delay: 500,
+                        onRefresh: chart => {
+                            chart.data.datasets[0].data.push({
+                                x: Date.now(),
+                                y: count
+                            })
+                            chart.data.datasets[1].data.push({
+                                x: Date.now(),
+                                y: count2
+                            })
+
+                        }
+                    }
+                }
+            }
+        }
+    };
+
+    const myChart = new Chart(
+        document.getElementById('myChart'),
+        config
+    );
 </script>
 
 {% endblock %}
