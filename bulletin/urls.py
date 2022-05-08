@@ -12,5 +12,8 @@ urlpatterns = [
     path('<int:post_id>/modify/', views.modify_post, name='modify_post'),
     path('<int:post_id>/delete/', views.delete_post, name='delete_post'),
     
+    # 댓글 추가, 삭제
+    path('add_reply/', views.add_reply, name='add_reply'),
+    path('delete_reply/', views.delete_reply, name='delete_reply'),
 
 ]

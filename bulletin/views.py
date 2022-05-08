@@ -105,3 +105,36 @@ def delete_post(request, post_id):
     post.delete()
     return redirect('/bulletin')
 
+
+@login_required
+def add_reply(request):
+    obj = request.body.decode("utf-8")
+    data = json.loads(obj)
+
+    post_id = data['post_id']
+    user_id = data['user_id']
+    content = data['content']
+    if request.method == "POST":
+        reply = Reply()
+        reply.post = Post.objects.get(id=post_id)
+        reply.user = User.objects.get(id=user_id)
+        reply.content = content
+        reply.created_at = timezone.now()
+        if reply.content != '':
+            print(reply.content)
+            reply.save()
+
+    return JsonResponse(data)
+
+
+@login_required
+def delete_reply(request):
+    obj = request.body.decode("utf-8")
+    data = json.loads(obj)
+
+    reply_id = data['reply_id']
+
+    target = Reply.objects.get(id=reply_id)
+    target.delete()
+
+    return JsonResponse(data)
