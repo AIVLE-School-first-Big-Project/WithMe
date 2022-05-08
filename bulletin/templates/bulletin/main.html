@@ -2,101 +2,98 @@
 {% block content %}
 {% load static %}
 
-<!--jquery -->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-
-
-<!-- bootstrap -->
-<!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script> -->
-<!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap-theme.min.css"> -->
-<!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css"> -->
-
-<!--구글 머티리얼 아이콘 -->
-<!-- <link
-    href="https://fonts.googleapis.com/css?family=Material+Icons|Material+Icons+Outlined|Material+Icons+Two+Tone|Material+Icons+Round|Material+Icons+Sharp"
-    rel="stylesheet"
-    /> -->
-    
-
-<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-
 <link rel="stylesheet" href="{% static 'bulletin.css' %}" />
 
-<div class="bulletin_main_body">
-    <div class="container">
-        <br>
-        <h1 class="text-center"><a href="#">📌자유 게시판</a>
-           <button type="button" class="btn btn-default pull-right" onclick="location.href='upload_post/' ">
+<div class="container" style="position: relative;">
+    <div class="row">
+        <div class="col-12" style="height: 72px">
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-1"></div>
+        <div class="col-7 bg-light" style="border-radius: 10px 0 0 10px / 10px 0 0 10px; width: 800px;">
+
+            <h1 class="text-center">
+                <a href="#">📌자유 게시판</a>
+            </h1>
+
+            <button class="btn btn-outline-secondary pull-right" type="button" id="btn_search" style="margin-left: 660px" onclick="location.href='upload_post/' ">
                 <b>✋글쓰기</b>
             </button>
-        </h1>
-        <br>
-        <table class = "table table-hover table-striped" style="border: 1px solid;">
-            <thead>
-                <tr>
-                    <th width="50px">번호</th>
-                    <th width="200px">제목</th>
-                    <th width="100px">글쓴이</th>
-                    <th width="150px">시간</th>
-                    <th width="50px">조회 수</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for post in post_list%}
-                <tr>
-                    <td width="50px">{{post.id}}</td>
-                    <td width="200px"><a href="./{{post.id}}"><b>{{post.title}}</b></a></td>
-                    <td width="100px">{{post.user.username}}</td>
-                    <td width="150px">{{post.write_date}}</td>
-                    <td width="50px">{{post.view_count}}</td>
-                </tr>
-                {%endfor%}
-            </tbody>
-        </table>
-        <hr>
-        <div class="row justify-content-end my-3" style="margin-left: 0.5px ">
-            <div class="col-4 input-group" style='margin: 0 auto'>
-                <input type="text" class="form-control keyword" value="{{ keyword|default_if_none:'' }}">
-                <div class="input-group-append" style="display: flex; flex-flow: row wrap;">
-                    <button class="btn btn-outline-secondary" type="button" id="btn_search" style="margin-left: 60px">검색</button>
+            
+            <br>
+            <br>
+            <table class = "table table-hover table-striped" style="border: 1px solid;">
+                <thead>
+                    <tr>
+                        <th width="50px">번호</th>
+                        <th width="200px">제목</th>
+                        <th width="100px">글쓴이</th>
+                        <th width="150px">시간</th>
+                        <th width="50px">조회 수</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for post in post_list%}
+                    <tr>
+                        <td width="50px">{{post.id}}</td>
+                        <td width="200px"><a href="./{{post.id}}"><b>{{post.title}}</b></a></td>
+                        <td width="100px">{{post.user.username}}</td>
+                        <td width="150px">{{post.write_date}}</td>
+                        <td width="50px">{{post.view_count}}</td>
+                    </tr>
+                    {%endfor%}
+                </tbody>
+            </table>
+            <hr>
+    
+            <div class="row justify-content-end my-3" style="margin-left: 0.5px ">
+                <div class="col-4 input-group" style='margin: 0 auto'>
+                    <input type="text" class="form-control keyword" value="{{ keyword|default_if_none:'' }}">
+                    <div class="input-group-append" style="display: flex; flex-flow: row wrap;">
+                        <button class="btn btn-outline-secondary" type="button" id="btn_search" style="margin-left: 60px">검색</button>
+                    </div>
                 </div>
             </div>
+    
+            <ul class="pagination justify-content-center">
+                
+                {% if post_list.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ post_list.previous_page_number}}">◁</a>
+                </li>
+                {% endif %}
+    
+                {% for page_num in page_range %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{page_num}}">
+                        {% if current_page == page%}
+                            <b><u>{{page_num}}</u></b>
+                        {% else %}
+                            {{page_num}}
+                        {% endif %}
+    
+                    </a>
+                </li>
+                {% endfor %}
+    
+                {% if post_list.has_next%}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ post_list.next_page_number}}">▷</a>
+                </li>
+                {% endif %}
+    
+            </ul>
+    
+    
+            <form id="searchForm" method="GET" action="{% url 'bulletin:main' %}">
+                <input type="hidden" id="keyword" name="keyword" value="{{ keyword|default_if_none:'' }}">
+                <input type="hidden" id="page" name="page" value="{{ page }}">
+            </form>
         </div>
-
-        <ul class="pagination justify-content-center">
-            
-          {% if post_list.has_previous %}
-          <li class="page-item">
-              <a class="page-link" href="?page={{ post_list.previous_page_number}}">◁</a>
-          </li>
-          {% endif %}
-
-          {% for page_num in page_range %}
-          <li class="page-item">
-              <a class="page-link" href="?page={{page_num}}">
-                  {% if current_page == page%}
-                      <b><u>{{page_num}}</u></b>
-                  {% else %}
-                      {{page_num}}
-                  {% endif %}
-
-              </a>
-          </li>
-          {% endfor %}
-
-          {% if post_list.has_next%}
-          <li class="page-item">
-              <a class="page-link" href="?page={{ post_list.next_page_number}}">▷</a>
-          </li>
-          {% endif %}
-
-        </ul>
+        
+        <div class="col-1"></div>
     </div>
-
-    <form id="searchForm" method="GET" action="{% url 'bulletin:main' %}">
-        <input type="hidden" id="keyword" name="keyword" value="{{ keyword|default_if_none:'' }}">
-        <input type="hidden" id="page" name="page" value="{{ page }}">
-    </form>
 
 </div>
 
@@ -115,4 +112,5 @@
         });
     });
 </script>
+
 {% endblock %}
