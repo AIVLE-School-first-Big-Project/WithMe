@@ -1,5 +1,6 @@
 from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 from .models import Post, Reply
 from .forms import PostForm
@@ -69,7 +70,7 @@ def upload_post(request):
     else:
         form = PostForm()
 
-    return render(request, 'bulletin/upload.html', {'form': form})
+    return render(request, 'bulletin/upload_post.html', {'form': form})
 
 
 @login_required

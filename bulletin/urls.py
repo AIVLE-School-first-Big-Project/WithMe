@@ -4,7 +4,7 @@ from . import views
 app_name = 'bulletin'
 urlpatterns = [
     # 기본 페이지
-    path('', views.bulletin, name='bulletin'),
+    path('', views.bulletin, name='main'),
     
     # 게시글 조회, 추가, 수정, 삭제
     path('<int:post_id>/', views.post),
