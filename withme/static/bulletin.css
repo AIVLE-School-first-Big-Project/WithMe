@@ -1,0 +1,40 @@
+.bulletin_main_body{
+    display: flex;
+    flex-direction: column;
+    background-color: white; 
+    margin-right: 20px; 
+    margin-left: 20px; 
+    margin-top: 10px; 
+    margin-bottom: 10px;
+    height: 500px; 
+}
+.pagination {
+    display: flex;
+    padding-left: 0px;
+    list-style: none;
+    border-radius: 0.25rem;
+    justify-content: center;
+}
+
+.content_box{
+    color : white;
+    height: 100px;
+}
+
+.contour{
+    height: 2px; 
+    background-color: lightgrey;
+}
+
+.buffer{
+    height: 0px; 
+}
+
+
+textarea {
+    width: 100%;
+}
+
+input[type=submit] {
+    margin-top: 10px;
+}

@@ -1,0 +1,50 @@
+{% extends "main/base_main.html" %}
+{% block content %}
+{% load static %}
+<!--jquery -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script> -->
+<link rel="stylesheet" href="{% static 'bulletin.css' %}" />
+
+<div class="main_body">
+  <div class="container">
+    <br />
+    <button
+      type="button"
+      class="btn btn-default pull-right"
+      onclick="location.href='../' "
+    >
+      <b>📜목록</b>
+    </button>
+    <br /><br />
+    <div class="contour"></div>
+    <form method="POST" class="post-form my-3">
+      {% csrf_token %}
+
+      <div class="form-group">
+        <label for="subject">제목</label>
+        <input
+          type="text"
+          class="form-control"
+          name="title"
+          value="{{ form.title.value|default_if_none:'' }}"
+        />
+      </div>
+      <div class="form-group">
+        <label for="content">내용</label>
+        <textarea class="form-control" name="content" rows="10">
+{{ form.content.value|default_if_none:'' }}</textarea
+        >
+      </div>
+
+      <input type="submit" value="저장하기" style="font-weight: bold" />
+      <div><br /></div>
+    </form>
+
+    <div class="contour"></div>
+  </div>
+</div>
+<div style="height: 200px"></div>
+
+{%endblock%}
