@@ -92,7 +92,7 @@ def modify_post(request, post_id):
         form = PostForm(instance=post)
 
     context = {'form': form}
-    return render(request, 'bulletin/post_modify.html', context)
+    return render(request, 'bulletin/modify_post.html', context)
 
 
 @login_required
