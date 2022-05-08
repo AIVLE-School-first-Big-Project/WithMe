@@ -11,77 +11,85 @@
 <p hidden>{{ post.update_counter }}</p>
 <p hidden>{{ post.view_count}}</p>
 
-<div class="main_body">
-    <div class="container">
-        <br>
-        <div>
-            <button type="button" class="btn btn-default pull-right" onclick="location.href='../' ">
-                <b>📜목록</b>
-            </button>
-            <button type="button" class="btn btn-default pull-right" onclick="location.href='../upload_post/' ">
-                <b>✋글쓰기</b>
-            </button>
+<div class="container" style="position: relative;">
+    <div class="row">
+        <div class="col-12" style="height: 72px">
         </div>
+    </div>
+    <div class="row">
+        <div class="col-1"></div>
+        <div class="col-7 bg-light" style="border-radius: 10px 0 0 10px / 10px 0 0 10px; width: 800px;">
 
-        <div>
-            <br><br>
-            <div class="contour"></div>
-            {% if post.user.id == user.id %}    
-                <div>
-                    <a href="{% url 'bulletin:delete_post' post.id %}" type="button" class="btn btn-default pull-right" style="float: right; margin-right: 10px; margin-bottom: 10px">
-                        삭제
-                    </a>
-                    <a href="{% url 'bulletin:modify_post' post.id %}" type="button" class="btn btn-default pull-right" style="float: right; margin-right: 10px; margin-bottom: 10px">
-                        수정
-                    </a>
-                </div>
-            {% endif %}
             <br>
-            <b style="font-size:35px">{{post.title}}</b>   
-            <a href="/photo_zone/user_content/{{post.user.username}}/" aria-label="Left Align" style="color:gray; text-decoration-line:underline">
-                    작성자 :    
-                    {% if post.user.username %}
-                        {{post.user.username}}
-                    {% else %}
-                        알 수 없음
-                    {% endif %}              
-            </a>
-            <div style="height: 0px; background-color: black"></div>
-            <p> time: {{post.write_date}}</p>
-            <div class="contour"></div>
-            <br><br>
-            <p>
-                {% if not post.content %}
-                    내용 없음
-                {% else %}
-                    {{post.content}}
-                {% endif %}
-            </p>  
-            <br><br><br><br>
-        </div>    
-    
-        <b>댓글</b>
-        <div class="contour"></div>
-        <div class="container">
-            {% for reply in reply_list %}
-                <b>{{reply.user.username}}</b>  || &nbsp {{reply.content}}                
-                {% if reply.user.id == user.id %}   
-                    &nbsp<input type="submit" class = "reply_remove" id="{{reply.id}}" style="font-size:1px; background-color:transparent; border-color:transparent" value="삭제" onclick="remove_reply({{reply.id}})">
+            <div>
+                <button class="button" style="margin-left: 560px" onclick="location.href='../' ">
+                    <b>📜목록</b>
+                </button>
+                <button class="button" style="margin-left: 20px" onclick="location.href='../upload_post/' ">
+                    <b>✋글쓰기</b>
+                </button>
+            </div>
+
+            <div>
+                <br><br>
+                <div class="contour"></div>
+                {% if post.user.id == user.id %}    
+                    <div>
+                        <a href="{% url 'bulletin:delete_post' post.id %}" type="button" class="btn btn-default pull-right" style="float: right; margin-right: 10px; margin-bottom: 10px">
+                            삭제
+                        </a>
+                        <a href="{% url 'bulletin:modify_post' post.id %}" type="button" class="btn btn-default pull-right" style="float: right; margin-right: 10px; margin-bottom: 10px">
+                            수정
+                        </a>
+                    </div>
                 {% endif %}
                 <br>
-            {% endfor %}
-        </div>
-        <br>
-        <div>
-            <form method="POST">
-                {% csrf_token %}
-                <input type="text" id="reply_content" class="form-control" style="width=100%; border:none; " placeholder="댓글 입력">
-                {% if user.is_authenticated %}
-                    <input type="button" id="reply_add" class="btn btn-basic pull-right" value="저장">
-                {% else %}                    
-                    <input type="button" class="btn btn-basic pull-right" value="저장" disabled>
-                {% endif %}
-        </div>      
+                <b style="font-size:35px">{{post.title}}</b>   
+                <a href="#" aria-label="Left Align" style="color:gray; text-decoration-line:underline">
+                        작성자 :    
+                        {% if post.user.username %}
+                            {{post.user.username}}
+                        {% else %}
+                            알 수 없음
+                        {% endif %}              
+                </a>
+                <div style="height: 0px; background-color: black"></div>
+                <p> time: {{post.write_date}}</p>
+                <div class="contour"></div>
+                <br><br>
+                <p>
+                    {% if not post.content %}
+                        내용 없음
+                    {% else %}
+                        {{post.content}}
+                    {% endif %}
+                </p>  
+                <br><br><br><br>
+            </div>    
+        
+            <b>댓글</b>
+            <div class="contour"></div>
+            <div class="container">
+                {% for reply in reply_list %}
+                    <b>{{reply.user.username}}</b>  || &nbsp {{reply.content}}                
+                    {% if reply.user.id == user.id %}   
+                        &nbsp<input type="submit" class = "reply_remove" id="{{reply.id}}" style="font-size:1px; background-color:transparent; border-color:transparent" value="삭제" onclick="remove_reply({{reply.id}})">
+                    {% endif %}
+                    <br>
+                {% endfor %}
+            </div>
+            <br>
+            <div>
+                <form method="POST">
+                    {% csrf_token %}
+                    <input type="text" id="reply_content" class="form-control" style="width=100%; border:none; " placeholder="댓글 입력">
+                    {% if user.is_authenticated %}
+                        <input type="button" id="reply_add" class="btn btn-basic pull-right" value="저장">
+                    {% else %}                    
+                        <input type="button" class="btn btn-basic pull-right" value="저장" disabled>
+                    {% endif %}
+            </div>   
+        </div>   
     </div>
 </div>
 <script>
