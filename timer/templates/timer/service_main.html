@@ -9,40 +9,40 @@
 
 <div class="row" style="z-index: 10; width:100%">
     <div class="col-4" style="min-width: 250px;">
-        <div class="d-flex justify-content-center" style="width:100%;">
-            <div class="d-flex flex-column border border-white" style="border-radius: 10px; min-height:400px; background: rgba( 0, 0, 0, 0.3 );">
-                <div class="d-flex flex-column" style="border-radius: 10px 10px 0px 0px / 10px 10px 0px 0px;">
-                    <div class="d-flex mx-auto p-2">
-                        <div class="d-flex justify-content-center text-white">Todo List</div>
-                    </div>
-                </div>
 
-                <div id="todo_list_view" class="col p-3 bg-light">
-                    {% for todo in todo_list %}
-                        {% include "timer/todo_item.html" %}
-                    {% empty %}
-                        <div id ="todo_empty">
-                            <div class="p-2 bg-white">
-                                <div class="d-flex flex-column">
-                                    <div>
-                                        오늘의 일정이 없습니다. ㅠ_ㅠ
-                                    </div>
-                                    <div>
-                                        <small class="text-muted">새로운 일정을 등록해주세요.</small>
-                                    </div>
+        <div class="d-flex flex-column border border-white" style="border-radius: 10px; min-height:400px; background: rgba( 0, 0, 0, 0.3 );">
+            <div class="d-flex flex-column" style="border-radius: 10px 10px 0px 0px / 10px 10px 0px 0px;">
+                <div class="d-flex mx-auto p-2">
+                    <div class="d-flex justify-content-center text-white">Todo List</div>
+                </div>
+            </div>
+
+            <div id="todo_list_view" class="col p-3 bg-light">
+                {% for todo in todo_list %}
+                    {% include "timer/todo_item.html" %}
+                {% empty %}
+                    <div id ="todo_empty">
+                        <div class="p-2 bg-white">
+                            <div class="d-flex flex-column">
+                                <div>
+                                    오늘의 일정이 없습니다. ㅠ_ㅠ
+                                </div>
+                                <div>
+                                    <small class="text-muted">새로운 일정을 등록해주세요.</small>
                                 </div>
                             </div>
-                            <div class="bg-light" style="background: linear-gradient(to top, #f8f9fa, 80%, #edeff0); height:5px"></div>
                         </div>
-                    {% endfor %}
-                </div>
-                <div class="p-2" style="border-radius: 10px;">
-                    <div class="d-flex justify-content-center">
-                        <button id="modalBtn_todo" type="button" class="btn btn-light my-2 btn-lg" style="border-radius: 50%;">+</button>
+                        <div class="bg-light" style="background: linear-gradient(to top, #f8f9fa, 80%, #edeff0); height:5px"></div>
                     </div>
+                {% endfor %}
+            </div>
+            <div class="p-2" style="border-radius: 10px;">
+                <div class="d-flex justify-content-center">
+                    <button id="modalBtn_todo" type="button" class="btn btn-light my-2 btn-lg" style="border-radius: 50%;">+</button>
                 </div>
             </div>
         </div>
+
     </div>
     <div class="col-8" style="color:white; min-width: 500px;" >
         <div class="d-flex flex-column">
