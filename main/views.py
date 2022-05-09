@@ -2,8 +2,6 @@ import base64
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, JsonResponse
-
-# for image capture
 from django.views.decorators.csrf import csrf_exempt
 from timer.models import UserLog
 from calendarApp.form import TodoForm, TodoEditForm
@@ -15,19 +13,10 @@ import os, random
 from withme.settings import MEDIA_ROOT
 
 
-
+@login_required
 def index(request):
-    if request.user.is_authenticated:
-        return main(request)
-    return render(request, "main/intro_main.html")
+    return camera_setting(request)
 
-@login_required
-def main(request):
-    return render(request, "main/home.html")
-
-@login_required
-def settings(request):
-    return render(request, "main/settings.html")
 
 @csrf_exempt
 def detectme(request):
@@ -55,9 +44,12 @@ def detectme(request):
         return JsonResponse(answer)
     return render(request, 'main/video_test.html')
 
+
 def pushmes(request):
     return render(request, 'main/pushmes_send.html')
 
+
+@login_required
 def camera_setting(request):
     item = UserLog.objects.filter(Q(user_id=request.user) & Q(end_time__isnull=True))
     if len(item) == 0:

@@ -1,0 +1,38 @@
+{% extends "main/index_base.html"  %}
+{% load bootstrap5 %}
+
+{% block content %}
+
+<div class="d-flex align-items-center justify-content-end" style="width: 40vw; height: 95vh;">
+    <div class="d-flex flex-column">
+        <div id="intro_meg" class="p-2" style="color:white;"></div>
+    </div>
+</div>
+<div class="d-flex align-items-center justify-content-center" style="width: 40vw; height: 95vh;">
+    <div class="d-flex flex-column" style="width:300px; color:white;">
+        <div style="height:50px;"></div>
+        <form action="" method="POST" enctype="multipart/form-data" >
+            {% csrf_token %}
+            {% bootstrap_form form %}
+            <button type="submit" class="btn btn-outline-light btn-lg" style="width:100%;">
+                Sign in
+            </button>
+        </form>
+    </div>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+            new TypeIt("#intro_meg").
+            type("비록 산의 정상에 이르지 못했다 하더라도</br>\
+            그 도전은 얼마나 대견한 일인가.</br>\
+            중도에 넘어진다 해도 성실하게 노력하는 사람들을 존경하자.</br></br>\
+            자신에게 내재한 힘을 최대한 끊임없이 도전하는 사람.</br>\
+            큰 목표를 설정해 놓고 부단히 노력하는 사람은</br>\
+            인생의 진정한 승리자인 것이다.</br></br>\
+            L.A 세네카.").
+            go()
+        });
+</script>
+
+{% endblock %}

@@ -1,31 +1,17 @@
-{% extends "main/base_main.html" %}
+{% extends "main/main_base.html" %}
 {% load static %}
 {% load bootstrap5 %}
 
 {% block content %}
-<script>
-    $('#side_nav1').attr("class", 'nav-link link-dark');
-    $('#side_nav2').attr("class", 'nav-link active');
-    $('#side_nav3').attr("class", 'nav-link link-dark');
-    $('#side_nav4').attr("class", 'nav-link link-dark');
-</script>
-<svg class="wave-top" style="position: absolute; z-index: -1; top: 0%; left: 0; width: 100%;"  viewBox="0 0 1200 250">
+<svg class="wave-top" style="position: absolute; z-index: -1; top: 60px; left: 0; width: 100%; opacity:0.2;"  viewBox="0 0 1200 250">
     <path fill-rule="evenodd" clip-rule="evenodd" d="M0 108.306L50 114.323C100 120.34 200 132.374 300 168.476C400 204.578 500 264.749 600 246.698C700 228.647 800 132.374 900 108.306C1000 84.2382 1100 132.374 1150 156.442L1200 180.51V-8.5451e-06H1150C1100 -8.5451e-06 1000 -8.5451e-06 900 -8.5451e-06C800 -8.5451e-06 700 -8.5451e-06 600 -8.5451e-06C500 -8.5451e-06 400 -8.5451e-06 300 -8.5451e-06C200 -8.5451e-06 100 -8.5451e-06 50 -8.5451e-06H0V108.306Z" fill="#f8f9fa"/>
 </svg>
 
-</div>
-<div style="position: absolute; z-index: -3; top: 0; left: 0; width: 100%; height:98vh; background-color: white;"  viewBox="0 0 1200 250">
-</div>
-<div class="container" style="position: relative; z-index: 10;">
-    <div class="row">
-        <div class="col-12" style="height: 72px">
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-1"></div>
-        <div class="col-3">
-            <div class="d-flex flex-column border border-primary" style="border-radius: 10px; height: 80vh;">
-                <div class="d-flex flex-column bg-primary" style="border-radius: 10px 10px 0px 0px / 10px 10px 0px 0px;">
+<div class="row" style="z-index: 10; width:100%">
+    <div class="col-4" style="min-width: 250px;">
+        <div class="d-flex justify-content-center" style="width:100%;">
+            <div class="d-flex flex-column border border-white" style="border-radius: 10px; min-height:400px; background: rgba( 0, 0, 0, 0.3 );">
+                <div class="d-flex flex-column" style="border-radius: 10px 10px 0px 0px / 10px 10px 0px 0px;">
                     <div class="d-flex mx-auto p-2">
                         <div class="d-flex justify-content-center text-white">Todo List</div>
                     </div>
@@ -50,64 +36,61 @@
                         </div>
                     {% endfor %}
                 </div>
-                <div class="p-2 bg-white" style="border-radius: 10px">
+                <div class="p-2" style="border-radius: 10px;">
                     <div class="d-flex justify-content-center">
-                        <button id="modalBtn_todo" type="button" class="btn btn-primary my-2 btn-lg" style="border-radius: 50%;">+</button>
+                        <button id="modalBtn_todo" type="button" class="btn btn-light my-2 btn-lg" style="border-radius: 50%;">+</button>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="col-7">
-            <div class="d-flex flex-column">
-                <div class="px-3 mb-2 border-bottom border-dark">
-                    <p style="font-size: 20px; font: 1em NanumGothic, sans-serif bold ">
-                        {{ tag }}
-                    </p>
-                </div>
-                <div class="m-2 p-2 border-top border-bottom">
-                    <div class="d-flex justify-content-around">
-                        <div class="d-flex flex-column bd-highlight">
-                            <div class="d-flex justify-content-center p-2 bd-highlight">경과 시간</div>
-                            <div class="align-items-center p-2 bd-highlight"><h2><div class="clock"></div></h2></div>
-                        </div>
-                        <div class="d-flex flex-column bd-highlight">
-                            <div class="d-flex justify-content-center p-2 bd-highlight">공부 시간</div>
-                            <div class="align-items-center p-2 bd-highlight"><h1>00:00:00</h1></div>
-                        </div>
-                        <div class="d-flex flex-column bd-highlight">
-                            <div class="d-flex justify-content-center p-2 bd-highlight">흘러간 시간</div>
-                            <div class="align-items-center p-2 bd-highlight"><h2>00:00:00</div></h2></div>
-                        </div>
+    </div>
+    <div class="col-8" style="color:white; min-width: 500px;" >
+        <div class="d-flex flex-column">
+            <div class="px-3">
+                <p style="font-size: 20px; font: 1em NanumGothic, sans-serif bold ">
+                    {{ tag }}
+                </p>
+            </div>
+            <div class="mb-2 p-2 border-top border-bottom">
+                <div class="d-flex justify-content-around">
+                    <div class="d-flex flex-column bd-highlight">
+                        <div class="d-flex justify-content-center p-2 bd-highlight">경과 시간</div>
+                        <div class="align-items-center p-2 bd-highlight"><h2><div class="clock"></div></h2></div>
+                    </div>
+                    <div class="d-flex flex-column bd-highlight">
+                        <div class="d-flex justify-content-center p-2 bd-highlight">공부 시간</div>
+                        <div class="align-items-center p-2 bd-highlight"><h1>00:00:00</h1></div>
+                    </div>
+                    <div class="d-flex flex-column bd-highlight">
+                        <div class="d-flex justify-content-center p-2 bd-highlight">흘러간 시간</div>
+                        <div class="align-items-center p-2 bd-highlight"><h2>00:00:00</div></h2></div>
                     </div>
                 </div>
-                <div class="d-flex bd-highlight">
-                    <div class="m-2 p-3 w-100 bd-highlight border">
-                        <div class="d-flex justify-content-center p-2 bd-highlight">
-                             <div class="align-items-center p-2 bd-highlight">
-                                종료버튼?
-                             </div>
-                        </div>
+            </div>
+            <div class="d-flex bd-highlight">
+                <div class="m-2 p-3 w-100 bd-highlight border">
+                    <div class="d-flex justify-content-center p-2 bd-highlight">
+                         <div class="align-items-center p-2 bd-highlight">
+                            종료버튼?
+                         </div>
                     </div>
-                    <div class="p-2 flex-shrink-1 bd-highlight">
-                        <div id="videoSection" class="card border-0">
-                            <video class="card-img-top" id="videoElement" style="width:300px; border-radius: 10px 10px 0px 0px / 10px 10px 0px 0px;"></video>
-                            <div class="card-footer">
-                                <div class="d-flex justify-content-center" style="width:100%">
-                                    <small id="result" style="font-size: 0.5em;">System message</small>
-                                </div>
+                </div>
+                <div class="p-2 flex-shrink-1 bd-highlight">
+                    <div id="videoSection" class="card border-0" style="background:transparent;">
+                        <video class="card-img-top" id="videoElement" style="width:300px; border-radius: 10px 10px 0px 0px / 10px 10px 0px 0px;"></video>
+                        <div class="card-footer bg-dark">
+                            <div class="d-flex justify-content-center" style="width:100%">
+                                <small id="result" style="font-size: 0.7em;">System message</small>
                             </div>
-                            <canvas id="canvas" width="400" height="300" style="display:None;"></canvas>
                         </div>
+                        <canvas id="canvas" width="400" height="300" style="display:None;"></canvas>
                     </div>
-                </div>
-                <div class="col mt-3 px-3 pb-2 border" >
-                    >> Rangking System
                 </div>
             </div>
         </div>
-        <div class="col-1"></div>
     </div>
 </div>
+
 
 <div id="modalBox_todo" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog" role="document">
@@ -149,6 +132,14 @@
         </div>
     </div>
 </div>
+
+<div id="container" style="display:None;">
+        <video playsinline id="videoElement"></video>
+        <br>
+        <h2 id="result">DETECT ME</h2>
+        <h2 id="count_eye"></h2>
+        <h2 id='count_neck'></h2>
+    </div>
 
 <div id="todo_modalBox" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog" role="document">
@@ -194,8 +185,14 @@
             return result['userAwakeState'] != '0';
         }
 
+        function isUserNeckOkay(result){
+            return result['userNeckState'] == '0';
+        }
+
         const FPS = 2;
         const THRESHOLD = 3;
+        var count = 0;
+        var count2 = 0;
         var count = THRESHOLD;
         var tag_idx = -1;
 
@@ -216,12 +213,36 @@
                         count = 0;
                         $('#result').text('바른 자세입니다.');
                     }
+                    $('#count_eye').text(count);
                 },
                 error: function () {
                     //console.log('통신 실패');
                 },
             });
         }
+        function monitorNeck(){
+                $.ajax({
+                    type: "POST",
+                    url: "../predict_eyes/detectneck",
+                    data: { data: getFrameData() },
+                    success: function (result) {
+                        if (isUserNeckOkay(result)) {
+                            count2++;
+                            if (count2 >= THRESHOLD) {
+
+                            }
+                        } else {
+
+                        }
+
+                        $('#count_neck').text(count2);
+                        //console.log(result);
+                    },
+                    error: function () {
+                        //console.log('통신 실패');
+                    },
+                });
+            }
 
         function clock() {// We create a new Date object and assign it to a variable called "time".
             let start_time = new Date('{{user_log.start_time|date:"c"}}');
@@ -246,10 +267,11 @@
         setInterval(function () {
             monitorUser();
         }, 1000 / FPS);
+        setInterval(function () {
+            monitorNeck();
+        }, 2000 / FPS);
 
         setInterval(clock, 1000);
-
-
 
         // modal
         $("#modalBtn_todo").click(function () {
@@ -258,6 +280,7 @@
         $("#modalBtn_todo_close").click(function () {
             $('#modalBox_todo').modal('hide');
         });
+
     });
 </script>
 

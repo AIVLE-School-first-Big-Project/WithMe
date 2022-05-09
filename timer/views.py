@@ -19,35 +19,37 @@ from tag.models import Tag
 def service(request):
     todo_form = TodoForm()
     todo_list = Todolist.objects.all().filter(Q(author=request.user))
-    if request.method == 'POST':
-        tag = Tag.objects.get(pk=request.POST['tag_id'])
-        user_log = UserLog()
-        user_log.user = request.user
-        user_log.tag = tag
-        user_log.save()
-
-        return render(request, 'timer/service_main.html', {
-            "todo_form" : todo_form,
-            "todo_edit_form": TodoEditForm,
-            "todo_list" : todo_list,
-            "tag": tag,
-            "user_log": user_log,
-        })
-    else:
-        item = UserLog.objects.filter(Q(user_id=request.user) & Q(end_time__isnull=True))
-        if len(item) == 0:
-            return render(request, 'main/camera_setting.html')
-        else:
-            item = item[0]
-            tag = Tag.objects.get(pk=item.tag_id)
+    item = UserLog.objects.filter(Q(user_id=request.user) & Q(end_time__isnull=True))
+    if len(item) == 0:
+        if request.method == 'POST':
+            tag = Tag.objects.get(pk=request.POST['tag_id'])
+            user_log = UserLog()
+            user_log.user = request.user
+            user_log.tag = tag
+            user_log.save()
 
             return render(request, 'timer/service_main.html', {
                 "todo_form": todo_form,
                 "todo_edit_form": TodoEditForm,
                 "todo_list": todo_list,
                 "tag": tag,
-                "user_log": item,
+                "user_log": user_log,
             })
+        return render(request, 'main/camera_setting.html')
+    else:
+        item = item[0]
+        tag = Tag.objects.get(pk=item.tag_id)
+
+        return render(request, 'timer/service_main.html', {
+            "todo_form": todo_form,
+            "todo_edit_form": TodoEditForm,
+            "todo_list": todo_list,
+            "tag": tag,
+            "user_log": item,
+        })
+
+
+
 
 @login_required
 def watch(request):

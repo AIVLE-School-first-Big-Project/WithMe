@@ -1,28 +1,21 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.forms import PasswordChangeForm
-from django.contrib.auth import update_session_auth_hash
+from django.contrib.auth import update_session_auth_hash, authenticate, login
 from django.contrib.auth import login as auth_login
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.forms import UserChangeForm
 from django.contrib import messages
-from django.http import HttpResponse
-from .models import User, UserType
-from .forms import SignupForm
-from django.urls import reverse
-# from .forms import CustomUserChangeForm
-
+from .models import UserType
 from django.contrib.auth.views import LoginView
-
-from .forms import SignupForm
-
-login = LoginView.as_view(template_name="accounts/login_form.html")
+from .forms import SignupForm, CustomAuthenticationForm
 
 
-def login_ok(request):
-    return HttpResponse('\
-                        login successful!</br>\
-                        <a href="/accounts/logout/">[ Logout ] </a>\
-                        ')
+class CustomLoginView(LoginView):
+    template_name = 'main/index_login.html'
+    form_class = CustomAuthenticationForm
+
+
+login = CustomLoginView.as_view()
+
 
 def signup(request):
     if request.method == 'POST':
