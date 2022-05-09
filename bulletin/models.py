@@ -7,9 +7,10 @@ class Post(models.Model):
     title       = models.CharField(max_length=255,  null=True)
     write_date  = models.DateTimeField(null=True)
     modify_date = models.DateTimeField(null=True, blank=True)
+    image       = models.ImageField(null=True, upload_to="", blank=True)
     content     = models.TextField(max_length=255,  null=True)
-    user        = models.ForeignKey(User, on_delete=models.SET_NULL, null = True)
     view_count  = models.PositiveIntegerField(default=0)
+    user        = models.ForeignKey(User, on_delete=models.SET_NULL, null = True)
     
     def update_counter(self):
         self.view_count = self.view_count + 1
