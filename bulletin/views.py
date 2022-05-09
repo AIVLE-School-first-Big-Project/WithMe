@@ -44,7 +44,6 @@ def post(request, post_id):
     post = get_object_or_404(Post, id=post_id)
     reply_list = Reply.objects.filter(post__id=post_id)
     if request.method == "POST":
-
         reply = Reply()
         reply.post = Post.objects.get(id=post_id)
         reply.user = request.user
@@ -59,14 +58,21 @@ def post(request, post_id):
 @login_required
 def upload_post(request):
     if request.method == "POST":
-        form = PostForm(request.POST)
-        if form.is_valid():
-
-            post = form.save(commit=False)
-            post.write_date = timezone.now()
-            post.user = request.user
-            post.save()
-            return redirect("../")
+        print("request:", request)
+        post = Post()
+        post.title = request.POST['title']
+        post.content = request.POST['content']
+        try:
+            post.image = request.FILES['image']
+        except:
+            print("\n"*10)
+            print("error")
+            print("\n"*10)
+            
+        post.write_date = timezone.now()
+        post.user = request.user
+        post.save()
+        return redirect("../")
     else:
         form = PostForm()
 

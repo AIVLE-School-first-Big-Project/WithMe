@@ -15,3 +15,5 @@ mediapipe==0.8.9.1
 tensorflow==2.8.0
 
 django-bootstrap-datepicker-plus==4.0.0
+
+pillow==8.4.0

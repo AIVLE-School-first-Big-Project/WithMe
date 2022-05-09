@@ -1,4 +1,4 @@
-{% extends "main/base_main.html" %}
+{% extends "main/main_base.html" %}
 {% block content %}
 {% load static %}
 
@@ -57,6 +57,11 @@
                 <p> time: {{post.write_date}}</p>
                 <div class="contour"></div>
                 <br><br>
+                <!-- 이미지 보여주기 -->
+                {% if post.image %}
+                    <img src = "{{ post.image.url }}" alt="" height="600">
+                    <br>
+                {% endif %}
                 <p>
                     {% if not post.content %}
                         내용 없음

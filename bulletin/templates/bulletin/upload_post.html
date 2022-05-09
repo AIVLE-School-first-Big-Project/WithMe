@@ -1,4 +1,4 @@
-{% extends "main/base_main.html" %}
+{% extends "main/main_base.html" %}
 {% block content %}
 {% load static %}
 <!--jquery -->
@@ -23,23 +23,26 @@
         <br>
       
         <div class="contour"></div>
-        <form method="POST" class="post-form my-3">
-        {% csrf_token %}
-
+        <form method="POST" class="post-form my-3" enctype="multipart/form-data">
+          {% csrf_token %}
+        
           <div class="form-group">
-            <label for="subject">제목</label>
+            <label for="title">제목</label>
             <input
               type="text"
               class="form-control"
               name="title"
-              value="{{ form.title.value|default_if_none:'' }}"
+              value=""
             />
-          </div>
-          <div class="form-group">
+
             <label for="content">내용</label>
-            <textarea class="form-control" name="content" rows="10" value="{{ form.content.value|default_if_none:'' }}">
-              
+            <textarea class="form-control" name="content" rows="10" value="">              
             </textarea>
+            <label for="image">사진</label>
+            <input
+              type="file"
+              name="image"
+            />
           </div>
 
           <input type="submit" value="저장하기" style="margin-left: 660px" />
