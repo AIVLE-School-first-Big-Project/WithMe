@@ -16,8 +16,10 @@ def timer2(request):
 
 @login_required
 def todo_new(request):
+    print("hello")
     if request.method == 'POST':
         form = TodoForm(request.POST)
+        print("hello")
         if form.is_valid():
             todo = form.save(commit=False)
             todo.author = request.user
@@ -30,7 +32,6 @@ def todo_new(request):
             return redirect(request.META.get('HTTP_REFERER', 'redirect_if_referer_not_found'))
     else:
         form = TodoForm()
-        print('hi')
         return render(request, 'calendarApp/todo_new.html', {
             "form": form
         })
