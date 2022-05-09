@@ -3,7 +3,7 @@
 {% load bootstrap5 %}
 
 {% block content %}
-<svg class="wave-top" style="position: absolute; z-index: -1; top: 60px; left: 0; width: 100%; opacity:0.2;"  viewBox="0 0 1200 250">
+<svg class="wave-top" style="position: absolute; z-index: -1; top: 60px; left: 0; width: 100%; opacity:0.1;"  viewBox="0 0 1200 250">
     <path fill-rule="evenodd" clip-rule="evenodd" d="M0 108.306L50 114.323C100 120.34 200 132.374 300 168.476C400 204.578 500 264.749 600 246.698C700 228.647 800 132.374 900 108.306C1000 84.2382 1100 132.374 1150 156.442L1200 180.51V-8.5451e-06H1150C1100 -8.5451e-06 1000 -8.5451e-06 900 -8.5451e-06C800 -8.5451e-06 700 -8.5451e-06 600 -8.5451e-06C500 -8.5451e-06 400 -8.5451e-06 300 -8.5451e-06C200 -8.5451e-06 100 -8.5451e-06 50 -8.5451e-06H0V108.306Z" fill="#f8f9fa"/>
 </svg>
 
@@ -46,42 +46,43 @@
     </div>
     <div class="col-8" style="color:white; min-width: 500px;" >
         <div class="d-flex flex-column">
-            <div class="px-3">
-                <p style="font-size: 20px; font: 1em NanumGothic, sans-serif bold ">
+            <div class="d-flex justify-content-center">
+                <p style="font-size: 20px; font: 1em; top:10px">
                     {{ tag }}
                 </p>
+
             </div>
             <div class="mb-2 p-2 border-top border-bottom">
                 <div class="d-flex justify-content-around">
                     <div class="d-flex flex-column bd-highlight">
                         <div class="d-flex justify-content-center p-2 bd-highlight">경과 시간</div>
-                        <div class="align-items-center p-2 bd-highlight"><h2><div class="clock"></div></h2></div>
+                        <div class="align-items-center p-2 bd-highlight"><h2><div id="clock1"></div></h2></div>
                     </div>
                     <div class="d-flex flex-column bd-highlight">
                         <div class="d-flex justify-content-center p-2 bd-highlight">공부 시간</div>
-                        <div class="align-items-center p-2 bd-highlight"><h1>00:00:00</h1></div>
+                        <div class="align-items-center p-2 bd-highlight"><h1><div id="clock2"></div></h1></div>
                     </div>
                     <div class="d-flex flex-column bd-highlight">
                         <div class="d-flex justify-content-center p-2 bd-highlight">흘러간 시간</div>
-                        <div class="align-items-center p-2 bd-highlight"><h2>00:00:00</div></h2></div>
+                        <div class="align-items-center p-2 bd-highlight"><h2><div id="clock3"></div></h2></div>
                     </div>
                 </div>
             </div>
             <div class="d-flex bd-highlight">
                 <div class="m-2 p-3 w-100 bd-highlight border">
-                    <div class="d-flex justify-content-center p-2 bd-highlight">
-                         <div class="align-items-center p-2 bd-highlight">
-                            종료버튼?
+                    <div class="d-flex align-items-center justify-content-center p-2 bd-highlight" style="height:100%;">
+                         <div id="textneck_p" class="p-2 bd-highlight">
+                            잘못된 자세 : {{ user_log.textneck_point }}
                          </div>
                     </div>
                 </div>
                 <div class="p-2 flex-shrink-1 bd-highlight">
                     <div id="videoSection" class="card border-0" style="background:transparent;">
                         <video class="card-img-top" id="videoElement" style="width:300px; border-radius: 10px 10px 0px 0px / 10px 10px 0px 0px;"></video>
-                        <div class="card-footer bg-dark">
-                            <div class="d-flex justify-content-center" style="width:100%">
-                                <small id="result" style="font-size: 0.7em;">System message</small>
-                            </div>
+                        <div class="card-footer bg-dark m-0 p-0" style="background: rgba( 0, 0, 0, 0.0 ) !important;">
+                            <a id="submit-button" class="btn btn-outline-danger btn-block" style="width:100%">
+                                    학습 종료
+                            </a>
                         </div>
                         <canvas id="canvas" width="400" height="300" style="display:None;"></canvas>
                     </div>
@@ -133,13 +134,6 @@
     </div>
 </div>
 
-<div id="container" style="display:None;">
-        <video playsinline id="videoElement"></video>
-        <br>
-        <h2 id="result">DETECT ME</h2>
-        <h2 id="count_eye"></h2>
-        <h2 id='count_neck'></h2>
-    </div>
 
 <div id="todo_modalBox" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog" role="document">
@@ -151,109 +145,71 @@
     </div>
 </div>
 
+<form id='redirection_form' style="display:None;">
+    {% csrf_token %}
+</form>
 <script src="{% static 'anime_service_bg.js' %}"></script>
 <script>
     $(function() {
-        $("#sidetoggle").click();
-        var canvas = document.getElementById('canvas');
-        var context = canvas.getContext('2d');
+        let canvas = document.getElementById('canvas');
+        let context = canvas.getContext('2d');
         const video = document.querySelector("#videoElement");
+        let clock_stop = false;
+        let start_time = new Date('{{user_log.start_time|date:"c"}}');
+        let neck_point = {{ user_log.textneck_point }};
+        let differ2 = 0;
+        let eyes = false, neck = false;
 
-        function setVideo() {
-            if (navigator.mediaDevices.getUserMedia) {
-                navigator.mediaDevices
-                    .getUserMedia({ video: true })
-                    .then(function (stream) {
-                        video.srcObject = stream;
-                        video.play();
-                    })
-                    .catch(function (errMsg) {
-                        console.log(errMsg);
-                    });
-            }
+        if (navigator.mediaDevices.getUserMedia) {
+            navigator.mediaDevices
+                .getUserMedia({ video: true })
+                .then(function (stream) {
+                    video.srcObject = stream;
+                    video.play();
+                })
+                .catch(function (errMsg) {
+                    console.log(errMsg);
+                });
         }
 
         function getFrameData() {
             context.drawImage(video, 0, 0, 400, 300);
-            var data = canvas.toDataURL('image/png', 1.0);
-            context.clearRect(0, 0, video.width, video.height);
-
-            return data;
+            return canvas.toDataURL('image/jpeg', 1.0);
         }
 
-        function isUserAwake(result){
-            return result['userAwakeState'] != '0';
-        }
-
-        function isUserNeckOkay(result){
-            return result['userNeckState'] == '0';
-        }
-
-        const FPS = 2;
-        const THRESHOLD = 3;
-        var count = 0;
-        var count2 = 0;
-        var count = THRESHOLD;
-        var tag_idx = -1;
-
-        function monitorUser() {
-            $.ajax({
-                type: "POST",
-                url: "../predict_eyes/detectme2",
-                data: { data: getFrameData() },
-                success: function (result) {
-                    //console.log(result);
-                    if (isUserAwake(result) == false) {
-                        count++;
-                        if (count >= THRESHOLD) {
-                            count = THRESHOLD;
-                            $('#result').text('어깨와 눈이 보이도록 카메라를 조정하세요.');
-                        }
-                    } else {
-                        count = 0;
-                        $('#result').text('바른 자세입니다.');
-                    }
-                    $('#count_eye').text(count);
-                },
-                error: function () {
-                    //console.log('통신 실패');
-                },
-            });
-        }
-        function monitorNeck(){
-                $.ajax({
-                    type: "POST",
-                    url: "../predict_eyes/detectneck",
-                    data: { data: getFrameData() },
-                    success: function (result) {
-                        if (isUserNeckOkay(result)) {
-                            count2++;
-                            if (count2 >= THRESHOLD) {
-
-                            }
-                        } else {
-
-                        }
-
-                        $('#count_neck').text(count2);
-                        //console.log(result);
-                    },
-                    error: function () {
-                        //console.log('통신 실패');
-                    },
-                });
-            }
+        let tag_idx = -1;
+        let abnormal_time = {{ user_log.abnormal_time }} ;
 
         function clock() {// We create a new Date object and assign it to a variable called "time".
-            let start_time = new Date('{{user_log.start_time|date:"c"}}');
             let time = new Date();
             let differ = parseInt((time.getTime() - start_time.getTime()) / 1000);
-
             let hours = parseInt(differ/3600),
             minutes = parseInt((differ%3600)/60),
             seconds = differ%60;
 
-            document.querySelectorAll('.clock')[0].innerHTML = harold(hours) + ":" + harold(minutes) + ":" + harold(seconds);
+            if (!clock_stop){
+                differ -= abnormal_time;
+                differ2 = differ;
+            }
+            else{
+                differ = differ2
+            }
+
+            let hours2 = parseInt(differ/3600),
+                minutes2 = parseInt((differ%3600)/60),
+                seconds2 = differ%60;
+
+            if (clock_stop){
+                abnormal_time += 1
+            }
+
+            let hours3 = parseInt(abnormal_time/3600),
+                minutes3 = parseInt((abnormal_time%3600)/60),
+                seconds3 = abnormal_time%60;
+            $("#clock1").text(harold(hours) + ":" + harold(minutes) + ":" + harold(seconds));
+            $("#clock2").text(harold(hours2) + ":" + harold(minutes2) + ":" + harold(seconds2));
+            $("#clock3").text(harold(hours3) + ":" + harold(minutes3) + ":" + harold(seconds3));
+
 
             function harold(standIn) {
             if (standIn < 10) {
@@ -263,15 +219,65 @@
             }
         }
 
-        setVideo()
-        setInterval(function () {
-            monitorUser();
-        }, 1000 / FPS);
-        setInterval(function () {
-            monitorNeck();
-        }, 2000 / FPS);
-
         setInterval(clock, 1000);
+        const chatSocket = new WebSocket(
+            'ws://'
+            + window.location.host
+            + '/ws/service/'
+            + "{{ user_log.id|safe }}"
+            + '/'
+        );
+        chatSocket.onmessage = function(e) {
+            const data = JSON.parse(e.data);
+            d1 = data.type;
+            if (d1 == 'res_eyes'){
+                d2 = parseInt(JSON.stringify(data.message));
+                abnormal_time = parseInt(JSON.stringify(data.abnormal));
+                if (d2 != 0){
+                    if (d2 == 1){
+                        eyes = true;
+                    }
+                    clock_stop = true;
+                }
+                else{
+                    eyes = false;
+                    clock_stop = false;
+                }
+            }
+            else if (d1 == 'res_neck'){
+                d2 = parseInt(JSON.stringify(data.message));
+                neck_point = parseInt(JSON.stringify(data.neckpoint));
+                if (d2 == 1){
+                    $("#textneck_p").text(neck_point);
+
+                    neck = true;
+                }
+                else{
+                    neck = false;
+                }
+            }
+
+        };
+
+        function Socket_msg_eyes(){
+            chatSocket.send(JSON.stringify({
+                'type': 'DE',
+                'message': getFrameData(),
+            }));
+        }
+        function Socket_msg_neck(){
+            chatSocket.send(JSON.stringify({
+                'type': 'DN',
+                'message': getFrameData(),
+            }));
+        }
+        setTimeout(function() {
+            setInterval(Socket_msg_eyes, 500);
+            setInterval(Socket_msg_neck, 1000);
+        }, 2000);
+
+
+
 
         // modal
         $("#modalBtn_todo").click(function () {
@@ -279,6 +285,20 @@
         });
         $("#modalBtn_todo_close").click(function () {
             $('#modalBox_todo').modal('hide');
+        });
+
+        $('#submit-button').click(function() {
+            let f = $("#redirection_form")[0];
+            f.setAttribute('method', 'post');
+            f.setAttribute('action', '/timer/result');
+
+            let obj = document.createElement('input');
+            obj.setAttribute('type', 'text');
+            obj.setAttribute('name', 'user_log');
+            obj.setAttribute('value', '{{ user_log.id }}');
+            f.appendChild(obj);
+
+            f.submit();
         });
 
     });

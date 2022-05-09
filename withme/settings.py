@@ -69,7 +69,6 @@ INSTALLED_APPS = [
     'tag',
     'main',
     'timer',
-    'predict_eyes',
     'calendarApp',
     'bulletin',
 ]

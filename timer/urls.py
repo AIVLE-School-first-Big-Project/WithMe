@@ -11,4 +11,6 @@ urlpatterns = [
     path("create_userlog/", views.create_userlog, name='create_userlog'),
 
     path('service', views.service, name='main'),
+    path('result', views.result, name='main'),
+
 ]

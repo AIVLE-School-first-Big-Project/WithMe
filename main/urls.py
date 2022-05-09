@@ -1,8 +1,8 @@
 from django.urls import path, re_path
 from .views import *
-
+from timer.views import service
 urlpatterns = [
-    path('', camera_setting, name='camera_setting'),
+    path('', service, name='service'),
     path('detectme', detectme, name="detectme"),
 
     # push

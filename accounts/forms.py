@@ -8,7 +8,7 @@ from .models import User
 class CustomAuthenticationForm(AuthenticationForm):
     error_messages = {
         'invalid_login': (
-            "비밀번호나 이름이 올바르지 않습니다."
+            "아이디와 비밀번호를 다시 확인해주세요."
         )
     }
 
@@ -17,10 +17,12 @@ class CustomAuthenticationForm(AuthenticationForm):
         self.fields['username'].label = '__Name'
         self.fields["username"].widget.attrs.update({
             'class': 'bg-transparent text-white border-white',
+            'placeholder': 'Input here your name',
         })
         self.fields['password'].label = '__Password'
         self.fields["password"].widget.attrs.update({
             'class': 'bg-transparent text-white border-white',
+            'placeholder': 'Input here your password',
         })
 
 

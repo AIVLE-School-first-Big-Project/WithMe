@@ -13,42 +13,46 @@ from django.db.models import Q
 from calendarApp.form import TodoForm, TodoEditForm
 from calendarApp.models import Todolist
 from tag.models import Tag
+from .models import TimeLog
 
 
 @login_required
 def service(request):
-    todo_form = TodoForm()
-    todo_list = Todolist.objects.all().filter(Q(author=request.user))
+    context = dict()
+    context['todo_form'] = TodoForm
+    context['todo_edit_form'] = TodoEditForm
+    context['todo_list'] = Todolist.objects.all().filter(Q(author=request.user))
+
     item = UserLog.objects.filter(Q(user_id=request.user) & Q(end_time__isnull=True))
     if len(item) == 0:
         if request.method == 'POST':
-            tag = Tag.objects.get(pk=request.POST['tag_id'])
+            context['tag'] = Tag.objects.get(pk=request.POST['tag_id'])
             user_log = UserLog()
             user_log.user = request.user
-            user_log.tag = tag
+            user_log.tag = context['tag']
             user_log.save()
-
-            return render(request, 'timer/service_main.html', {
-                "todo_form": todo_form,
-                "todo_edit_form": TodoEditForm,
-                "todo_list": todo_list,
-                "tag": tag,
-                "user_log": user_log,
-            })
+            TimeLog(user_log=user_log, time=user_log.start_time,event_type=0).save()
+            context['user_log'] = user_log
+            return render(request, 'timer/service_main.html', context)
         return render(request, 'main/camera_setting.html')
     else:
-        item = item[0]
-        tag = Tag.objects.get(pk=item.tag_id)
-
-        return render(request, 'timer/service_main.html', {
-            "todo_form": todo_form,
-            "todo_edit_form": TodoEditForm,
-            "todo_list": todo_list,
-            "tag": tag,
-            "user_log": item,
-        })
+        user_log = item[0]
+        context['tag'] = Tag.objects.get(pk=user_log.tag_id)
+        context['user_log'] = user_log
+        return render(request, 'timer/service_main.html', context)
 
 
+@login_required
+def result(request):
+    context = dict()
+    if request.method == 'POST':
+        item = UserLog.objects.get(id=request.POST['user_log'])
+        item.end_time = timezone.now()
+        item.save()
+        context['user_log'] = item
+        return render(request, 'timer/service_result.html', context)
+    else:
+        return redirect('service')
 
 
 @login_required
@@ -122,7 +126,6 @@ def create_timelog(request):
         # create user log through ORM
         time_log = TimeLog()
         time_log.user_log = get_user_log(request.user)
-        time_log.time = timezone.now()
         time_log.event_type = int(data['event_type'])
         time_log.save()
 

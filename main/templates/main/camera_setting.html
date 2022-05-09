@@ -2,102 +2,95 @@
 {% load static %}
 
 {% block content %}
-<div class="container-fluid" style="position: relative;">
-    <div class="row">
-        <div class="col-12" style="height: 72px">
-        </div>
-    </div>
-    <div class="row" style="color:white;">
-        <div class="col-1"></div>
-        <div class="col-7" style="border-radius: 10px 0 0 10px / 10px 0 0 10px;">
-            <div class="d-flex flex-column" >
-                <div style="height:30px"></div>
-                <div class="px-3 mb-2 border-bottom border-light">
-                    <p style="font-size: 20px; bold ">공부 주제 선택하기</p>
-                </div>
-                <div class="m-2 p-2 border-top border-bottom">
-                    <div class="d-flex justify-content-center">
-                        <select id="tag_selector" onChange="tag_change_func(this);" style="width:100%" type = "submit" name="Tag" class="selector" data-placeholder="과목선택" data-autocomplete-light-language="ko" data-autocomplete-light-url="http://127.0.0.1:8000/tag/test/" data-autocomplete-light-function="select2"></select>
-                    </div>
-                </div>
-                <div class="mt-3 px-3 mb-2 border-bottom border-light">
-                    <p style="font-size: 20px; bold ">카메라 설정하기</p>
-                </div>
 
-                <div class="row m-2">
-                    <p class="mx-2"> 카메라의 구도를 오른쪽 사진과 유사하게 설정해 주세요! </p>
-                    <div class="col-6">
-                        <div id="videoSection" class="card border-0" style="background:transparent;">
-                            <video class="card-img-top" id="videoElement" style="border-radius: 10px 10px 0px 0px / 10px 10px 0px 0px;"></video>
-                            <div class="card-footer bg-dark">
-                                <div class="d-flex justify-content-center" style="width:100%">
-                                    <small id="result" style="color: white; font-size: 0.7em;"></small>
-                                </div>
-                            </div>
-                            <canvas id="canvas" width="400" height="300" style="display:None;"></canvas>
-                        </div>
-                    </div>
-                    <div class="col-6 border" style="border-radius: 10px" style="height:100%;">
-                        <img id="sample_picture" src="{% static "assets/img/sample_camera.png" %}" class="img-fluid" />
-                    </div>
-                </div>
-            </div>
+<div class="row" style="color:white;">
+    <div class="col-9" style="border-radius: 10px 0 0 10px / 10px 0 0 10px;">
+        <div class="d-flex flex-column" >
             <div style="height:30px"></div>
-        </div>
-        <div class="col-3 my-5" style="border-radius: 0 10px 10px 0 / 0 10px 10px 0;">
-            <div class="d-flex align-items-start flex-column" style="height: 100%; width: 100%;">
-                <div class="p-2 mt-3" style="border-radius: 10px 10px 0px 0px / 10px 10px 0px 0px;">
-                        > 시작하기 앞서
+            <div class="px-3 mb-2 border-bottom border-light">
+                <p style="font-size: 20px; bold ">공부 주제 선택하기</p>
+            </div>
+            <div class="m-2 p-2 border-top border-bottom">
+                <div class="d-flex justify-content-center">
+                    <select id="tag_selector" onChange="tag_change_func(this);" style="width:100%" type = "submit" name="Tag" class="selector" data-placeholder="과목선택" data-autocomplete-light-language="ko" data-autocomplete-light-url="http://127.0.0.1:8000/tag/test/" data-autocomplete-light-function="select2"></select>
                 </div>
+            </div>
+            <div class="mt-3 px-3 mb-2 border-bottom border-light">
+                <p style="font-size: 20px; bold ">카메라 설정하기</p>
+            </div>
 
-                <div class="p-1" style="width: 100%;">
-                    <div class="p-2">
-                        <div class="d-flex flex-column">
-                            <div class="d-flex justify-content-between">
-                                <div>
-                                    공부 주제 선택
-                                </div>
-                                <div>
-                                    <img id="setting_tag_picture" src="{% static "assets/img/delete-button.png" %}" alt="" width="20" height="20" />
-                                </div>
-                            </div>
-                            <div>
-                                <small id="setting_tag_text" class="text-muted">공부 주제를 선택해 주세요.</small>
+            <div class="row m-2">
+                <p class="mx-2"> 카메라의 구도를 오른쪽 사진과 유사하게 설정해 주세요! </p>
+                <div class="col-6">
+                    <div id="videoSection" class="card border-0" style="background:transparent;">
+                        <video class="card-img-top" id="videoElement" style="border-radius: 10px 10px 0px 0px / 10px 10px 0px 0px;"></video>
+                        <div class="card-footer bg-dark">
+                            <div class="d-flex justify-content-center" style="width:100%">
+                                <small id="result" style="color: white; font-size: 0.7em;"></small>
                             </div>
                         </div>
+                        <canvas id="canvas" width="400" height="300" style="display:None;"></canvas>
                     </div>
-                    <div class="bg-light" style="background: linear-gradient(to top, #e8ecf3, 80%, #edeff0); height:5px"></div>
-                    <div class="p-2 mt-1">
-                        <div class="d-flex flex-column">
-                            <div class="d-flex justify-content-between">
-                                <div>
-                                    카메라 구도 설정
-                                </div>
-                                <div>
-                                    <img id="setting_camera_picture" src="{% static "assets/img/delete-button.png" %}" alt="" width="20" height="20" />
-                                </div>
-                            </div>
-                            <div>
-                                <small id="setting_camera_text" class="text-muted">카메라 구도를 재조정 해주세요.</small>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="bg-light" style="background: linear-gradient(to top, #e8ecf3, 80%, #edeff0); height:5px"></div>
                 </div>
-
-                <div class="mt-auto py-2 " style="height:130px; width: 100%;">
-                    <div class="d-grid gap-2" style="height:120px;">
-                        <button id="submit-button" type="button" class="btn btn-block btn-secondary my-2 btn-lg">시작하기</button>
-                    </div>
+                <div class="col-6 border" style="border-radius: 10px" style="height:100%;">
+                    <img id="sample_picture" src="{% static "assets/img/sample_camera.png" %}" class="img-fluid" />
                 </div>
             </div>
         </div>
-        <div class="col-1"></div>
+        <div style="height:30px"></div>
     </div>
-    <form id='redirection_form' style="display:None;">
-        {% csrf_token %}
-    </form>
+    <div class="col-3 my-5" style="border-radius: 0 10px 10px 0 / 0 10px 10px 0;">
+        <div class="d-flex align-items-start flex-column" style="height: 100%; width: 100%;">
+            <div class="p-2 mt-3" style="border-radius: 10px 10px 0px 0px / 10px 10px 0px 0px;">
+                    > 시작하기 앞서
+            </div>
+
+            <div class="p-1" style="width: 100%;">
+                <div class="p-2">
+                    <div class="d-flex flex-column">
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                공부 주제 선택
+                            </div>
+                            <div>
+                                <img id="setting_tag_picture" src="{% static "assets/img/delete-button.png" %}" alt="" width="20" height="20" />
+                            </div>
+                        </div>
+                        <div>
+                            <small id="setting_tag_text" class="text-muted">공부 주제를 선택해 주세요.</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-light" style="background: linear-gradient(to top, #e8ecf3, 80%, #edeff0); height:5px"></div>
+                <div class="p-2 mt-1">
+                    <div class="d-flex flex-column">
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                카메라 구도 설정
+                            </div>
+                            <div>
+                                <img id="setting_camera_picture" src="{% static "assets/img/delete-button.png" %}" alt="" width="20" height="20" />
+                            </div>
+                        </div>
+                        <div>
+                            <small id="setting_camera_text" class="text-muted">카메라 구도를 재조정 해주세요.</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-light" style="background: linear-gradient(to top, #e8ecf3, 80%, #edeff0); height:5px"></div>
+            </div>
+
+            <div class="mt-auto py-2 " style="height:130px; width: 100%;">
+                <div class="d-grid gap-2" style="height:120px;">
+                    <button id="submit-button" type="button" class="btn btn-block btn-secondary my-2 btn-lg">시작하기</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
+<form id='redirection_form' style="display:None;">
+    {% csrf_token %}
+</form>
 <script>
     function tag_change_func(sel) {
         if ($("#tag_selector")[0].value == ''){
@@ -112,7 +105,6 @@
         }
     }
     $(function() {
-        $("#sidetoggle").click();
         var canvas = document.getElementById('canvas');
         var context = canvas.getContext('2d');
         const video = document.querySelector("#videoElement");
@@ -202,9 +194,9 @@
             f.setAttribute('action', '/timer/service');
 
             let obj = document.createElement('input');
-            obj.setAttribute('type', 'text')
-            obj.setAttribute('name', 'tag_id')
-            obj.setAttribute('value', $("#tag_selector")[0].value)
+            obj.setAttribute('type', 'text');
+            obj.setAttribute('name', 'tag_id');
+            obj.setAttribute('value', $("#tag_selector")[0].value);
             f.appendChild(obj);
 
             f.submit();

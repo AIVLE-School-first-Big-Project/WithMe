@@ -12,12 +12,6 @@ from django.db.models import Q
 import os, random
 from withme.settings import MEDIA_ROOT
 
-
-@login_required
-def index(request):
-    return camera_setting(request)
-
-
 @csrf_exempt
 def detectme(request):
     if request.POST:

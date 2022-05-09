@@ -1,38 +1,38 @@
 @font-face {
  font-family: 'NanumSquare';
  font-weight: 400;
- src: url(assets/font/NanumSquareR.eot);
+ src: url('assets/font/NanumSquareR.eot');
  src: local('☺'),
-      url(assets/font/NanumSquareR.eot?#iefix) format('embedded-opentype'),
-      url(assets/font/NanumSquareR.woff) format('woff'),
-      url(assets/font/NanumSquareR.ttf) format('truetype');
+      url('assets/font/NanumSquareR.eot?#iefix') format('embedded-opentype'),
+      url('assets/font/NanumSquareR.woff') format('woff'),
+      url('assets/font/NanumSquareR.ttf') format('truetype');
 }
 @font-face {
  font-family: 'NanumSquare';
  font-weight: 700;
- src: url(assets/font/NanumSquareB.eot);
+ src: url('assets/font/NanumSquareB.eot');
  src: local('☺'),
-      url(assets/font/NanumSquareB.eot?#iefix) format('embedded-opentype'),
-      url(assets/font/NanumSquareB.woff) format('woff'),
-      url(assets/font/NanumSquareB.ttf) format('truetype');
+      url('assets/font/NanumSquareB.eot?#iefix') format('embedded-opentype'),
+      url('assets/font/NanumSquareB.woff') format('woff'),
+      url('assets/font/NanumSquareB.ttf') format('truetype');
 }
 @font-face {
  font-family: 'NanumSquare';
  font-weight: 800;
- src: url(assets/font/NanumSquareEB.eot);
+ src: url('assets/font/NanumSquareEB.eot');
  src: local('☺'),
-      url(assets/font/NanumSquareEB.eot?#iefix) format('embedded-opentype'),
-      url(assets/font/NanumSquareEB.woff) format('woff'),
-      url(assets/font/NanumSquareEB.ttf) format('truetype');
+      url('assets/font/NanumSquareEB.eot?#iefix') format('embedded-opentype'),
+      url('assets/font/NanumSquareEB.woff') format('woff'),
+      url('assets/font/NanumSquareEB.ttf') format('truetype');
 }
 @font-face {
  font-family: 'NanumSquare';
  font-weight: 300;
- src: url(assets/font/NanumSquareL.eot);
+ src: url('assets/font/NanumSquareL.eot');
  src: local('☺'),
-      url(assets/font/NanumSquareL.eot?#iefix) format('embedded-opentype'),
-      url(assets/font/NanumSquareL.woff) format('woff'),
-      url(assets/font/NanumSquareL.ttf) format('truetype');
+      url('assets/font/NanumSquareL.eot?#iefix') format('embedded-opentype'),
+      url('assets/font/NanumSquareL.woff') format('woff'),
+      url('assets/font/NanumSquareL.ttf') format('truetype');
 }
 
 input[type=password] {font-family:'Malgun gothic', dotum, sans-serif;}

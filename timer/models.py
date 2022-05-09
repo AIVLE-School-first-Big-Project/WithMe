@@ -8,9 +8,13 @@ class UserLog(models.Model):
     tag          = models.ForeignKey(Tag, on_delete=models.SET_NULL, null=True)
     start_time   = models.DateTimeField(auto_now_add=True, null=True)
     end_time     = models.DateTimeField(auto_now_add=False, null=True)
-    abnomal_time = models.DateTimeField(auto_now_add=False, null=True)
+    abnormal_time= models.IntegerField(default=0)
+    textneck_point = models.IntegerField(default=0)
 
 class TimeLog(models.Model):
     user_log    = models.ForeignKey(UserLog, on_delete=models.SET_NULL, null=True)
-    time        = models.DateTimeField(auto_now_add=False)
+    time        = models.DateTimeField(auto_now_add=True)
     event_type  = models.IntegerField()
+
+    class Meta:
+        ordering = ['-time']
