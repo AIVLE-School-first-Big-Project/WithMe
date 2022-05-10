@@ -11,8 +11,14 @@
 }
 
 .contour{
+    width: 500px;
     height: 2px; 
     background-color: white;
+}
+.contour_post{
+    width: 500px;
+    height: 2px; 
+    background-color: black;
 }
 
 .buffer{
@@ -38,4 +44,54 @@ input[type=submit] {
     float:right;color: white;
     margin-top: 10px;
     margin-bottom: 10px;
+}
+
+#btn_bulletin{
+    float:right;
+    color: white;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+#btn_post{
+    float:right;
+    margin-top: 10px;
+    margin-left: 10px;
+    margin-right: 10px;
+    margin-bottom: 10px;
+}
+
+#btn_save{
+    float:right;color: white;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.pagination > li > a
+{
+    background-color: white;
+    background: rgba(0, 0, 0, 0.4);
+    color: #ffffff;
+}
+
+.pagination > li > a:focus,
+.pagination > li > a:hover,
+.pagination > li > span:focus,
+.pagination > li > span:hover
+{
+    color: #5a5a5a;
+    background-color: #eee;
+    border-color: #ddd;
+}
+
+.pagination > .active > a
+{
+    color: white;
+    background-color: #5d5d5d !Important;
+    border: solid 1px #ffffff !Important;
+}
+
+.pagination > .active > a:hover
+{
+    background-color: #525252 !Important;
+    border: solid 1px #525252;
 }
