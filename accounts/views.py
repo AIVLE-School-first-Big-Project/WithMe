@@ -23,7 +23,7 @@ def signup(request):
         if form.is_valid():
             signed_user = form.save()
             auth_login(request, signed_user)
-            return redirect("index")
+            return redirect("service")
     else:
         form = SignupForm()
     return render(request, 'accounts/signup.html', {'form': form})
