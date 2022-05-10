@@ -8,7 +8,7 @@
     <div>
         <div style="height:140px"></div>
         <h1 class="text-center">
-            <p style="font-size: 40px; bold ">Community</p>
+            <p style="font-size: 40px;">Community</p>
         </h1>
 
     
@@ -16,9 +16,7 @@
             글쓰기
         </a>
         
-            
-        
-        <table class="table table-dark table-hover" style="color:white;">
+        <table class="table table-dark table-hover">
             <thead>
                 <tr>
                     <th width="50px">번호</th>
@@ -31,11 +29,11 @@
             <tbody>
                 {% for post in post_list%}
                 <tr>
-                    <td width="50px" style="font-size=5px;">{{post.id}}</td>
-                    <td width="200px"><a href="./{{post.id}}" style="color:white;"><b>{{post.title}}</b></a></td>
-                    <td width="100px">{{post.user.username}}</td>
-                    <td width="150px">{{post.write_date}}</td>
-                    <td width="50px">{{post.view_count}}</td>
+                    <td width="50px" style="font-size:10px;">{{post.id}}</td>
+                    <td width="200px"><a href="./{{post.id}}" style="font-size:20px; color:white;"><b>{{post.title}}</b></a></td>
+                    <td width="100px" style="font-size:15px;">{{post.user.username}}</td>
+                    <td width="150px" style="font-size:10px;">{{post.write_date}}</td>
+                    <td width="50px" style="font-size:15px;">{{post.view_count}}</td>
                 </tr>
                 {%endfor%}
             </tbody>
@@ -61,16 +59,11 @@
             {% endif %}
 
             {% for page_num in page_range %}
-            <li class="page-item">
-                <a class="page-link" href="?page={{page_num}}">
-                    {% if current_page == page%}
-                        <b><u>{{page_num}}</u></b>
-                    {% else %}
-                        {{page_num}}
-                    {% endif %}
-
-                </a>
-            </li>
+                {% if page_num == current_page%}
+                    <li class="page-item active "><a class="page-link" href="?page={{page_num}}">{{page_num}}</a></li>
+                {% else %}
+                    <li class="page-item"><a class="page-link" href="?page={{page_num}}">{{page_num}}</a></li>
+                {% endif %}
             {% endfor %}
 
             {% if post_list.has_next%}

@@ -39,3 +39,33 @@ input[type=submit] {
     margin-top: 10px;
     margin-bottom: 10px;
 }
+
+.pagination > li > a
+{
+    background-color: white;
+    background: rgba(0, 0, 0, 0.4);
+    color: #ffffff;
+}
+
+.pagination > li > a:focus,
+.pagination > li > a:hover,
+.pagination > li > span:focus,
+.pagination > li > span:hover
+{
+    color: #5a5a5a;
+    background-color: #eee;
+    border-color: #ddd;
+}
+
+.pagination > .active > a
+{
+    color: white;
+    background-color: #5d5d5d !Important;
+    border: solid 1px #ffffff !Important;
+}
+
+.pagination > .active > a:hover
+{
+    background-color: #525252 !Important;
+    border: solid 1px #525252;
+}

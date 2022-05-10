@@ -34,7 +34,7 @@ def bulletin(request):
     start_page = (page - 1) // print_range * print_range + 1
     end_page = min(start_page + (print_range - 1), paginator.num_pages)
     post_obj = paginator.get_page(page)
-    context = {'post_list': post_obj, 'page': page, 'keyword': keyword,
+    context = {'post_list': post_obj, 'current_page': page, 'keyword': keyword,
                'page_range': range(start_page, end_page + 1)}
 
     return render(request, 'bulletin/main.html', context)
