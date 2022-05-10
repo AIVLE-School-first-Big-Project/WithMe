@@ -113,4 +113,4 @@ def mypage(request):
     context['user_tag_dict'] = user_tag_dict
     context['user_log_list'] = user_log_list
 
-    return render(request, 'main/mypage_main.html', context)
+    return render(request, 'main/mypage.html', context)

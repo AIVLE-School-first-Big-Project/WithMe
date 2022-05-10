@@ -106,6 +106,61 @@
     tag_tt_list.push('{{value|safe}}');
     {% endfor %}
 
+    new Chart(document.getElementById("bar-chart"), {
+        type: 'bar',
+        data: {
+            labels: ["학습시간", "집중시간", "학습시간", "집중시간"],
+            datasets: [
+                {
+                    label: "Time(minutes)",
+                    backgroundColor: ["rgb(76, 183, 252,0.9)", "rgb(252, 76, 132,0.9)", "rgb(76, 183, 252,0.9)", "rgb(252, 76, 132,0.9)"],
+                    data: [{{ my_total|safe }}, {{ my_focus|safe }}, {{ user_total|safe }}, {{ user_focus|safe }}],
+                    fontStyle: 'normal',
+                    fontFamily: ['NanumSquare', 'sans-serif'],
+                }
+            ]
+            },
+        options: {
+            legend: { display: false },
+            scales: {
+                yAxes: [{
+                    display: false,
+                }],
+            },
+        }
+    });
+    new Chart(document.getElementById("bar-chart2"), {
+        type: 'horizontalBar',
+        data: {
+            labels: tag_name_list,
+            datasets: [
+                {
+                    label: "Time(minutes)",
+                    backgroundColor: "rgb(255,255,255,0.7)",
+                    data: tag_tt_list,
+                    fontStyle: 'normal',
+                    fontFamily: ['NanumSquare', 'sans-serif'],
+                }
+            ]
+            },
+        options: {
+            legend: {
+                display: false,
+            },
+            scales: {
+                yAxes: [{
+                    display: true,
+                    ticks:{
+                        fontColor: 'rgb(255, 255, 255)',
+                    }
+                }],
+                xAxes: [{
+                    display: false,
+                }],
+            },
+        }
+    });
+
     $(function() {
         $("#prev_btn").click(function () {
             let f = $("#new_from")[0];
@@ -145,60 +200,7 @@
             $("#new_from").submit()
         });
         console.log('{{ my_focus|safe }}')
-        new Chart(document.getElementById("bar-chart"), {
-            type: 'bar',
-            data: {
-                labels: ["학습시간", "집중시간", "학습시간", "집중시간"],
-                datasets: [
-                    {
-                        label: "Time(minutes)",
-                        backgroundColor: ["rgb(76, 183, 252,0.9)", "rgb(252, 76, 132,0.9)", "rgb(76, 183, 252,0.9)", ],
-                        data: [{{ my_total|safe }}, {{ my_focus|safe }}, {{ user_total|safe }}, {{ user_focus|safe }}],
-                        fontStyle: 'normal',
-                        fontFamily: ['NanumSquare', 'sans-serif'],
-                    }
-                ]
-                },
-            options: {
-                legend: { display: false },
-                scales: {
-                    yAxes: [{
-                        display: false,
-                    }],
-                },
-            }
-        });
-        new Chart(document.getElementById("bar-chart2"), {
-            type: 'horizontalBar',
-            data: {
-                labels: tag_name_list,
-                datasets: [
-                    {
-                        label: "Time(minutes)",
-                        backgroundColor: "rgb(255,255,255,0.7)",
-                        data: tag_tt_list,
-                        fontStyle: 'normal',
-                        fontFamily: ['NanumSquare', 'sans-serif'],
-                    }
-                ]
-                },
-            options: {
-                legend: {
-                    display: false,
-                },
-                scales: {
-                    yAxes: [{
-                        display: true,
-                        ticks:{
-                            fontColor: 'rgb(255, 255, 255)',
-                        }
-                    }],
-                    xAxes: [{
-                        display: false,
-                    }],
-                },
-            }
-        });
+
 
     });
 </script>
