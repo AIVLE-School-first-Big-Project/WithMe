@@ -1,0 +1,54 @@
+{% load static %}
+{% load humanize %}
+<div id="btn{{user_log.id|safe}}" class="todo_item_ele" type="button">
+    <div class="p-2">
+        <div class="d-flex flex-column">
+            <div>
+                <img src="{% static "assets/img/unchecked.png" %}" alt="" width="20" height="20" />
+                <span id="total_text{{user_log.id|safe}}">
+                    {{ user_log.tag }}
+                </span>
+            </div>
+            <small id="focus_text{{user_log.id|safe}}" class="text-muted" style="color:#dbd9d9 !important;">
+                집중 시간 :
+            </small>
+            <small id="neck_text{{user_log.id|safe}}" class="text-muted" style="color:#dbd9d9 !important;">
+                집중 시간 :
+            </small>
+            <small class="text-muted" style="color:#bdbdbd !important;">
+                시작 : {{user_log.start_time|date:"c"}}
+            </small>
+            <small class="text-muted" style="color:#bdbdbd !important;">
+                종료 : {{user_log.end_time|date:"c"}}
+            </small>
+
+        </div>
+    </div>
+    <div class="mb-2" style="background: rgba( 255, 255, 255, 0.3 ); height:3px"></div>
+</div>
+<form id='new_from{{user_log.id|safe}}' method="POST" action="/timer/result_item" enctype="multipart/form-data" style="display:None;">
+    {% csrf_token %}
+    <input id='new_input{{user_log.id|safe}}' type="text" name="user_log" value="{{user_log.id|safe}}"/>
+</form>
+<script>
+    $(function() {
+        let st = new Date('{{user_log.start_time|date:"c"}}');
+        let ed = new Date('{{user_log.end_time|date:"c"}}');
+        let differ = parseInt((ed.getTime() - st.getTime()) / 1000);
+        let focus = differ - {{ user_log.abnormal_time }} ;
+        let neck = differ - {{ user_log.textneck_point }} ;
+
+        let percent = 100 - ({{ user_log.abnormal_time }} / differ).toFixed(2) * 100;
+        let percent2 = 100 - ({{ user_log.textneck_point }} / differ).toFixed(2) * 100;
+
+        document.getElementById("total_text{{user_log.id|safe}}").textContent= '{{ user_log.tag }} - ' + time_to_str(differ);
+        document.getElementById("focus_text{{user_log.id|safe}}").textContent= '집중 시간 : ' + time_to_str(focus) + "(" + percent + "%)";
+        document.getElementById("neck_text{{user_log.id|safe}}").textContent= '바른 자세 : ' + time_to_str(neck) + "(" + percent2 + "%)";
+
+        $("#btn{{user_log.id|safe}}").click(function () {
+            let f = $("#new_from{{user_log.id|safe}}")[0];
+            $("#new_from{{user_log.id|safe}}").submit()
+        });
+
+    });
+</script>

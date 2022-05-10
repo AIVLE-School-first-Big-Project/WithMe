@@ -3,8 +3,7 @@ from .views import *
 from timer.views import service
 urlpatterns = [
     path('', service, name='service'),
+    path('mypage', mypage, name="mypage"),
     path('detectme', detectme, name="detectme"),
 
-    # push
-    path('pushmes/', pushmes, name='pushmes'),
 ]

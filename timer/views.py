@@ -19,53 +19,54 @@ from django.utils import timezone
 from datetime import timedelta
 
 def test_result(request):
-    context = dict()
-    user_log_pk = UserLog.objects.last().id
-    item = UserLog.objects.last()
-    context['user_log'] = item
+    if request.POST:
+        context = dict()
+        user_log_pk = request.POST['user_log']
+        item = UserLog.objects.get(id=user_log_pk)
+        context['user_log'] = item
 
-    total_time, total_focus_time = 0, 0
-    for i in UserLog.objects.all().filter(Q(tag=item.tag)):
-        parsed_t = parse_datetime(str(i.start_time))
-        parsed_t2 = parse_datetime(str(i.end_time))
-        tt = int((parsed_t2 - parsed_t).total_seconds())
-        total_time += tt
-        total_focus_time += tt - i.abnormal_time
-    context['total_time'] = total_time
-    context['total_focus_time'] = total_focus_time
-    pattern_list = []
+        total_time, total_focus_time = 0, 0
+        for i in UserLog.objects.all().filter(Q(tag=item.tag)):
+            parsed_t = parse_datetime(str(i.start_time))
+            parsed_t2 = parse_datetime(str(i.end_time))
+            tt = int((parsed_t2 - parsed_t).total_seconds())
+            total_time += tt
+            total_focus_time += tt - i.abnormal_time
+        context['total_time'] = total_time
+        context['total_focus_time'] = total_focus_time
+        pattern_list = []
 
-    lst = TimeLog.objects.all().filter(Q(user_log=user_log_pk)).order_by('time')
-    for idx, i in enumerate(lst):
-        e = 1 if i.event_type == 0 else 0
+        lst = TimeLog.objects.all().filter(Q(user_log=user_log_pk)).order_by('time')
+        for idx, i in enumerate(lst):
+            e = 1 if i.event_type == 0 else 0
 
-        if e == 0:
-            res = dict()
-            later = i.time - timedelta(seconds=1)
-            print(idx, '>>', later)
-            res['x'] = later.strftime("%Y-%m-%d %H:%M:%S")
-            res['y'] = 1
-            pattern_list.append(res)
-
-        if e == 1:
-            if idx != 0:
+            if e == 0:
                 res = dict()
                 later = i.time - timedelta(seconds=1)
                 res['x'] = later.strftime("%Y-%m-%d %H:%M:%S")
-                res['y'] = 0
+                res['y'] = 1
                 pattern_list.append(res)
+
+            if e == 1:
+                if idx != 0:
+                    res = dict()
+                    later = i.time - timedelta(seconds=1)
+                    res['x'] = later.strftime("%Y-%m-%d %H:%M:%S")
+                    res['y'] = 0
+                    pattern_list.append(res)
+            res = dict()
+            res['x'] = i.time.strftime("%Y-%m-%d %H:%M:%S")
+            res['y'] = e
+            pattern_list.append(res)
+
         res = dict()
-        res['x'] = i.time.strftime("%Y-%m-%d %H:%M:%S")
-        res['y'] = e
+        res['x'] = item.end_time.strftime("%Y-%m-%d %H:%M:%S")
+        res['y'] = 1
         pattern_list.append(res)
-
-    res = dict()
-    res['x'] = item.end_time.strftime("%Y-%m-%d %H:%M:%S")
-    res['y'] = 1
-    pattern_list.append(res)
-    context['pattern_list'] = pattern_list
-    return render(request, 'timer/service_result.html', context)
-
+        context['pattern_list'] = pattern_list
+        return render(request, 'timer/service_result2.html', context)
+    else:
+        return redirect('mypage');
 
 @login_required
 def service(request):

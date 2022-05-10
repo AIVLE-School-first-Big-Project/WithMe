@@ -1,0 +1,205 @@
+{% extends "main/main_base.html"  %}
+{% load static bootstrap5 %}
+
+{% block content %}
+<script>
+    function time_to_str(para){
+            let hours = parseInt(para/3600),
+            minutes = parseInt((para%3600)/60),
+            seconds = para%60;
+
+            let str = '';
+            if (hours > 0){
+                str += hours + '시간 ';
+            }
+            if (minutes > 0){
+                str += minutes + '분 ';
+            }
+
+            str += seconds + '초';
+            return str;
+        }
+</script>
+<div class="row" style="color:white; z-index: 10; width:100%; border-radius: 10px;">
+    <div class="col-7 p-1" style="background: rgba( 0, 0, 0, 0.3 );">
+        <div class="d-flex flex-column border border-white" style="border-radius: 10px 10px 0 0 / 10px 10px 0 0 ; background: rgba( 0, 0, 0, 0.3 );">
+            <div class="d-flex align-items-center justify-content-between border-bottom" style="width: 100%; height: 50px;">
+                <a id="prev_btn" href="#" class="btn btn-outline-light border-0" style="height: 100%; width: 100px; border-radius: 10px 0 0 0px / 10px 0 0 0px; ">
+                     <div class="d-flex align-items-center justify-content-center bold" style="width: 100%; height: 100%;">
+                        <
+                    </div>
+                </a>
+                <div id="month_lb" style="font-size:1em">
+                    {{ now_date|safe }}
+                </div>
+                <a id="next_btn" href="#" class="btn btn-outline-light border-0" style="height: 100%; width: 100px; border-radius: 0 10px 0 0 / 0 10px 0 0; ">
+                    <div class="d-flex align-items-center justify-content-center bold" style="width: 100%; height: 100%;">
+                        >
+                    </div>
+                </a>
+            </div>
+            <div id="log_list" class="d-flex align-items-start justify-content-center" style="width: 100%; min-height: 500px;">
+                <div class="d-flex flex-column border-0 p-2" style="width:100%;">
+                    {% for user_log in user_log_list %}
+                        {% include "timer/user_log_item.html" %}
+                    {% empty %}
+                        <div>
+                            <div class="p-2">
+                                <div class="d-flex flex-column">
+                                    <div>
+                                        기록된 내용이 없습니다.
+                                    </div>
+                                    <small class="text-muted p-2"style="color:#bdbdbd !important;">새로운 학습을 진행해주세요!</small>
+                                </div>
+                                <div style="background: rgba( 255, 255, 255, 0.3 ); height:3px"></div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div class="col-5 p-1">
+        <div class="d-flex flex-column border border-white p-1" style="background: rgba( 0, 0, 0, 0.3 );">
+            {% if not user_log_list|length %}
+            <div id="total_lb" class="d-flex align-items-center justify-content-center" style="width: 100%; height:100px;">
+                통계를 낼 데이터가 없습니다.
+            </div>
+            {% else %}
+            <div id="total_lb" class="d-flex align-items-center justify-content-center pt-4" style="width: 100%;">
+                전체학습량
+            </div>
+            <div id="total_num_lb" class="d-flex align-items-center justify-content-between pt-3" style="width: 100%;">
+                <span class="d-flex align-items-center justify-content-center" style="width: 50%; font-size:0.9em">
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;나의 평균
+                </span>
+                <span class="d-flex align-items-center justify-content-center" style="width: 50%; font-size:0.9em">
+                    전체 평균&nbsp;&nbsp;&nbsp;
+                </span>
+            </div>
+            <div class="d-flex align-items-center justify-content-around" style="width: 100%;">
+                <canvas id="bar-chart"></canvas>
+            </div>
+            <div class="d-flex align-items-center justify-content-center mt-4" style="width: 100%; height: 20px;">
+                공부별 학습량
+            </div>
+            <div class="d-flex align-items-center justify-content-around mt-2 p-2" style="width: 100%;">
+                <canvas id="bar-chart2"></canvas>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+<form id='new_from' method="POST" action="/mypage" enctype="multipart/form-data" style="display:None;">
+    {% csrf_token %}
+    <input id='new_input' type="text" name="new_date" value=""/>
+</form>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.3/moment.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
+<script>
+    let tag_name_list = [];
+    let tag_tt_list = [];
+
+    {% for key, value in user_tag_dict.items %}
+    tag_name_list.push('{{key|safe}}');
+    tag_tt_list.push('{{value|safe}}');
+    {% endfor %}
+
+    $(function() {
+        $("#prev_btn").click(function () {
+            let f = $("#new_from")[0];
+            now_data_str = '{{now_date|safe}}'
+            let year = parseInt(now_data_str.substr(0, 4));
+            let month = parseInt(now_data_str.substr(6, 2));
+
+            month -= 1;
+            if (month == 0){
+                year -= 1;
+                month = 12;
+            }
+            var s = "0000" + month;
+            new_date_str = year +'년 '+ s.substr(3)+'월';
+            let obj = $("#new_input")[0];
+            obj.setAttribute('value', new_date_str);
+
+            $("#new_from").submit()
+        });
+
+        $("#next_btn").click(function () {
+            let f = $("#new_from")[0];
+            now_data_str = '{{now_date|safe}}'
+            let year = parseInt(now_data_str.substr(0, 4));
+            let month = parseInt(now_data_str.substr(6, 2));
+
+            month += 1;
+            if (month == 13){
+                year += 1;
+                month = 1;
+            }
+            var s = "0000" + month;
+            new_date_str = year +'년 '+ s.substr(3)+'월';
+            let obj = $("#new_input")[0];
+            obj.setAttribute('value', new_date_str);
+
+            $("#new_from").submit()
+        });
+
+        new Chart(document.getElementById("bar-chart"), {
+            type: 'bar',
+            data: {
+                labels: ["학습시간", "집중시간", "학습시간", "집중시간",],
+                datasets: [
+                    {
+                        label: "Time(minutes)",
+                        backgroundColor: ["rgb(76, 183, 252,0.9)", "rgb(252, 76, 132,0.9)", "rgb(76, 183, 252,0.9)", "rgb(252, 76, 132,0.9)"],
+                        data: [{{ my_total }}, {{ my_focus }}, {{ user_total }}, {{ user_focus }}],
+                        fontStyle: 'normal',
+                        fontFamily: ['NanumSquare', 'sans-serif'],
+                    }
+                ]
+                },
+            options: {
+                legend: { display: false },
+                scales: {
+                    yAxes: [{
+                        display: false,
+                    }],
+                },
+            }
+        });
+        new Chart(document.getElementById("bar-chart2"), {
+            type: 'horizontalBar',
+            data: {
+                labels: tag_name_list,
+                datasets: [
+                    {
+                        label: "Time(minutes)",
+                        backgroundColor: "rgb(255,255,255,0.7)",
+                        data: tag_tt_list,
+                        fontStyle: 'normal',
+                        fontFamily: ['NanumSquare', 'sans-serif'],
+                    }
+                ]
+                },
+            options: {
+                legend: {
+                    display: false,
+                },
+                scales: {
+                    yAxes: [{
+                        display: true,
+                        ticks:{
+                            fontColor: 'rgb(255, 255, 255)',
+                        }
+                    }],
+                    xAxes: [{
+                        display: false,
+                    }],
+                },
+            }
+        });
+
+    });
+</script>
+{% endblock %}

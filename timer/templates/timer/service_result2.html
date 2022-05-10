@@ -21,8 +21,6 @@
             </div>
         </div>
     </div>
-    <div id="intro_meg2" class="d-flex justify-content-center mb-2" style="height:1em;"></div>
-    <div id="intro_meg3" class="d-flex justify-content-center mb-2" style="height:2em;"></div>
     <div style="height:2em;"></div>
     <h3 class="d-flex justify-content-center my-3"> 집중 패턴 </h3>
     <div class="p-2">
@@ -73,25 +71,13 @@
         return str;
     }
 
-    new TypeIt("#intro_meg", {speed: 30, afterComplete:intro_meg2}).type(
-    "수고 많으셨습니다. {{ request.user.username }}님.</br></br>\
-    이번 학습 정보는 정상적으로 기록되었으며,</br>총 학습시간은\
-    " + time_to_str(diff_start_end) + "입니다.</br></br>\
+    new TypeIt("#intro_meg", {speed: 30, }).type(
+    "이전 학습 데이터에 대한 정보를 불러옵니다..</br></br>\
+    해당 기록의,총 학습시간은\
+    "+ time_to_str(diff_start_end) + "입니다.</br></br>\
     그 중, 집중 시간은 " + time_to_str(focus_time) + "(" + (100 - percent) + "%)를,</br>\
     좋은 자세를 유지한 시간은 " + time_to_str(diff_start_end - neck_point) + "(" + (100 - percent2) + "%)로 기록되었습니다."
     ).go();
-    function intro_meg2(){
-        new TypeIt("#intro_meg2", {cursor: false, speed: 30, afterComplete:intro_meg3}).type(
-        "[ 해당 과목에 대한 전체 학습량 ]"
-        ).go();
-    };
-    function intro_meg3(){
-        new TypeIt("#intro_meg3", {cursor: false, speed: 30, }).type(
-            "총 학습시간 : " + time_to_str({{ total_time }}) +
-            "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" +
-            "총 집중시간 : " + time_to_str({{ total_focus_time }})
-        ).go();
-    };
 
 
     let hours2 = parseInt(focus_time/3600),

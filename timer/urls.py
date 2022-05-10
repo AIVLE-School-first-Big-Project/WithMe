@@ -11,6 +11,6 @@ urlpatterns = [
     path("create_userlog/", views.create_userlog, name='create_userlog'),
 
     path('service', views.service, name='main'),
-    path('result', views.result, name='main'),
-    path('test', views.test_result, name='main'),
+    path('result', views.result, name='result'),
+    path('result_item', views.test_result, name='result_item'),
 ]

@@ -8,9 +8,12 @@ from calendarApp.form import TodoForm, TodoEditForm
 from calendarApp.models import Todolist
 from tag.models import Tag
 from django.db.models import Q
-
+from timer.models import UserLog
+from tag.models import Tag
 import os, random
 from withme.settings import MEDIA_ROOT
+from django.utils.dateparse import parse_datetime
+import datetime
 
 @csrf_exempt
 def detectme(request):
@@ -39,10 +42,6 @@ def detectme(request):
     return render(request, 'main/video_test.html')
 
 
-def pushmes(request):
-    return render(request, 'main/pushmes_send.html')
-
-
 @login_required
 def camera_setting(request):
     item = UserLog.objects.filter(Q(user_id=request.user) & Q(end_time__isnull=True))
@@ -61,3 +60,55 @@ def camera_setting(request):
             "tag": tag,
             "user_log": item,
         })
+
+def get_month_data(user, date_str):
+    userlog_items = UserLog.objects.filter(end_time__year=date_str[:4], end_time__month=date_str[6:8])
+    length = len(userlog_items) # 굳이 사람으로 나눌 필요 없음. 학습 시간의 전체 평균을 구하면 해당 로그 길이로 나눠도 문제 없음.
+    my_total, user_total = 0, 0
+    my_focus, user_focus = 0, 0
+    user_tag_dict = dict()
+    user_log_list = []
+    for item in userlog_items:
+        parsed_t = parse_datetime(str(item.start_time))
+        parsed_t2 = parse_datetime(str(item.end_time))
+        tt = int((parsed_t2 - parsed_t).total_seconds())
+        ft = tt - item.abnormal_time
+        if item.user == user:
+            my_total += tt // 60
+            my_focus += ft // 60
+            user_log_list.append(item)
+            tag_str = Tag.objects.get(pk=item.tag_id)
+            if user_tag_dict.get(tag_str) is None:
+                user_tag_dict[tag_str] = tt // 60
+            else:
+                user_tag_dict[tag_str] += tt // 60
+        user_total += tt // 60
+        user_focus += ft // 60
+
+
+    if length != 0:
+        user_total //= length
+
+    if length != 0:
+        user_focus //= length
+    return my_total, user_total, my_focus, user_focus, user_tag_dict, user_log_list
+
+@login_required
+def mypage(request):
+    context = dict()
+    user = request.user
+
+    now_date = str(datetime.datetime.now().strftime('%Y년 %m월'))
+    if request.POST:
+        now_date = request.POST['new_date']
+
+    my_total, user_total, my_focus, user_focus, user_tag_dict, user_log_list = get_month_data(user, now_date)
+    context['now_date'] = now_date
+    context['my_total'] = my_total
+    context['user_total'] = user_total
+    context['my_focus'] = my_focus
+    context['user_focus'] = user_focus
+    context['user_tag_dict'] = user_tag_dict
+    context['user_log_list'] = user_log_list
+
+    return render(request, 'main/mypage_main.html', context)
