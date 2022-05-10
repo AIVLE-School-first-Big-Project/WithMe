@@ -18,21 +18,15 @@
     </div>
     <div class="row">
         <div class="col-1"></div>
-        <div class="col-7 bg-light" style="border-radius: 10px 0 0 10px / 10px 0 0 10px; width: 800px;">
-
+        <div class="col-7 bg-light" style="border-radius: 10px 10px 10px 10px / 10px 10px 10px 10px; width: 800px;">
             <br>
             <div>
-                <button class="button" style="margin-left: 560px" onclick="location.href='../' ">
-                    <b>📜목록</b>
-                </button>
-                <button class="button" style="margin-left: 20px" onclick="location.href='../upload_post/' ">
-                    <b>✋글쓰기</b>
-                </button>
+                <button onclick="location.href= '../'" class="btn btn-secondary" style="float:right; margin-left: 10px; margin-right: 10px;">목록</button>
+                <button onclick="location.href='../upload_post/'" class="btn btn-secondary" style="float:right;">글쓰기</button>
             </div>
 
             <div>
                 <br><br>
-                <div class="contour"></div>
                 {% if post.user.id == user.id %}    
                     <div>
                         <a href="{% url 'bulletin:delete_post' post.id %}" type="button" class="btn btn-default pull-right" style="float: right; margin-right: 10px; margin-bottom: 10px">
@@ -87,7 +81,7 @@
             <div>
                 <form method="POST">
                     {% csrf_token %}
-                    <input type="text" id="reply_content" class="form-control" style="width=100%; border:none; " placeholder="댓글 입력">
+                    <input type="text" id="reply_content" class="form-control" style="width:80%; border:none; " placeholder="댓글 입력">
                     {% if user.is_authenticated %}
                         <input type="button" id="reply_add" class="btn btn-basic pull-right" value="저장">
                     {% else %}                    

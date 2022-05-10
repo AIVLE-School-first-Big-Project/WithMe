@@ -15,6 +15,11 @@
     height: 2px; 
     background-color: white;
 }
+.contour_post{
+    width: 500px;
+    height: 2px; 
+    background-color: black;
+}
 
 .buffer{
     height: 0px; 
@@ -42,8 +47,16 @@ input[type=submit] {
 }
 
 #btn_bulletin{
-    float:right;color: white;
+    float:right;
+    color: white;
     margin-top: 10px;
+    margin-bottom: 10px;
+}
+#btn_post{
+    float:right;
+    margin-top: 10px;
+    margin-left: 10px;
+    margin-right: 10px;
     margin-bottom: 10px;
 }
 
