@@ -7,50 +7,40 @@
 
 <link rel="stylesheet" href="{% static 'bulletin.css' %}" />
 
-<div class="container" style="position: relative;">
-  <div class="row">
-      <div class="col-12" style="height: 72px">
-      </div>
-  </div>
-  <div class="row">
-    <div class="col-1"></div>
-      <div class="col-7 bg-light" style="border-radius: 10px 0 0 10px / 10px 0 0 10px; width: 800px;">
-        <br>
-        <button class="button" style="margin-left: 660px" onclick="location.href='../' ">
-          <b>📜목록</b>
-        </button>
-        <br>
-        <br>
-      
-        <div class="contour"></div>
-        <form method="POST" class="post-form my-3" enctype="multipart/form-data">
-          {% csrf_token %}
-        
-          <div class="form-group">
-            <label for="title">제목</label>
-            <input
-              type="text"
-              class="form-control"
-              name="title"
-              value=""
-            />
+<div class="row" style="color:white;">
+  <div>
+    <br>
+    <a href='../' id="btn_bulletin" class="btn btn-outline-light align-self-end mx-2">
+      목록
+    </a>
+  
+    <div class="contour"></div>
 
-            <label for="content">내용</label>
-            <textarea class="form-control" name="content" rows="10" value="">              
-            </textarea>
-            <label for="image">사진</label>
-            <input
-              type="file"
-              class="form-control"
-              name="image"
-            />
-          </div>
+    <form method="POST" class="post-form my-3" enctype="multipart/form-data">
+      {% csrf_token %}
+    
+      <div class="form-group">
+        <label for="title">제목</label>
+        <input
+          type="text"
+          class="form-control"
+          name="title"
+          value=""
+        />
 
-          <input type="submit" value="저장하기" style="margin-left: 660px" />
-          <div><br></div>
-        </form>
+        <label for="content">내용</label>
+        <textarea class="form-control" id="textbox" name="content" rows="10" value="">              
+        </textarea>
+        <label for="image">사진</label>
+        <input
+          type="file"
+          class="form-control"
+          name="image"
+        />
       </div>
-    </div>
+        <input type="submit" id="btn_bulletin" href='../' class="btn btn-outline-light align-self-end mx-2" value="저장"/>
+      <div><br></div>
+    </form>
   </div>
 </div>
 

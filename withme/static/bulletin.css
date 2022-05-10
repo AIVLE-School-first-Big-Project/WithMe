@@ -11,6 +11,7 @@
 }
 
 .contour{
+    width: 500px;
     height: 2px; 
     background-color: white;
 }
@@ -35,6 +36,18 @@ input[type=submit] {
 }
 
 #btn_write{
+    float:right;color: white;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+#btn_bulletin{
+    float:right;color: white;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+#btn_save{
     float:right;color: white;
     margin-top: 10px;
     margin-bottom: 10px;
