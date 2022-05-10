@@ -15,18 +15,19 @@ from withme.settings import MEDIA_ROOT
 from django.utils.dateparse import parse_datetime
 import datetime
 
+
 @csrf_exempt
 def detectme(request):
     if request.POST:
         data = request.POST.__getitem__('data')
-        data = data[22:] # data:image/png;base64 부분 제거
+        data = data[22:]  # data:image/png;base64 부분 제거
         number = random.randrange(1, 10000)
 
         # 저장 경로 및 파일명 설정
         filename = request.user.username + '_image_' + str(number) + '.png'
         save_path = os.path.join(MEDIA_ROOT, filename)
 
-        image = open(save_path, "wb") # path+filename, "wb")
+        image = open(save_path, "wb")  # path+filename, "wb")
         image.write(base64.b64decode(data))
         image.close()
 
@@ -35,8 +36,8 @@ def detectme(request):
         user_state = '눈 뜨세요' if number % 2 else '화이팅 !!'
         answer = {
             'userState': user_state,
-            'filepath' : save_path
-            }
+            'filepath': save_path
+        }
 
         return JsonResponse(answer)
     return render(request, 'main/video_test.html')
@@ -61,9 +62,10 @@ def camera_setting(request):
             "user_log": item,
         })
 
+
 def get_month_data(user, date_str):
     userlog_items = UserLog.objects.filter(end_time__year=date_str[:4], end_time__month=date_str[6:8])
-    length = len(userlog_items) # 굳이 사람으로 나눌 필요 없음. 학습 시간의 전체 평균을 구하면 해당 로그 길이로 나눠도 문제 없음.
+    length = len(userlog_items)  # 굳이 사람으로 나눌 필요 없음. 학습 시간의 전체 평균을 구하면 해당 로그 길이로 나눠도 문제 없음.
     my_total, user_total = 0, 0
     my_focus, user_focus = 0, 0
     user_tag_dict = dict()
@@ -85,13 +87,13 @@ def get_month_data(user, date_str):
         user_total += tt // 60
         user_focus += ft // 60
 
-
     if length != 0:
         user_total //= length
 
     if length != 0:
         user_focus //= length
     return my_total, user_total, my_focus, user_focus, user_tag_dict, user_log_list
+
 
 @login_required
 def mypage(request):

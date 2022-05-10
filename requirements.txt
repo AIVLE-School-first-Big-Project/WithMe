@@ -17,3 +17,4 @@ tensorflow==2.8.0
 django-bootstrap-datepicker-plus==4.0.0
 
 pillow==8.4.0
+flake8==4.0.1

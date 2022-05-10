@@ -144,16 +144,16 @@
 
             $("#new_from").submit()
         });
-
+        console.log('{{ my_focus|safe }}')
         new Chart(document.getElementById("bar-chart"), {
             type: 'bar',
             data: {
-                labels: ["학습시간", "집중시간", "학습시간", "집중시간",],
+                labels: ["학습시간", "집중시간", "학습시간", "집중시간"],
                 datasets: [
                     {
                         label: "Time(minutes)",
-                        backgroundColor: ["rgb(76, 183, 252,0.9)", "rgb(252, 76, 132,0.9)", "rgb(76, 183, 252,0.9)", "rgb(252, 76, 132,0.9)"],
-                        data: [{{ my_total }}, {{ my_focus }}, {{ user_total }}, {{ user_focus }}],
+                        backgroundColor: ["rgb(76, 183, 252,0.9)", "rgb(252, 76, 132,0.9)", "rgb(76, 183, 252,0.9)", ],
+                        data: [{{ my_total|safe }}, {{ my_focus|safe }}, {{ user_total|safe }}, {{ user_focus|safe }}],
                         fontStyle: 'normal',
                         fontFamily: ['NanumSquare', 'sans-serif'],
                     }

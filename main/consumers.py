@@ -105,6 +105,7 @@ class ChatConsumer(WebsocketConsumer):
             if self.exist_state == 1:
                 pass
             else:
+                self.neck_cnt += 1
                 res = predict_neck(message)
                 async_to_sync(self.channel_layer.group_send)(
                     self.room_group_name,
