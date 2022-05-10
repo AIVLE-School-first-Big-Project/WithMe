@@ -3,6 +3,7 @@
 {% load bootstrap5 %}
 
 {% block content %}
+
 <div class="d-flex align-items-center justify-content-end" style="width: 40vw; height: 95vh;">
     <div class="d-flex flex-column">
         <div class="p-2" style="color:white;"> 결과페이지 입니다.</div>
@@ -10,12 +11,51 @@
 </div>
 <div class="d-flex align-items-center justify-content-center" style="width: 40vw; height: 95vh;">
     <div class="d-flex flex-column" style="width:300px; color:white;">
-        결과 페이지 입니다.
+        <canvas id="pie-chart" ></canvas>
     </div>
 </div>
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
 <script>
+    let start_time = new Date('{{user_log.start_time|date:"c"}}');
+    let end_time = new Date('{{user_log.end_time|date:"c"}}');
+    let diff_start_end = parseInt((end_time.getTime() - start_time.getTime()) / 1000);
+    let abnormal_time = {{ user_log.abnormal_time }};
+    let percent = (abnormal_time / diff_start_end).toFixed(2) * 100
+    let neck_point = 0
     $(function() {
+
+        pie_chart = new Chart(document.getElementById("pie-chart"), {
+            type: 'doughnut',
+            data: {
+                labels: ["집중 시간(sec)", "날린 시간(sec)"],
+                datasets: [{
+                    label: "Population (millions)",
+                    backgroundColor: ["white", "rgb(0,0,0,0)"],
+                    data: [diff_start_end-abnormal_time, abnormal_time],
+                    borderWidth: 1,
+                    fontStyle: 'normal',
+                    fontFamily: ['NanumSquare', 'sans-serif'],
+                }],
+            },
+            options: {
+                title: {
+                    display: true,
+                    text: '전체 시간 중 ' + (100-percent) + '%를 집중하셨습니다.',
+                    fontColor: 'rgb(255, 255, 255)',
+                    fontSize: 20,
+
+                },
+
+                legend: {
+                    display: true,
+                    labels: {
+                        fontColor: 'rgb(255, 255, 255)',
+                        fontSize: 15,
+                    }
+                }
+
+            },
+        });
 
     });
 </script>

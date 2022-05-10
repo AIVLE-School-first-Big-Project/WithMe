@@ -16,6 +16,13 @@ from tag.models import Tag
 from .models import TimeLog
 
 
+def test_result(request):
+    context = dict()
+    item = UserLog.objects.get(id=9999)
+    context['user_log'] = item
+    return render(request, 'timer/service_result.html', context)
+
+
 @login_required
 def service(request):
     context = dict()
