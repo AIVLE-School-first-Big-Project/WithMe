@@ -271,8 +271,8 @@
                 // #end time이 기록된 Userlog의 페이지 이동
                 location.href='{% url 'service' %}';
             }
+            d2 = parseInt(JSON.stringify(data.message));
             if (d1 == 'res_eyes'){
-                d2 = parseInt(JSON.stringify(data.message));
                 abnormal_time = parseInt(JSON.stringify(data.abnormal));
                 if (d2 != 0){
                     if (d2 == 1){
