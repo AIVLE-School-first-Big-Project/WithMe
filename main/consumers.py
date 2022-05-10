@@ -18,7 +18,6 @@ class ChatConsumer(WebsocketConsumer):
         self.eyes_cnt = 0
         self.neck_cnt = 0
         self.exist_state = 0
-        self.abnormal = 0
 
     def connect(self):
         self.room_group_name = self.scope['url_route']['kwargs']['user_log']
@@ -32,6 +31,7 @@ class ChatConsumer(WebsocketConsumer):
         item = UserLog.objects.get(id=self.room_group_name)
         item.end_time = timezone.now()
         item.save()
+        print(item.end_time)
         async_to_sync(self.channel_layer.group_discard)(
             self.room_group_name,
             self.channel_name,
@@ -80,33 +80,31 @@ class ChatConsumer(WebsocketConsumer):
                     Q(user_log_id=self.room_group_name)
                 ).first()
                 prev = prev_item.event_type
-                item = UserLog.objects.get(id=self.room_group_name)
 
                 if prev != res:
                     curr = TimeLog(user_log_id=self.room_group_name, event_type=res)
                     curr.save()
-
+                    item = UserLog.objects.get(id=self.room_group_name)
                     if prev != 0 and res == 0:
                         parsed_t = parse_datetime(str(prev_item.time))
                         parsed_t2 = parse_datetime(str(curr.time))
                         time_value = int((parsed_t2 - parsed_t).total_seconds())
                         item.abnormal_time += time_value
-                        item.abnormal_timeabnormal = item.abnormal_time
-                        async_to_sync(item.save())
+                        item.save()
 
-                async_to_sync(self.channel_layer.group_send)(
-                    self.room_group_name,
-                    {
-                        'type': 'res_eyes',
-                        'message': res,
-                    }
-                )
+                    async_to_sync(self.channel_layer.group_send)(
+                        self.room_group_name,
+                        {
+                            'type': 'res_eyes',
+                            'message': res,
+                            'abnormal': item.abnormal_time,
+                        }
+                    )
 
         elif type == 'DN': # DetectNeck
             if self.exist_state == 1:
                 pass
             else:
-                self.neck_cnt += 1
                 res = predict_neck(message)
                 async_to_sync(self.channel_layer.group_send)(
                     self.room_group_name,
@@ -130,11 +128,13 @@ class ChatConsumer(WebsocketConsumer):
     # Receive message from room group
     def res_eyes(self, args):
         message = args['message']
+        abnormal = args['abnormal']
 
         # Send message to WebSocket
         self.send(text_data=json.dumps({
             'type': 'res_eyes',
             'message': message,
+            'abnormal': abnormal,
         }))
 
     def res_neck(self, args):

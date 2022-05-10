@@ -199,7 +199,7 @@
         }
 
         let tag_idx = -1;
-        let abnormal_time = 0;
+        let abnormal_time = {{ user_log.abnormal_time }} ;
 
         function clock() {// We create a new Date object and assign it to a variable called "time".
             let time = new Date();
@@ -272,6 +272,7 @@
             }
             d2 = parseInt(JSON.stringify(data.message));
             if (d1 == 'res_eyes'){
+                abnormal_time = parseInt(JSON.stringify(data.abnormal));
                 if (d2 != 0){
                     if (d2 == 1){
                         $('#eyes_img').attr("src", '{% static "assets/img/unhappy.png" %}');
