@@ -37,17 +37,15 @@
                             if (responseText['cnt'] == 0){
                                 $("#todo_list_view").append('\
                                 <div id ="todo_empty">\
-                                    <div class="p-2 bg-white">\
+                                    <div class="p-2">\
                                         <div class="d-flex flex-column">\
                                             <div>\
-                                                오늘의 일정이 없습니다. ㅠ_ㅠ\
+                                                표시할 일정이 없습니다. ㅠ_ㅠ\
                                             </div>\
-                                            <div>\
-                                                <small class="text-muted">새로운 일정을 등록해주세요.</small>\
-                                            </div>\
+                                            <small id="rest_time" class="text-muted p-2"style="color:#bdbdbd !important;">새로운 일정을 등록해주세요.</small>\
                                         </div>\
+                                        <div style="background: rgba( 255, 255, 255, 0.3 ); height:3px"></div>\
                                     </div>\
-                                    <div class="bg-light" style="background: linear-gradient(to top, #f8f9fa, 80%, #edeff0); height:5px"></div>\
                                 </div>\
                                 ');
                             }

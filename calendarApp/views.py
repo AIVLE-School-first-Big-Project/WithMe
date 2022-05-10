@@ -16,10 +16,8 @@ def timer2(request):
 
 @login_required
 def todo_new(request):
-    print("hello")
     if request.method == 'POST':
         form = TodoForm(request.POST)
-        print("hello")
         if form.is_valid():
             todo = form.save(commit=False)
             todo.author = request.user

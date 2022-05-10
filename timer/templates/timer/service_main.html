@@ -6,88 +6,111 @@
 <svg class="wave-top" style="position: absolute; z-index: -1; top: 60px; left: 0; width: 100%; opacity:0.1;"  viewBox="0 0 1200 250">
     <path fill-rule="evenodd" clip-rule="evenodd" d="M0 108.306L50 114.323C100 120.34 200 132.374 300 168.476C400 204.578 500 264.749 600 246.698C700 228.647 800 132.374 900 108.306C1000 84.2382 1100 132.374 1150 156.442L1200 180.51V-8.5451e-06H1150C1100 -8.5451e-06 1000 -8.5451e-06 900 -8.5451e-06C800 -8.5451e-06 700 -8.5451e-06 600 -8.5451e-06C500 -8.5451e-06 400 -8.5451e-06 300 -8.5451e-06C200 -8.5451e-06 100 -8.5451e-06 50 -8.5451e-06H0V108.306Z" fill="#f8f9fa"/>
 </svg>
-
-<div class="row" style="z-index: 10; width:100%">
-    <div class="col-4" style="min-width: 250px;">
-
-        <div class="d-flex flex-column border border-white" style="border-radius: 10px; min-height:400px; background: rgba( 0, 0, 0, 0.3 );">
+<div id="loader2"></div>
+<div class="row row-eq-height" style="z-index: 10; width:100%">
+    <div class="col-4" style="height:100%">
+        <div class="d-flex flex-column border border-white" style="border-radius: 10px; background: rgba( 0, 0, 0, 0.3 );">
+            <div class="p-2" style="border-radius: 10px;"></div>
             <div class="d-flex flex-column" style="border-radius: 10px 10px 0px 0px / 10px 10px 0px 0px;">
-                <div class="d-flex mx-auto p-2">
-                    <div class="d-flex justify-content-center text-white">Todo List</div>
-                </div>
-            </div>
-
-            <div id="todo_list_view" class="col p-3 bg-light">
-                {% for todo in todo_list %}
-                    {% include "timer/todo_item.html" %}
-                {% empty %}
-                    <div id ="todo_empty">
-                        <div class="p-2 bg-white">
-                            <div class="d-flex flex-column">
-                                <div>
-                                    오늘의 일정이 없습니다. ㅠ_ㅠ
-                                </div>
-                                <div>
-                                    <small class="text-muted">새로운 일정을 등록해주세요.</small>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="bg-light" style="background: linear-gradient(to top, #f8f9fa, 80%, #edeff0); height:5px"></div>
+                <div id="videoSection" class="card border-0" style="background:transparent;">
+                    <video class="card-img-top" id="videoElement"></video>
+                    <div class="card-footer bg-dark m-0 p-0" style="background: rgba( 0, 0, 0, 0.0 ) !important;">
+                        <a id="submit-button" class="btn btn-danger btn-block" style="width:100%">
+                                학습 종료
+                        </a>
                     </div>
-                {% endfor %}
-            </div>
-            <div class="p-2" style="border-radius: 10px;">
-                <div class="d-flex justify-content-center">
-                    <button id="modalBtn_todo" type="button" class="btn btn-light my-2 btn-lg" style="border-radius: 50%;">+</button>
+                    <canvas id="canvas" width="400" height="300" style="display:None;"></canvas>
                 </div>
             </div>
+
+            <div class="p-2 bg-light">
+                <div class="d-flex flex-column p-2" style="background: white; color:black;">
+                    <div class="d-flex align-items-center justify-content-between mb-1">
+                        <span>착석 상태</span>
+                        <img id="sitting_img" src='{% static "assets/img/happy.png" %}' alt="Responsive image" width="40" height="40">
+                    </div>
+                    <small id="sitting_text" class="text-muted">
+                        -
+                    </small>
+                </div>
+                <div class="bg-light" style="background: linear-gradient(to top, #f8f9fa, 80%, #edeff0); height:5px"></div>
+
+                <div class="d-flex flex-column p-2" style="background: white; color:black;">
+                    <div class="d-flex align-items-center justify-content-between mb-1">
+                        <span>집중 상태</span>
+                        <img id="eyes_img" src='{% static "assets/img/happy.png" %}' alt="Responsive image" width="40" height="40">
+                    </div>
+                    <small id="eyes_text" class="text-muted">
+                        -
+                    </small>
+                </div>
+                <div class="bg-light" style="background: linear-gradient(to top, #f8f9fa, 80%, #edeff0); height:5px"></div>
+
+                <div class="d-flex flex-column p-2" style="background: white; color:black;">
+                    <div class="d-flex align-items-center justify-content-between mb-1">
+                        <span>자세 상태</span>
+                        <img id="neck_img" src='{% static "assets/img/happy.png" %}' alt="Responsive image" width="40" height="40">
+                    </div>
+                    <small id="neck_text" class="text-muted">
+                        -
+                    </small>
+                </div>
+                <div class="bg-light" style="background: linear-gradient(to top, #f8f9fa, 80%, #edeff0); height:5px"></div>
+            </div>
+            <div class="p-2" style="border-radius: 10px;"></div>
         </div>
-
     </div>
-    <div class="col-8" style="color:white; min-width: 500px;" >
-        <div class="d-flex flex-column">
-            <div class="d-flex justify-content-center">
+    <div class="col-8" style="color:white;" >
+        <div class="d-flex flex-column" style="height:100%;">
+            <div class="d-flex justify-content-center mt-3">
                 <p style="font-size: 20px; font: 1em; top:10px">
-                    {{ tag }}
+                    <h2>{{ tag }}</h2>
                 </p>
-
             </div>
             <div class="mb-2 p-2 border-top border-bottom">
                 <div class="d-flex justify-content-around">
                     <div class="d-flex flex-column bd-highlight">
                         <div class="d-flex justify-content-center p-2 bd-highlight">경과 시간</div>
-                        <div class="align-items-center p-2 bd-highlight"><h2><div id="clock1"></div></h2></div>
+                        <div class="align-items-center p-2 bd-highlight"><h2><div id="clock1">--:--:--</div></h2></div>
                     </div>
                     <div class="d-flex flex-column bd-highlight">
                         <div class="d-flex justify-content-center p-2 bd-highlight">공부 시간</div>
-                        <div class="align-items-center p-2 bd-highlight"><h1><div id="clock2"></div></h1></div>
+                        <div class="align-items-center p-2 bd-highlight"><h1><div id="clock2">--:--:--</div></h1></div>
                     </div>
                     <div class="d-flex flex-column bd-highlight">
                         <div class="d-flex justify-content-center p-2 bd-highlight">흘러간 시간</div>
-                        <div class="align-items-center p-2 bd-highlight"><h2><div id="clock3"></div></h2></div>
+                        <div class="align-items-center p-2 bd-highlight"><h2><div id="clock3">--:--:--</div></h2></div>
                     </div>
                 </div>
             </div>
-            <div class="d-flex bd-highlight">
-                <div class="m-2 p-3 w-100 bd-highlight border">
-                    <div class="d-flex align-items-center justify-content-center p-2 bd-highlight" style="height:100%;">
-                         <div id="textneck_p" class="p-2 bd-highlight">
-                            잘못된 자세 : {{ user_log.textneck_point }}
-                         </div>
+
+            <div class="d-flex flex-column border-0 border-white" style="border-radius: 10px; height:100%; width:100%;">
+                <div class="d-flex flex-column" style="border-radius: 10px 10px 0px 0px / 10px 10px 0px 0px;">
+                    <div class="d-flex align-items-center justify-content-between text-white px-3 mt-2">
+                        <div>Todo List</div>
+                        <button id="modalBtn_todo" type="button" class="btn btn-outline-light" style="border-radius: 50%;">+</button>
                     </div>
                 </div>
-                <div class="p-2 flex-shrink-1 bd-highlight">
-                    <div id="videoSection" class="card border-0" style="background:transparent;">
-                        <video class="card-img-top" id="videoElement" style="width:300px; border-radius: 10px 10px 0px 0px / 10px 10px 0px 0px;"></video>
-                        <div class="card-footer bg-dark m-0 p-0" style="background: rgba( 0, 0, 0, 0.0 ) !important;">
-                            <a id="submit-button" class="btn btn-outline-danger btn-block" style="width:100%">
-                                    학습 종료
-                            </a>
+
+                <div id="todo_list_view" class="col p-3 ">
+                    {% for todo in todo_list %}
+                        {% include "timer/todo_item.html" %}
+                    {% empty %}
+                        <div id ="todo_empty">
+                            <div class="p-2">
+                                <div class="d-flex flex-column">
+                                    <div>
+                                        표시할 일정이 없습니다. ㅠ_ㅠ
+                                    </div>
+                                    <small id="rest_time" class="text-muted p-2"style="color:#bdbdbd !important;">새로운 일정을 등록해주세요.</small>
+                                </div>
+                                <div style="background: rgba( 255, 255, 255, 0.3 ); height:3px"></div>
+                            </div>
                         </div>
-                        <canvas id="canvas" width="400" height="300" style="display:None;"></canvas>
-                    </div>
+                    {% endfor %}
                 </div>
             </div>
+
         </div>
     </div>
 </div>
@@ -144,7 +167,6 @@
         </div>
     </div>
 </div>
-
 <form id='redirection_form' style="display:None;">
     {% csrf_token %}
 </form>
@@ -158,7 +180,6 @@
         let start_time = new Date('{{user_log.start_time|date:"c"}}');
         let neck_point = {{ user_log.textneck_point }};
         let differ2 = 0;
-        let eyes = false, neck = false;
 
         if (navigator.mediaDevices.getUserMedia) {
             navigator.mediaDevices
@@ -219,7 +240,6 @@
             }
         }
 
-        setInterval(clock, 1000);
         const chatSocket = new WebSocket(
             'ws://'
             + window.location.host
@@ -227,33 +247,73 @@
             + "{{ user_log.id|safe }}"
             + '/'
         );
+
+        setTimeout(function() {
+            chatSocket.send(JSON.stringify({
+                'type': 'ST'
+            }));
+        }, 2000);
+
         chatSocket.onmessage = function(e) {
             const data = JSON.parse(e.data);
-            d1 = data.type;
+            d1 = data.type
+            if (d1 == 'on'){
+                 setTimeout(function() {
+                    $("#loader2").css('display', 'none');
+                }, 800);
+                setInterval(Socket_msg_eyes, 500);
+                setInterval(Socket_msg_neck, 1000);
+                setInterval(clock, 1000);
+
+            }
+            if (d1 == 'dis'){
+                console.log(d1)
+                // #end time이 기록된 Userlog의 페이지 이동
+                location.href='{% url 'service' %}';
+            }
             if (d1 == 'res_eyes'){
                 d2 = parseInt(JSON.stringify(data.message));
                 abnormal_time = parseInt(JSON.stringify(data.abnormal));
                 if (d2 != 0){
                     if (d2 == 1){
-                        eyes = true;
+                        $('#eyes_img').attr("src", '{% static "assets/img/unhappy.png" %}');
+                        $('#eyes_text').text('혹시 눈을 감고있나요?');
+                    }
+                    else{
+                        $('#eyes_img').attr("src", '{% static "assets/img/happy.png" %}');
+                        $('#eyes_text').text('-');
+                    }
+                    if (d2 == 2){
+                        $('#eyes_img').attr("src", '{% static "assets/img/normal.png" %}');
+                        $('#eyes_text').text('-');
+                        $('#neck_img').attr("src", '{% static "assets/img/normal.png" %}');
+                        $('#neck_text').text('-');
+                        $('#sitting_img').attr("src", '{% static "assets/img/unhappy.png" %}');
+                        $('#sitting_text').text('화면에 모습이 들어오도록 조정해주세요!');
+                    }
+                    else{
+                        $('#sitting_img').attr("src", '{% static "assets/img/happy.png" %}');
                     }
                     clock_stop = true;
                 }
                 else{
-                    eyes = false;
+                    $('#eyes_img').attr("src", '{% static "assets/img/happy.png" %}');
+                    $('#sitting_img').attr("src", '{% static "assets/img/happy.png" %}');
+                    $('#eyes_text').text('-');
+                    $('#sitting_text').text('-');
                     clock_stop = false;
                 }
             }
             else if (d1 == 'res_neck'){
                 d2 = parseInt(JSON.stringify(data.message));
-                neck_point = parseInt(JSON.stringify(data.neckpoint));
                 if (d2 == 1){
-                    $("#textneck_p").text(neck_point);
-
-                    neck = true;
+                    //$("#textneck_p").text(neck_point);
+                    $('#neck_img').attr("src", '{% static "assets/img/unhappy.png" %}');
+                    $('#neck_text').text('자세를 바르게 고쳐주세요!');
                 }
                 else{
-                    neck = false;
+                    $('#neck_img').attr("src", '{% static "assets/img/happy.png" %}');
+                    $('#neck_text').text('-');
                 }
             }
 
@@ -271,13 +331,6 @@
                 'message': getFrameData(),
             }));
         }
-        setTimeout(function() {
-            setInterval(Socket_msg_eyes, 500);
-            setInterval(Socket_msg_neck, 1000);
-        }, 2000);
-
-
-
 
         // modal
         $("#modalBtn_todo").click(function () {

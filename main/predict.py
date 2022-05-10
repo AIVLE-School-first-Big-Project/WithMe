@@ -27,7 +27,7 @@ def predict_eyes(data):
 
 def predict_neck(data):
     y_pred = getTurtle_mediapipe_mesh(base64.b64decode(extractData(data)))
-    return 0 if y_pred < 0.5 else 1
+    return 1 if y_pred < 0.75 else 0
 
 
 def getTurtle_mediapipe_mesh(image):

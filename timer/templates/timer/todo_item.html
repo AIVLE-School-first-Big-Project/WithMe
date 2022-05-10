@@ -1,24 +1,26 @@
 {% load static %}
 {% load humanize %}
 <div class="todo_item_ele" type="button" id="todo_{{todo.id}}" >
-    <div class="p-2 bg-white">
+    <div class="p-2">
         <div class="d-flex flex-column">
             <div>
                 {% if todo.confirm %}
-                    <img src="{% static "assets/img/check.png" %}" alt="" width="20" height="20" />
+                    <img src="{% static "assets/img/checked.png" %}" alt="" width="20" height="20" />
+                {% else %}
+                    <img src="{% static "assets/img/unchecked.png" %}" alt="" width="20" height="20" />
                 {% endif %}
                 {{ todo.description }}
             </div>
             <div>
                 {% if todo.date_to != None %}
-                    <small class="text-muted">
-                    {{ todo.date_to|naturaltime }} 남았습니다.
+                    <small id="rest_time" class="text-muted" style="color:#bdbdbd !important;">
+                        {{ todo.date_to|naturaltime }} 남았습니다.
                     </small>
                 {% endif %}
             </div>
         </div>
     </div>
-    <div class="bg-light" style="background: linear-gradient(to top, #f8f9fa, 80%, #edeff0); height:5px"></div>
+    <div class="mb-2" style="background: rgba( 255, 255, 255, 0.3 ); height:3px"></div>
     <script>
         $("#todo_{{todo.id}}").click(function () {
             $.ajax({
@@ -31,5 +33,12 @@
                 },
             });
         });
+//         let rest_time = new Date('{{user_log.start_time|date:"c"}}');
+//         let time = new Date();
+//         let differ = parseInt((time.getTime() - start_time.getTime()) / 1000);
+//         let hours = parseInt(differ/3600),
+//         minutes = parseInt((differ%3600)/60),
+//         seconds = differ%60;
+//         $("#rest_time").text()
     </script>
 </div>
