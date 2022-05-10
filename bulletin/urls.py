@@ -1,9 +1,6 @@
 from django.urls import path
 from . import views
 
-from django.conf.urls.static import static
-from django.conf import settings
-
 app_name = 'bulletin'
 urlpatterns = [
     # 기본 페이지
@@ -20,6 +17,3 @@ urlpatterns = [
     path('delete_reply/', views.delete_reply, name='delete_reply'),
 
 ]
-
-# 이미지 URL 설정
-urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
