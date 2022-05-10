@@ -31,7 +31,6 @@ class ChatConsumer(WebsocketConsumer):
         item = UserLog.objects.get(id=self.room_group_name)
         item.end_time = timezone.now()
         item.save()
-        print(item.end_time)
         async_to_sync(self.channel_layer.group_discard)(
             self.room_group_name,
             self.channel_name,

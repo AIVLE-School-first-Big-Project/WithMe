@@ -14,12 +14,56 @@ from calendarApp.form import TodoForm, TodoEditForm
 from calendarApp.models import Todolist
 from tag.models import Tag
 from .models import TimeLog
-
+from django.utils.dateparse import parse_datetime
+from django.utils import timezone
+from datetime import timedelta
 
 def test_result(request):
     context = dict()
-    item = UserLog.objects.get(id=9999)
+    user_log_pk = UserLog.objects.last().id
+    item = UserLog.objects.last()
     context['user_log'] = item
+
+    total_time, total_focus_time = 0, 0
+    for i in UserLog.objects.all().filter(Q(tag=item.tag)):
+        parsed_t = parse_datetime(str(i.start_time))
+        parsed_t2 = parse_datetime(str(i.end_time))
+        tt = int((parsed_t2 - parsed_t).total_seconds())
+        total_time += tt
+        total_focus_time += tt - i.abnormal_time
+    context['total_time'] = total_time
+    context['total_focus_time'] = total_focus_time
+    pattern_list = []
+
+    lst = TimeLog.objects.all().filter(Q(user_log=user_log_pk)).order_by('time')
+    for idx, i in enumerate(lst):
+        e = 1 if i.event_type == 0 else 0
+
+        if e == 0:
+            res = dict()
+            later = i.time - timedelta(seconds=1)
+            print(idx, '>>', later)
+            res['x'] = later.strftime("%Y-%m-%d %H:%M:%S")
+            res['y'] = 1
+            pattern_list.append(res)
+
+        if e == 1:
+            if idx != 0:
+                res = dict()
+                later = i.time - timedelta(seconds=1)
+                res['x'] = later.strftime("%Y-%m-%d %H:%M:%S")
+                res['y'] = 0
+                pattern_list.append(res)
+        res = dict()
+        res['x'] = i.time.strftime("%Y-%m-%d %H:%M:%S")
+        res['y'] = e
+        pattern_list.append(res)
+
+    res = dict()
+    res['x'] = item.end_time.strftime("%Y-%m-%d %H:%M:%S")
+    res['y'] = 1
+    pattern_list.append(res)
+    context['pattern_list'] = pattern_list
     return render(request, 'timer/service_result.html', context)
 
 
@@ -51,12 +95,54 @@ def service(request):
 
 @login_required
 def result(request):
-    context = dict()
     if request.method == 'POST':
-        item = UserLog.objects.get(id=request.POST['user_log'])
+        context = dict()
+        user_log_pk = request.POST['user_log']
+        item = UserLog.objects.get(id=user_log_pk)
         item.end_time = timezone.now()
         item.save()
         context['user_log'] = item
+
+        total_time, total_focus_time = 0, 0
+        for i in UserLog.objects.all().filter(Q(tag=item.tag)):
+            parsed_t = parse_datetime(str(i.start_time))
+            parsed_t2 = parse_datetime(str(i.end_time))
+            tt = int((parsed_t2 - parsed_t).total_seconds())
+            total_time += tt
+            total_focus_time += tt - i.abnormal_time
+        context['total_time'] = total_time
+        context['total_focus_time'] = total_focus_time
+        pattern_list = []
+
+        lst = TimeLog.objects.all().filter(Q(user_log=user_log_pk)).order_by('time')
+        for idx, i in enumerate(lst):
+            e = 1 if i.event_type == 0 else 0
+
+            if e == 0:
+                res = dict()
+                later = i.time - timedelta(seconds=1)
+                print(idx, '>>', later)
+                res['x'] = later.strftime("%Y-%m-%d %H:%M:%S")
+                res['y'] = 1
+                pattern_list.append(res)
+
+            if e == 1:
+                if idx != 0:
+                    res = dict()
+                    later = i.time - timedelta(seconds=1)
+                    res['x'] = later.strftime("%Y-%m-%d %H:%M:%S")
+                    res['y'] = 0
+                    pattern_list.append(res)
+            res = dict()
+            res['x'] = i.time.strftime("%Y-%m-%d %H:%M:%S")
+            res['y'] = e
+            pattern_list.append(res)
+
+        res = dict()
+        res['x'] = item.end_time.strftime("%Y-%m-%d %H:%M:%S")
+        res['y'] = 1
+        pattern_list.append(res)
+        context['pattern_list'] = pattern_list
         return render(request, 'timer/service_result.html', context)
     else:
         return redirect('service')

@@ -45,7 +45,8 @@ body {
     margin: 0;
     padding: 0;
     height: 100vh;
-    font: 1.2em/1.3em 나눔스퀘어, 'NanumSquare', consolas;
+    font: 1.2em/1.3em;
+    font-family: 나눔스퀘어, 'NanumSquare', sans-serif;
 }
 
 .normal		{ font-weight: 400 }

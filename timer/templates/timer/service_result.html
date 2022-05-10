@@ -3,34 +3,107 @@
 {% load bootstrap5 %}
 
 {% block content %}
+<div class="d-flex flex-column w-100" style="color:white;">
+    <div class="row my-5">
+        <div class="col-6">
+            <div class="d-flex align-items-center justify-content-start mt-3" >
+                <div id="intro_meg" class="p-2" ></div>
+            </div>
+        </div>
+        <div class="col-3">
+            <div class="d-flex align-items-center justify-content-end" >
+                <canvas id="pie-chart" ></canvas>
+            </div>
+        </div>
+        <div class="col-3">
+            <div class="d-flex align-items-center justify-content-start" >
+                <canvas id="pie-chart2"></canvas>
+            </div>
+        </div>
+    </div>
+    <div id="intro_meg2" class="d-flex justify-content-center mb-2" style="height:1em;"></div>
+    <div id="intro_meg3" class="d-flex justify-content-center mb-2" style="height:2em;"></div>
+    <div style="height:2em;"></div>
+    <h3 class="d-flex justify-content-center my-3"> 집중 패턴 </h3>
+    <div class="p-2">
+        <canvas id="line-chart"></canvas>
+    </div>
 
-<div class="d-flex align-items-center justify-content-end" style="width: 40vw; height: 95vh;">
-    <div class="d-flex flex-column">
-        <div class="p-2" style="color:white;"> 결과페이지 입니다.</div>
-    </div>
 </div>
-<div class="d-flex align-items-center justify-content-center" style="width: 40vw; height: 95vh;">
-    <div class="d-flex flex-column" style="width:300px; color:white;">
-        <canvas id="pie-chart" ></canvas>
-    </div>
-</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.3/moment.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
+
+<script src="https://unpkg.com/typeit@8.4.0/dist/index.umd.js"></script>
 <script>
     let start_time = new Date('{{user_log.start_time|date:"c"}}');
     let end_time = new Date('{{user_log.end_time|date:"c"}}');
     let diff_start_end = parseInt((end_time.getTime() - start_time.getTime()) / 1000);
     let abnormal_time = {{ user_log.abnormal_time }};
+    let focus_time = diff_start_end - abnormal_time;
     let percent = (abnormal_time / diff_start_end).toFixed(2) * 100
-    let neck_point = 0
-    $(function() {
+    let neck_point = {{ user_log.textneck_point }};
+    let percent2 = (neck_point / diff_start_end).toFixed(2) * 100
+    let time_step = 1;
+    if (diff_start_end > 480){
+        time_step = parseInt(diff_start_end / 480);
+    }
+    let time_unit = 'minute';
+    if (diff_start_end < 60){
+        time_unit = 'second';
+        time_step = parseInt(diff_start_end / 6);
+        if (time_step == 0){
+            time_step = 1;
+        }
+    }
 
-        pie_chart = new Chart(document.getElementById("pie-chart"), {
+    function time_to_str(para){
+        let hours = parseInt(para/3600),
+        minutes = parseInt((para%3600)/60),
+        seconds = para%60;
+
+        let str = '';
+        if (hours > 0){
+            str += hours + '시간 ';
+        }
+        if (minutes > 0){
+            str += minutes + '분 ';
+        }
+
+        str += seconds + '초';
+        return str;
+    }
+
+    new TypeIt("#intro_meg", {speed: 30, afterComplete:intro_meg2}).type(
+    "수고 많으셨습니다. {{ request.user.username }}님.</br></br>\
+    이번 학습 정보는 정상적으로 기록되었으며,</br>총 학습시간은\
+    " + time_to_str(diff_start_end) + "입니다.</br></br>\
+    그 중, 집중 시간은 " + time_to_str(focus_time) + "(" + (100 - percent) + "%)를,</br>\
+    좋은 자세를 유지한 시간은 " + time_to_str(diff_start_end - neck_point) + "(" + (100 - percent2) + "%)로 기록되었습니다."
+    ).go();
+    function intro_meg2(){
+        new TypeIt("#intro_meg2", {cursor: false, speed: 30, afterComplete:intro_meg3}).type(
+        "[ 해당 과목에 대한 전체 학습량 ]"
+        ).go();
+    };
+    function intro_meg3(){
+        new TypeIt("#intro_meg3", {cursor: false, speed: 30, }).type(
+            "총 학습시간 : " + time_to_str({{ total_time }}) +
+            "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" +
+            "총 집중시간 : " + time_to_str({{ total_focus_time }})
+        ).go();
+    };
+
+
+    let hours2 = parseInt(focus_time/3600),
+        minutes2 = parseInt((focus_time%3600)/60),
+        seconds2 = focus_time%60;
+    $(function() {
+        new Chart(document.getElementById("pie-chart"), {
             type: 'doughnut',
             data: {
-                labels: ["집중 시간(sec)", "날린 시간(sec)"],
+                labels: ["집중 시간(sec)", "이상 시간(sec)"],
                 datasets: [{
-                    label: "Population (millions)",
-                    backgroundColor: ["white", "rgb(0,0,0,0)"],
+                    backgroundColor: ["rgb(255,255,255,0.8)", "rgb(235, 64, 52,0.2)"],
                     data: [diff_start_end-abnormal_time, abnormal_time],
                     borderWidth: 1,
                     fontStyle: 'normal',
@@ -38,25 +111,109 @@
                 }],
             },
             options: {
-                title: {
-                    display: true,
-                    text: '전체 시간 중 ' + (100-percent) + '%를 집중하셨습니다.',
-                    fontColor: 'rgb(255, 255, 255)',
-                    fontSize: 20,
-
-                },
-
                 legend: {
+                    position: 'bottom',
                     display: true,
                     labels: {
                         fontColor: 'rgb(255, 255, 255)',
-                        fontSize: 15,
+                        fontSize: 12,
                     }
                 }
 
             },
         });
 
+        new Chart(document.getElementById("pie-chart2"), {
+            type: 'doughnut',
+            data: {
+                labels: ["좋은 자세 시간(sec)", "나쁜 자세 시간(sec)"],
+                datasets: [{
+                    backgroundColor: ["rgb(255,255,255,0.8)", "rgb(56, 72, 168,0.2)"],
+                    data: [diff_start_end-neck_point, neck_point],
+                    borderWidth: 1,
+                    fontStyle: 'normal',
+                    fontFamily: ['NanumSquare', 'sans-serif'],
+                }],
+            },
+            options: {
+                legend: {
+                    display: true,
+                    position: 'bottom',
+                    labels: {
+                        fontColor: 'rgb(255, 255, 255)',
+                        fontSize: 12,
+                    }
+                }
+
+            },
+        });
+
+
+        const config = {
+            type: 'line',
+            data: {
+                labels: [],
+                datasets: [{
+                    data: {{pattern_list|safe}},
+                    label: "Temperature",
+                    borderColor: "white",
+                    backgroundColor: "rgb(245, 141, 15, 0.8)",
+                    pointBorderWidth: 0,
+                    pointHitRadius: 0,
+                    pointRadius: 0,
+                    fill: true,
+                    stepped: true,
+                    lineTension: 0,
+                }]
+            },
+            options: {
+                maintainAspectRatio: false,
+                legend: {
+                    display: false
+                },
+                tooltips: {
+                    enabled: false
+                },
+            scales: {
+                xAxes: [{
+                    type: 'time',
+                    distribution: 'linear',
+                    time: {
+                        unit: time_unit,
+                        unitStepSize: time_step,
+                        displayFormats: {
+                            'second': 'HH:mm:ss',
+                            'minute': 'HH:mm:ss',
+                            'hour': 'HH:mm:ss',
+                        },
+                    },
+                    ticks:{
+                        fontColor: 'rgb(255, 255, 255)',
+                        callback: function(value, index, ticks) {
+                            if (index > {{ pattern_list|length }} -4){
+                                return ''
+                            }
+                            return value;
+                        }
+                    }
+                }],
+                yAxes: [{
+                    display: false,
+                    type: 'linear',
+                    position: 'right',
+                    ticks: {
+                        max: 1,
+                        min: 0,
+                        stepSize: 1,
+                    }
+                }],
+                title: {
+                    display: false,
+                },
+            }
+          }
+        };
+        new Chart(document.getElementById("line-chart"), config);
     });
 </script>
 
