@@ -1,17 +1,5 @@
-.bulletin_main_body{
-    display: flex;
-    flex-direction: column;
-    background-color: white; 
-    margin-right: 20px; 
-    margin-left: 20px; 
-    margin-top: 10px; 
-    margin-bottom: 10px;
-    height: 500px; 
-}
-
 .pagination {
     display: flex;
-    padding-left: 0px;
     list-style: none;
     border-radius: 0.25rem;
     justify-content: center;
@@ -24,13 +12,19 @@
 
 .contour{
     height: 2px; 
-    background-color: lightgrey;
+    background-color: white;
 }
 
 .buffer{
     height: 0px; 
 }
 
+.table {
+    width: 100%;
+    margin-top: 30px;
+    margin-bottom: 10px;
+    color: lightgrey;
+}
 
 textarea {
     width: 100%;
@@ -38,4 +32,10 @@ textarea {
 
 input[type=submit] {
     margin-top: 10px;
+}
+
+#btn_write{
+    float:right;color: white;
+    margin-top: 10px;
+    margin-bottom: 10px;
 }
