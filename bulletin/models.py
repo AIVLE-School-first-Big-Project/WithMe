@@ -2,14 +2,12 @@ from django.db import models
 from accounts.models import User
 
 
-# Create your models here.
-
 # 게시판 피드 객체
 class Post(models.Model):
     title = models.CharField(max_length=255, null=True)
     write_date = models.DateTimeField(null=True)
     modify_date = models.DateTimeField(null=True, blank=True)
-    image = models.ImageField(null=True, upload_to="", blank=True)
+    image = models.ImageField(null=True, upload_to="community/%Y%m%d", blank=True)
     content = models.TextField(max_length=255, null=True)
     view_count = models.PositiveIntegerField(default=0)
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)

@@ -1,13 +1,26 @@
+import os
 from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 from .models import Post, Reply
 from .forms import PostForm
-from django.utils import timezone
 from accounts.models import User
 from django.db.models import Q
 import json
+from uuid import uuid4
+from django.utils import timezone
+
+
+def uuid_name_upload_to(filename):
+    ymd_path = timezone.now().strftime('%Y/%m/%d')
+    uuid_name = uuid4().hex
+    extension = os.path.splitext(filename)[-1].lower()  # 확장자 추출하고, 소문자로 변환
+    return '/'.join([
+        ymd_path,
+        uuid_name[:2],
+        uuid_name + extension,
+    ])
 
 
 # Create your views here.
@@ -50,7 +63,6 @@ def post(request, post_id):
         reply.content = request.POST.get('content')
         reply.created_at = timezone.now()
         if reply.content != '':
-            print(reply.content)
             reply.save()
 
     return render(request, 'bulletin/post.html', {'post': post, 'reply_list': reply_list})
@@ -65,6 +77,8 @@ def upload_post(request):
         post.content = request.POST['content']
         try:
             post.image = request.FILES['image']
+            post.image.name = uuid_name_upload_to(post.image.name)
+            print(post.image.name)
         except ValueError:
             print("\n" * 10)
             print("error")
