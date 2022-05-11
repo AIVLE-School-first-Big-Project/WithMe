@@ -1,16 +1,16 @@
 import base64
+import os
+
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render, redirect
-from django.http import HttpResponse, JsonResponse
+from django.shortcuts import render
+from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
-from timer.models import UserLog
 from calendarApp.form import TodoForm, TodoEditForm
 from calendarApp.models import Todolist
-from tag.models import Tag
 from django.db.models import Q
 from timer.models import UserLog
 from tag.models import Tag
-import os, random
+import random
 from withme.settings import MEDIA_ROOT
 from django.utils.dateparse import parse_datetime
 import datetime

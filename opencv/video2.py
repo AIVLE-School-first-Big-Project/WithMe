@@ -21,7 +21,7 @@ process_this_frame = True
 while True:
     ret, frame = cap.read()
 
-    small_frame = cv2.resize(frame, (0,0), fx=0.25, fy=0.25)
+    small_frame = cv2.resize(frame, (0, 0), fx=0.25, fy=0.25)
 
     rgb_small_frame = small_frame[:, :, ::-1]
 
@@ -29,13 +29,11 @@ while True:
         face_locations = face_recognition.face_locations(rgb_small_frame)
         face_encodings = face_recognition.face_encodings(rgb_small_frame, face_locations)
         face_landmark_list = face_recognition.face_landmarks(rgb_small_frame)
-        
 
-        face_name=[]
+        face_name = []
         for face_encoding in face_encodings:
             face_name.append("Unknown")
 
-    
     process_this_frame = not process_this_frame
 
     for (top, right, bottom, left), name in zip(face_locations, face_name):
@@ -45,13 +43,13 @@ while True:
         left *= 4
 
         cv2.rectangle(frame, (left, top), (right, bottom), (0, 0, 255), 2)
-        cv2.rectangle(frame, (left, bottom-35), (right, bottom), (0, 0, 255), cv2.FILLED)
+        cv2.rectangle(frame, (left, bottom - 35), (right, bottom), (0, 0, 255), cv2.FILLED)
         font = cv2.FONT_HERSHEY_DUPLEX
-        cv2.putText(frame, name, (left + 6, bottom - 6), font, 1.0, (255,255,255), 1)
+        cv2.putText(frame, name, (left + 6, bottom - 6), font, 1.0, (255, 255, 255), 1)
 
     for fl in face_landmark_list:
-        array_left = np.array(fl['left_eye'])*4
-        array_right = np.array(fl['right_eye'])*4
+        array_left = np.array(fl['left_eye']) * 4
+        array_right = np.array(fl['right_eye']) * 4
         cv2.polylines(frame, [array_left], True, (255, 0, 0), 5)
         cv2.polylines(frame, [array_right], True, (255, 0, 0), 5)
 

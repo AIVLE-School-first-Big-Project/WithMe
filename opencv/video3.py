@@ -22,9 +22,9 @@ while True:
         y = face['box'][1]
         w = face['box'][2]
         h = face['box'][3]
-        cv2.rectangle(frame, (x, y), (x+w, y+h), (255,0,0), 2)
-        cv2.line(frame, face['keypoints']['left_eye'], face['keypoints']['left_eye'], (0,0,255), 10)
-        cv2.line(frame, face['keypoints']['right_eye'], face['keypoints']['right_eye'], (0,0,255), 10)
+        cv2.rectangle(frame, (x, y), (x + w, y + h), (255, 0, 0), 2)
+        cv2.line(frame, face['keypoints']['left_eye'], face['keypoints']['left_eye'], (0, 0, 255), 10)
+        cv2.line(frame, face['keypoints']['right_eye'], face['keypoints']['right_eye'], (0, 0, 255), 10)
 
     cv2.imshow('Video', frame)
 

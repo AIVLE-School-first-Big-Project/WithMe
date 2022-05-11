@@ -5,13 +5,6 @@ from django.contrib.auth.decorators import login_required
 from .form import TodoForm, TodoEditForm
 from .models import Todolist
 import json
-# Create your views here.
-@login_required
-def timer2(request):
-
-    return render(request, 'calendarApp/calendarApp.html')
-    # return HttpResponse('hello world')
-
 
 
 @login_required
@@ -35,7 +28,6 @@ def todo_new(request):
         })
 
 
-
 @login_required
 def todo_edit(request, todo_id):
     item = Todolist.objects.get(id=todo_id)
@@ -54,6 +46,7 @@ def todo_edit(request, todo_id):
             "todo_id": todo_id,
         })
 
+
 @login_required
 def todo_delete(request):
     if request.method == 'POST':
@@ -61,4 +54,4 @@ def todo_delete(request):
         item.delete()
         item = Todolist.objects.all()
 
-        return HttpResponse(json.dumps({'cnt':len(item)}), content_type = "application/json")
+        return HttpResponse(json.dumps({'cnt': len(item)}), content_type="application/json")

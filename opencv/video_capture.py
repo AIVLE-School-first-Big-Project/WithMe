@@ -1,8 +1,6 @@
 import cv2
 import os
 
-from pathlib import Path
-
 cap = cv2.VideoCapture(0)
 isStart = False
 classes, cnt = 0, 0
@@ -25,8 +23,8 @@ while True:
                 cap.release()
                 cv2.destroyAllWindows()
                 break
-    
-    cv2.putText(frame, f'{path[classes]} : {cnt}', (10,20), 1, fontScale=1, color=(0,0,255), thickness=2)
+
+    cv2.putText(frame, f'{path[classes]} : {cnt}', (10, 20), 1, fontScale=1, color=(0, 0, 255), thickness=2)
     cv2.imshow('frame', frame)
 
     if cv2.waitKey(1) & 0xFF == ord('q'):

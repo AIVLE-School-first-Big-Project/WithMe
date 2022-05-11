@@ -1,6 +1,5 @@
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm, AuthenticationForm
 from django.contrib.auth import get_user_model
-from django.contrib.auth.hashers import check_password
 from django import forms
 from .models import User
 
@@ -59,5 +58,3 @@ class SignupForm(UserCreationForm):
             if qs.exists():
                 raise forms.ValidationError("이미 등록된 아이디입니다.")
         return username
-
-

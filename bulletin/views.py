@@ -9,6 +9,7 @@ from accounts.models import User
 from django.db.models import Q
 import json
 
+
 # Create your views here.
 @login_required
 def bulletin(request):
@@ -17,16 +18,14 @@ def bulletin(request):
     keyword = request.GET.get('keyword', '')
 
     # 게시판 (등록일 기준 최신 순)
-    post_list = Post.objects.all().order_by('-write_date')  
+    post_list = Post.objects.all().order_by('-write_date')
 
     # 검색 기능
     if keyword:
         post_list = post_list.filter(
-            Q(title__icontains=keyword) |  # 제목 검색
-            Q(content__icontains=keyword) |  # 내용 검색
-            Q(user__username__icontains=keyword)  # 작성자 검색
+            Q(title__icontains=keyword) | Q(content__icontains=keyword) | Q(user__username__icontains=keyword)
         ).distinct()
-        
+
     # 한 페이지 당 5개 게시물
     post_count = 5
     paginator = Paginator(post_list, post_count)
@@ -38,6 +37,7 @@ def bulletin(request):
                'page_range': range(start_page, end_page + 1)}
 
     return render(request, 'bulletin/main.html', context)
+
 
 @login_required
 def post(request, post_id):
@@ -55,6 +55,7 @@ def post(request, post_id):
 
     return render(request, 'bulletin/post.html', {'post': post, 'reply_list': reply_list})
 
+
 @login_required
 def upload_post(request):
     if request.method == "POST":
@@ -64,11 +65,11 @@ def upload_post(request):
         post.content = request.POST['content']
         try:
             post.image = request.FILES['image']
-        except:
-            print("\n"*10)
+        except ValueError:
+            print("\n" * 10)
             print("error")
-            print("\n"*10)
-            
+            print("\n" * 10)
+
         post.write_date = timezone.now()
         post.user = request.user
         post.save()
@@ -103,11 +104,6 @@ def modify_post(request, post_id):
 
 @login_required
 def delete_post(request, post_id):
-    login_session = request.session.get('login_session', '')
-    post = get_object_or_404(Post, id=post_id)
-
-    context = {'post': post}
-
     post = Post.objects.get(id=post_id)
     post.delete()
     return redirect('/bulletin')

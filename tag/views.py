@@ -4,6 +4,7 @@ from django.http import HttpResponse
 from .models import Tag
 from django.forms.models import ModelChoiceIterator, ModelMultipleChoiceField
 
+
 class Autocomplete(autocomplete.Select2QuerySetView):
     def get_queryset(self):
         qs = Tag.objects.all()
@@ -13,8 +14,8 @@ class Autocomplete(autocomplete.Select2QuerySetView):
 
         return qs
 
-def BasicDALView(request):
 
+def BasicDALView(request):
     js = """
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.js" crossorigin="anonymous"></script>
     """

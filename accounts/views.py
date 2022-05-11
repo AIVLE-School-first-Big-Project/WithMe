@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.forms import PasswordChangeForm
-from django.contrib.auth import update_session_auth_hash, authenticate, login
+from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth import login as auth_login
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
@@ -37,7 +37,7 @@ def change_password(request):
             user = form.save()
             update_session_auth_hash(request, user)  # Important!
             messages.success(request, 'Your password was successfully updated!')
-            return redirect('accounts:Login') # 나중에 메인페이지로 이동
+            return redirect('accounts:Login')  # 나중에 메인페이지로 이동
         else:
             messages.error(request, 'Please correct the error below.')
     else:
@@ -46,25 +46,25 @@ def change_password(request):
         'form': form
     })
 
+
 @login_required
 def update(request):
-    current_user = request.user # User.objects.get(id = request.session.get('login_session', ''))
-    usertype = current_user.User_type # request.session.get('Type_name')
+    current_user = request.user  # User.objects.get(id = request.session.get('login_session', ''))
+    usertype = current_user.User_type  # request.session.get('Type_name')
     # userid = request.session.get('username')
     if request.method == 'POST':
         new_type = str(request.POST.get('new_Type'))
         if usertype != new_type:
             try:
-                user_type = UserType.objects.get(Type_name = new_type)
+                user_type = UserType.objects.get(Type_name=new_type)
             except UserType.DoesNotExist:
                 user_type = None
-            user = current_user # User.objects.get(username = userid)
+            user = current_user  # User.objects.get(username = userid)
             user.User_type = user_type
             user.save()
-            
+
             # user_type.save()
-            
+
             # messages.info(request, 'type이 변경되었습니다.')
 
-        
     return render(request, 'accounts/change_type.html')

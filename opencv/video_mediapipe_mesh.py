@@ -17,8 +17,8 @@ with mp_face_mesh.FaceMesh(max_num_faces=1,
             print('ignoring empty camera frame.')
 
             continue
-        
-        image.flags.writeable=False
+
+        image.flags.writeable = False
         image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
         results = face_mesh.process(image)
 
@@ -38,8 +38,7 @@ with mp_face_mesh.FaceMesh(max_num_faces=1,
                     landmark_list=face_landmarks,
                     connections=mp_face_mesh.FACEMESH_CONTOURS,
                     landmark_drawing_spec=None,
-                    connection_drawing_spec=mp_drawing_styles
-                    .get_default_face_mesh_contours_style())
+                    connection_drawing_spec=mp_drawing_styles.get_default_face_mesh_contours_style())
                 print(face_landmarks)
                 # mp_drawing.draw_landmarks(
                 #     image=image,
@@ -50,7 +49,7 @@ with mp_face_mesh.FaceMesh(max_num_faces=1,
                 #     .get_default_face_mesh_iris_connections_style())
 
         cv2.imshow('mediapipe', cv2.flip(image, 1))
-        if cv2.waitKey(5) & 0xFF==27:
+        if cv2.waitKey(5) & 0xFF == 27:
             break
 cap.release()
 cv2.destroyAllWindows()

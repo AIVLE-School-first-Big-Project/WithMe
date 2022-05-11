@@ -247,12 +247,19 @@
             + "{{ user_log.id|safe }}"
             + '/'
         );
+        const chatSocket2 = new WebSocket(
+            'ws://'
+            + window.location.host
+            + '/ws/service2/'
+            + "{{ user_log.id|safe }}"
+            + '/'
+        );
 
         setTimeout(function() {
             chatSocket.send(JSON.stringify({
                 'type': 'ST'
             }));
-        }, 2000);
+        }, 1000);
 
         chatSocket.onmessage = function(e) {
             const data = JSON.parse(e.data);
@@ -303,7 +310,11 @@
                     clock_stop = false;
                 }
             }
-            else if (d1 == 'res_neck'){
+        };
+        chatSocket2.onmessage = function(e) {
+            const data = JSON.parse(e.data);
+            d1 = data.type
+            if (d1 == 'res_neck'){
                 d2 = parseInt(JSON.stringify(data.message));
                 if (d2 == 1){
                     //$("#textneck_p").text(neck_point);
@@ -325,7 +336,7 @@
             }));
         }
         function Socket_msg_neck(){
-            chatSocket.send(JSON.stringify({
+            chatSocket2.send(JSON.stringify({
                 'type': 'DN',
                 'message': getFrameData(),
             }));

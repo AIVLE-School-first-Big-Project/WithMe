@@ -1,4 +1,5 @@
-from accounts.models import *
+from django.db import models
+from accounts.models import User
 from tag.models import Tag
 
 
