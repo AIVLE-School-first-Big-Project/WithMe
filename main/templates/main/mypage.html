@@ -106,6 +106,7 @@
     tag_tt_list.push('{{value|safe}}');
     {% endfor %}
 
+    {% if user_log_list|length %}
     tag_tt_list.push('');
     new Chart(document.getElementById("bar-chart"), {
         type: 'bar',
@@ -115,7 +116,7 @@
                 {
                     label: "Time(minutes)",
                     backgroundColor: ["rgb(76, 183, 252,0.9)", "rgb(252, 76, 132,0.9)", "rgb(76, 183, 252,0.9)", "rgb(252, 76, 132,0.9)",],
-                    data: ['{{ my_total|safe }}', '{{ my_focus|safe }}', '{{ user_total|safe }}', '{{ user_focus|safe }}', '0'],
+                    data: [{{ my_total|safe }}, {{ my_focus|safe }}, {{ user_total|safe }}, {{ user_focus|safe }}, '0'],
                     fontStyle: 'normal',
                     fontFamily: ['NanumSquare', 'sans-serif'],
                 }
@@ -130,6 +131,7 @@
             },
         }
     });
+
     new Chart(document.getElementById("bar-chart2"), {
         type: 'horizontalBar',
         data: {
@@ -161,7 +163,7 @@
             },
         }
     });
-
+    {% endif %}
     $(function() {
         $("#prev_btn").click(function () {
             let f = $("#new_from")[0];
@@ -169,12 +171,20 @@
             let year = parseInt(now_data_str.substr(0, 4));
             let month = parseInt(now_data_str.substr(6, 2));
 
+            let s = '';
             month -= 1;
-            if (month == 0){
-                year -= 1;
-                month = 12;
+            if (month > 9){
+                s = "000" + month;
             }
-            var s = "0000" + month;
+            else{
+                s = "0000" + month;
+                if (month == 0){
+                    year -= 1;
+                    month = 12;
+                    s = "000" + month;
+                }
+            }
+
             new_date_str = year +'년 '+ s.substr(3)+'월';
             let obj = $("#new_input")[0];
             obj.setAttribute('value', new_date_str);
@@ -188,20 +198,28 @@
             let year = parseInt(now_data_str.substr(0, 4));
             let month = parseInt(now_data_str.substr(6, 2));
 
+            let s = '';
             month += 1;
-            if (month == 13){
-                year += 1;
-                month = 1;
+            if (month > 9){
+                s = "000" + month;
+                if (month == 13){
+                    year += 1;
+                    month = 1;
+                    s = "0000" + month;
+                }
+
             }
-            var s = "0000" + month;
+            else{
+                s = "0000" + month;
+            }
+
+
             new_date_str = year +'년 '+ s.substr(3)+'월';
             let obj = $("#new_input")[0];
             obj.setAttribute('value', new_date_str);
 
             $("#new_from").submit()
         });
-        console.log('{{ my_focus|safe }}')
-
 
     });
 </script>
